@@ -1,6 +1,14 @@
 # JoltC
 C wrapper for [Jolt Physics](https://github.com/jrouwe/JoltPhysics).
 
+## Building
+Use CMake:
+
+```bash
+cmake -B build
+cmake --build build
+```
+
 ## Other C Wrapper
 Other C wrappers for Jolt Physics include:
 - "JoltC", part of the [zphysics] Zig library started by [Michal Ziulek][michal-ziulek]
