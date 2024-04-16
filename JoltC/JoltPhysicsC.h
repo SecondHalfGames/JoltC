@@ -1,4 +1,4 @@
-// JoltPhysicsC v0.0.6 - C API for Jolt Physics C++ library
+// JoltC - C API for Jolt Physics C++ library
 
 #pragma once
 #include <stdlib.h>
@@ -6,12 +6,8 @@
 #include <stdint.h>
 #include <stdalign.h>
 #include <float.h>
-//--------------------------------------------------------------------------------------------------
-//
-// Const
-//
-//--------------------------------------------------------------------------------------------------
-#define JPC_API extern __declspec(dllexport) // TODO: Define this properly
+
+#define JPC_API extern __declspec(dllexport)
 
 // Always turn on asserts in Debug mode
 #if defined(_DEBUG) || defined(JPH_ENABLE_ASSERTS)
@@ -65,63 +61,59 @@ enum JPC_JobSystemConstants
     JPC_MAX_PHYSICS_BARRIERS = 8
 };
 
-typedef uint8_t JPC_PhysicsUpdateError;
-typedef enum JPC_EPhysicsUpdateError
-{
-    JPC_PHYSICS_UPDATE_NO_ERROR                 = 0,
-    JPC_PHYSICS_UPDATE_MANIFOLD_CACHE_FULL      = 1 << 0,
-    JPC_PHYSICS_UPDATE_BODY_PAIR_CACHE_FULL     = 1 << 1,
-    JPC_PHYSICS_UPDATE_CONTACT_CONSTRAINTS_FULL = 1 << 2,
-} JPC_EPhysicsUpdateError;
+typedef enum JPC_ShapeType: uint8_t {
+    JPC_SHAPE_TYPE_CONVEX,
+    JPC_SHAPE_TYPE_COMPOUND,
+    JPC_SHAPE_TYPE_DECORATED,
+    JPC_SHAPE_TYPE_MESH,
+    JPC_SHAPE_TYPE_HEIGHT_FIELD,
+    JPC_SHAPE_TYPE_SOFTBODY,
+    JPC_SHAPE_TYPE_USER1,
+    JPC_SHAPE_TYPE_USER2,
+    JPC_SHAPE_TYPE_USER3,
+    JPC_SHAPE_TYPE_USER4,
+} JPC_ShapeType;
 
-typedef uint8_t JPC_ShapeType;
-typedef enum JPC_EShapeType
-{
-    JPC_SHAPE_TYPE_CONVEX       = 0,
-    JPC_SHAPE_TYPE_COMPOUND     = 1,
-    JPC_SHAPE_TYPE_DECORATED    = 2,
-    JPC_SHAPE_TYPE_MESH         = 3,
-    JPC_SHAPE_TYPE_HEIGHT_FIELD = 4,
-    JPC_SHAPE_TYPE_USER1        = 5,
-    JPC_SHAPE_TYPE_USER2        = 6,
-    JPC_SHAPE_TYPE_USER3        = 7,
-    JPC_SHAPE_TYPE_USER4        = 8
-} JPC_EShapeType;
+typedef enum JPC_ShapeSubType: uint8_t {
+    JPC_SHAPE_SUB_TYPE_SPHERE,
+    JPC_SHAPE_SUB_TYPE_BOX,
+    JPC_SHAPE_SUB_TYPE_TRIANGLE,
+    JPC_SHAPE_SUB_TYPE_CAPSULE,
+    JPC_SHAPE_SUB_TYPE_TAPEREDCAPSULE,
+    JPC_SHAPE_SUB_TYPE_CYLINDER,
+    JPC_SHAPE_SUB_TYPE_CONVEX_HULL,
+    JPC_SHAPE_SUB_TYPE_STATIC_COMPOUND,
+    JPC_SHAPE_SUB_TYPE_MUTABLE_COMPOUND,
+    JPC_SHAPE_SUB_TYPE_ROTATED_TRANSLATED,
+    JPC_SHAPE_SUB_TYPE_SCALED,
+    JPC_SHAPE_SUB_TYPE_OFFSET_CENTER_OF_MASS,
+    JPC_SHAPE_SUB_TYPE_MESH,
+    JPC_SHAPE_SUB_TYPE_HEIGHT_FIELD,
+    JPC_SHAPE_SUB_TYPE_SOFT_BODY,
+    JPC_SHAPE_SUB_TYPE_USER1,
+    JPC_SHAPE_SUB_TYPE_USER2,
+    JPC_SHAPE_SUB_TYPE_USER3,
+    JPC_SHAPE_SUB_TYPE_USER4,
+    JPC_SHAPE_SUB_TYPE_USER5,
+    JPC_SHAPE_SUB_TYPE_USER6,
+    JPC_SHAPE_SUB_TYPE_USER7,
+    JPC_SHAPE_SUB_TYPE_USER8,
+    JPC_SHAPE_SUB_TYPE_USER_CONVEX1,
+    JPC_SHAPE_SUB_TYPE_USER_CONVEX2,
+    JPC_SHAPE_SUB_TYPE_USER_CONVEX3,
+    JPC_SHAPE_SUB_TYPE_USER_CONVEX4,
+    JPC_SHAPE_SUB_TYPE_USER_CONVEX5,
+    JPC_SHAPE_SUB_TYPE_USER_CONVEX6,
+    JPC_SHAPE_SUB_TYPE_USER_CONVEX7,
+    JPC_SHAPE_SUB_TYPE_USER_CONVEX8,
+} JPC_ShapeSubType;
 
-typedef uint8_t JPC_ShapeSubType;
-typedef enum JPC_EShapeSubType
-{
-    JPC_SHAPE_SUB_TYPE_SPHERE                = 0,
-    JPC_SHAPE_SUB_TYPE_BOX                   = 1,
-    JPC_SHAPE_SUB_TYPE_TRIANGLE              = 2,
-    JPC_SHAPE_SUB_TYPE_CAPSULE               = 3,
-    JPC_SHAPE_SUB_TYPE_TAPERED_CAPSULE       = 4,
-    JPC_SHAPE_SUB_TYPE_CYLINDER              = 5,
-    JPC_SHAPE_SUB_TYPE_CONVEX_HULL           = 6,
-    JPC_SHAPE_SUB_TYPE_STATIC_COMPOUND       = 7,
-    JPC_SHAPE_SUB_TYPE_MUTABLE_COMPOUND      = 8,
-    JPC_SHAPE_SUB_TYPE_ROTATED_TRANSLATED    = 9,
-    JPC_SHAPE_SUB_TYPE_SCALED                = 10,
-    JPC_SHAPE_SUB_TYPE_OFFSET_CENTER_OF_MASS = 11,
-    JPC_SHAPE_SUB_TYPE_MESH                  = 12,
-    JPC_SHAPE_SUB_TYPE_HEIGHT_FIELD          = 13,
-    JPC_SHAPE_SUB_TYPE_USER1                 = 14,
-    JPC_SHAPE_SUB_TYPE_USER2                 = 15,
-    JPC_SHAPE_SUB_TYPE_USER3                 = 16,
-    JPC_SHAPE_SUB_TYPE_USER4                 = 17,
-    JPC_SHAPE_SUB_TYPE_USER5                 = 18,
-    JPC_SHAPE_SUB_TYPE_USER6                 = 19,
-    JPC_SHAPE_SUB_TYPE_USER7                 = 20,
-    JPC_SHAPE_SUB_TYPE_USER8                 = 21,
-    JPC_SHAPE_SUB_TYPE_USER_CONVEX1          = 22,
-    JPC_SHAPE_SUB_TYPE_USER_CONVEX2          = 23,
-    JPC_SHAPE_SUB_TYPE_USER_CONVEX3          = 24,
-    JPC_SHAPE_SUB_TYPE_USER_CONVEX4          = 25,
-    JPC_SHAPE_SUB_TYPE_USER_CONVEX5          = 26,
-    JPC_SHAPE_SUB_TYPE_USER_CONVEX6          = 27,
-    JPC_SHAPE_SUB_TYPE_USER_CONVEX7          = 28,
-    JPC_SHAPE_SUB_TYPE_USER_CONVEX8          = 29,
-} JPC_EShapeSubType;
+typedef enum JPC_PhysicsUpdateError: uint32_t {
+    JPC_PHYSICS_UPDATE_ERROR_NONE                     = 0,
+    JPC_PHYSICS_UPDATE_ERROR_MANIFOLD_CACHE_FULL      = 1 << 0,
+    JPC_PHYSICS_UPDATE_ERROR_BODY_PAIR_CACHE_FULL     = 1 << 1,
+    JPC_PHYSICS_UPDATE_ERROR_CONTACT_CONSTRAINTS_FULL = 1 << 2,
+} JPC_PhysicsUpdateError;
 
 typedef enum JPC_ConstraintType
 {
