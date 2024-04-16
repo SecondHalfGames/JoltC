@@ -214,6 +214,26 @@ typedef enum JPC_EBackFaceMode
     JPC_BACK_FACE_COLLIDE = 1
 } JPC_EBackFaceMode;
 
+typedef uint8_t JPC_BodyType;
+typedef enum JPC_EBodyType
+{
+    JPC_BODY_TYPE_RIGID_BODY = 0,
+    JPC_BODY_TYPE_SOFT_BODY  = 1,
+} JPC_EBodyType;
+
+typedef uint8_t JPC_AllowedDOFs;
+typedef enum JPC_EAllowedDOFs {
+    JPC_ALLOWED_DOFS_NONE         = 0b000000,
+    JPC_ALLOWED_DOFS_ALL          = 0b111111,
+    JPC_ALLOWED_DOFS_TRANSLATIONX = 0b000001,
+    JPC_ALLOWED_DOFS_TRANSLATIONY = 0b000010,
+    JPC_ALLOWED_DOFS_TRANSLATIONZ = 0b000100,
+    JPC_ALLOWED_DOFS_ROTATIONX    = 0b001000,
+    JPC_ALLOWED_DOFS_ROTATIONY    = 0b010000,
+    JPC_ALLOWED_DOFS_ROTATIONZ    = 0b100000,
+    JPC_ALLOWED_DOFS_PLANE2D      = JPC_ALLOWED_DOFS_TRANSLATIONX | JPC_ALLOWED_DOFS_TRANSLATIONY | JPC_ALLOWED_DOFS_TRANSLATIONZ,
+} JPC_EAllowedDOFs;
+
 typedef uint32_t JPC_Features;
 typedef enum JPC_EFeatures {
     JPC_FEATURE_DOUBLE_PRECISION = (1 << 0),
@@ -1043,6 +1063,7 @@ JPC_MotionProperties_SetGravityFactor(JPC_MotionProperties *in_properties,
                                       float in_gravity_factor);
 JPC_API void
 JPC_MotionProperties_SetMassProperties(JPC_MotionProperties *in_properties,
+                                       JPC_EAllowedDOFs allowed_dofs,
                                        const JPC_MassProperties *in_mass_properties);
 JPC_API float
 JPC_MotionProperties_GetInverseMass(const JPC_MotionProperties *in_properties);
@@ -1140,7 +1161,7 @@ JPC_API uint32_t
 JPC_PhysicsSystem_GetNumBodies(const JPC_PhysicsSystem *in_physics_system);
 
 JPC_API uint32_t
-JPC_PhysicsSystem_GetNumActiveBodies(const JPC_PhysicsSystem *in_physics_system);
+JPC_PhysicsSystem_GetNumActiveBodies(const JPC_PhysicsSystem *in_physics_system, JPC_BodyType body_type);
 
 JPC_API uint32_t
 JPC_PhysicsSystem_GetMaxBodies(const JPC_PhysicsSystem *in_physics_system);
@@ -1176,7 +1197,6 @@ JPC_API JPC_PhysicsUpdateError
 JPC_PhysicsSystem_Update(JPC_PhysicsSystem *in_physics_system,
                          float in_delta_time,
                          int in_collision_steps,
-                         int in_integration_sub_steps,
                          JPC_TempAllocator *in_temp_allocator,
                          JPC_JobSystem *in_job_system);
 

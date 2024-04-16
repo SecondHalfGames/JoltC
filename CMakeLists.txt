@@ -14,3 +14,5 @@ add_library(joltc STATIC
 target_compile_features(joltc PUBLIC cxx_std_17)
 target_include_directories(joltc PUBLIC JoltPhysics)
 target_link_libraries(joltc PUBLIC JoltPhysics)
+
+add_subdirectory(JoltPhysics/Build)

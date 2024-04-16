@@ -1000,9 +1000,9 @@ JPC_PhysicsSystem_GetNumBodies(const JPC_PhysicsSystem *in_physics_system)
 }
 //--------------------------------------------------------------------------------------------------
 JPC_API uint32_t
-JPC_PhysicsSystem_GetNumActiveBodies(const JPC_PhysicsSystem *in_physics_system)
+JPC_PhysicsSystem_GetNumActiveBodies(const JPC_PhysicsSystem *in_physics_system, JPC_BodyType body_type)
 {
-    return toJph(in_physics_system)->GetNumActiveBodies();
+    return toJph(in_physics_system)->GetNumActiveBodies(static_cast<JPH::EBodyType>(body_type));
 }
 //--------------------------------------------------------------------------------------------------
 JPC_API uint32_t
@@ -1072,7 +1072,6 @@ JPC_API JPC_PhysicsUpdateError
 JPC_PhysicsSystem_Update(JPC_PhysicsSystem *in_physics_system,
                          float in_delta_time,
                          int in_collision_steps,
-                         int in_integration_sub_steps,
                          JPC_TempAllocator *in_temp_allocator,
                          JPC_JobSystem *in_job_system)
 {
@@ -1080,7 +1079,6 @@ JPC_PhysicsSystem_Update(JPC_PhysicsSystem *in_physics_system,
     JPC_PhysicsUpdateError error = (JPC_PhysicsUpdateError)toJph(in_physics_system)->Update(
         in_delta_time,
         in_collision_steps,
-        in_integration_sub_steps,
         reinterpret_cast<JPH::TempAllocator *>(in_temp_allocator),
         reinterpret_cast<JPH::JobSystem *>(in_job_system));
     return error;
@@ -2710,9 +2708,11 @@ JPC_MotionProperties_SetGravityFactor(JPC_MotionProperties *in_properties,
 //--------------------------------------------------------------------------------------------------
 JPC_API void
 JPC_MotionProperties_SetMassProperties(JPC_MotionProperties *in_properties,
+                                       JPC_EAllowedDOFs allowed_dofs,
                                        const JPC_MassProperties *in_mass_properties)
 {
-    toJph(in_properties)->SetMassProperties(*toJph(in_mass_properties));
+    toJph(in_properties)->SetMassProperties(static_cast<JPH::EAllowedDOFs>(allowed_dofs),
+                                            *toJph(in_mass_properties));
 }
 //--------------------------------------------------------------------------------------------------
 JPC_API float
