@@ -334,7 +334,7 @@ FN(toJpc)(JPH::EConstraintSpace in) { return static_cast<JPC_ConstraintSpace>(in
 FN(toJpc)(JPH::EMotionType in) { return static_cast<JPC_MotionType>(in); }
 FN(toJpc)(JPH::EActivation in) { return static_cast<JPC_Activation>(in); }
 FN(toJpc)(JPH::EMotionQuality in) { return static_cast<JPC_MotionQuality>(in); }
-FN(toJpc)(JPH::CharacterBase::EGroundState in) { return static_cast<JPC_CharacterGroundState>(in); }
+FN(toJpc)(JPH::CharacterBase::EGroundState in) { return static_cast<JPC_GroundState>(in); }
 
 FN(toJph)(JPC_ConstraintSpace in) { return static_cast<JPH::EConstraintSpace>(in); }
 
@@ -2708,7 +2708,7 @@ JPC_MotionProperties_SetGravityFactor(JPC_MotionProperties *in_properties,
 //--------------------------------------------------------------------------------------------------
 JPC_API void
 JPC_MotionProperties_SetMassProperties(JPC_MotionProperties *in_properties,
-                                       JPC_EAllowedDOFs allowed_dofs,
+                                       JPC_AllowedDOFs allowed_dofs,
                                        const JPC_MassProperties *in_mass_properties)
 {
     toJph(in_properties)->SetMassProperties(static_cast<JPH::EAllowedDOFs>(allowed_dofs),
@@ -2983,7 +2983,7 @@ JPC_CharacterVirtual_Update(JPC_CharacterVirtual *in_character,
         *reinterpret_cast<JPH::TempAllocator *>(in_temp_allocator));
 }
 //--------------------------------------------------------------------------------------------------
-JPC_API JPC_CharacterGroundState
+JPC_API JPC_GroundState
 JPC_CharacterVirtual_GetGroundState(JPC_CharacterVirtual *in_character)
 {
     return toJpc(toJph(in_character)->GetGroundState());

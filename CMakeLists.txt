@@ -5,11 +5,11 @@ project(JoltC VERSION 0.1
     LANGUAGES CXX)
 
 add_library(joltc STATIC
-    JoltC/Enums_Test.cpp
     JoltC/JoltPhysicsC.cpp
     JoltC/JoltPhysicsC.h
     # JoltC/JoltPhysicsC_Extensions.cpp
     JoltC/JoltPhysicsC_Tests.c
+    JoltC/Test.cpp
 )
 
 target_compile_features(joltc PUBLIC cxx_std_17)

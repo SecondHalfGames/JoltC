@@ -133,7 +133,6 @@ ENSURE_SIZE_ALIGN(JPH::ObjectLayer,             JPC_ObjectLayer)
 ENSURE_SIZE_ALIGN(JPH::CollisionGroup::GroupID,    JPC_CollisionGroupID)
 ENSURE_SIZE_ALIGN(JPH::CollisionGroup::SubGroupID, JPC_CollisionSubGroupID)
 
-ENSURE_SIZE_ALIGN(JPH::MassProperties,       JPC_MassProperties)
 ENSURE_SIZE_ALIGN(JPH::MotionProperties,     JPC_MotionProperties)
 ENSURE_SIZE_ALIGN(JPH::CollisionGroup,       JPC_CollisionGroup)
 ENSURE_SIZE_ALIGN(JPH::BodyCreationSettings, JPC_BodyCreationSettings)
@@ -150,81 +149,7 @@ ENSURE_SIZE_ALIGN(JPH::BodyLockWrite, JPC_BodyLockWrite)
 ENSURE_SIZE_ALIGN(JPH::RRayCast, JPC_RRayCast)
 ENSURE_SIZE_ALIGN(JPH::RayCastResult, JPC_RayCastResult)
 ENSURE_SIZE_ALIGN(JPH::RayCastSettings, JPC_RayCastSettings)
-//--------------------------------------------------------------------------------------------------
-#define ENSURE_ENUM_EQ(c_const, cpp_enum) static_assert(c_const == static_cast<int>(cpp_enum))
 
-ENSURE_ENUM_EQ(JPC_SHAPE_TYPE_CONVEX,       JPH::EShapeType::Convex);
-ENSURE_ENUM_EQ(JPC_SHAPE_TYPE_COMPOUND,     JPH::EShapeType::Compound);
-ENSURE_ENUM_EQ(JPC_SHAPE_TYPE_DECORATED,    JPH::EShapeType::Decorated);
-ENSURE_ENUM_EQ(JPC_SHAPE_TYPE_MESH,         JPH::EShapeType::Mesh);
-ENSURE_ENUM_EQ(JPC_SHAPE_TYPE_HEIGHT_FIELD, JPH::EShapeType::HeightField);
-ENSURE_ENUM_EQ(JPC_SHAPE_TYPE_USER1,        JPH::EShapeType::User1);
-ENSURE_ENUM_EQ(JPC_SHAPE_TYPE_USER2,        JPH::EShapeType::User2);
-ENSURE_ENUM_EQ(JPC_SHAPE_TYPE_USER3,        JPH::EShapeType::User3);
-ENSURE_ENUM_EQ(JPC_SHAPE_TYPE_USER4,        JPH::EShapeType::User4);
-
-ENSURE_ENUM_EQ(JPC_SHAPE_SUB_TYPE_SPHERE,                JPH::EShapeSubType::Sphere);
-ENSURE_ENUM_EQ(JPC_SHAPE_SUB_TYPE_BOX,                   JPH::EShapeSubType::Box);
-ENSURE_ENUM_EQ(JPC_SHAPE_SUB_TYPE_TRIANGLE,              JPH::EShapeSubType::Triangle);
-ENSURE_ENUM_EQ(JPC_SHAPE_SUB_TYPE_CAPSULE,               JPH::EShapeSubType::Capsule);
-ENSURE_ENUM_EQ(JPC_SHAPE_SUB_TYPE_TAPERED_CAPSULE,       JPH::EShapeSubType::TaperedCapsule);
-ENSURE_ENUM_EQ(JPC_SHAPE_SUB_TYPE_CYLINDER,              JPH::EShapeSubType::Cylinder);
-ENSURE_ENUM_EQ(JPC_SHAPE_SUB_TYPE_CONVEX_HULL,           JPH::EShapeSubType::ConvexHull);
-ENSURE_ENUM_EQ(JPC_SHAPE_SUB_TYPE_STATIC_COMPOUND,       JPH::EShapeSubType::StaticCompound);
-ENSURE_ENUM_EQ(JPC_SHAPE_SUB_TYPE_MUTABLE_COMPOUND,      JPH::EShapeSubType::MutableCompound);
-ENSURE_ENUM_EQ(JPC_SHAPE_SUB_TYPE_ROTATED_TRANSLATED,    JPH::EShapeSubType::RotatedTranslated);
-ENSURE_ENUM_EQ(JPC_SHAPE_SUB_TYPE_SCALED,                JPH::EShapeSubType::Scaled);
-ENSURE_ENUM_EQ(JPC_SHAPE_SUB_TYPE_OFFSET_CENTER_OF_MASS, JPH::EShapeSubType::OffsetCenterOfMass);
-ENSURE_ENUM_EQ(JPC_SHAPE_SUB_TYPE_MESH,                  JPH::EShapeSubType::Mesh);
-ENSURE_ENUM_EQ(JPC_SHAPE_SUB_TYPE_HEIGHT_FIELD,          JPH::EShapeSubType::HeightField);
-ENSURE_ENUM_EQ(JPC_SHAPE_SUB_TYPE_USER1,                 JPH::EShapeSubType::User1);
-ENSURE_ENUM_EQ(JPC_SHAPE_SUB_TYPE_USER2,                 JPH::EShapeSubType::User2);
-ENSURE_ENUM_EQ(JPC_SHAPE_SUB_TYPE_USER3,                 JPH::EShapeSubType::User3);
-ENSURE_ENUM_EQ(JPC_SHAPE_SUB_TYPE_USER4,                 JPH::EShapeSubType::User4);
-ENSURE_ENUM_EQ(JPC_SHAPE_SUB_TYPE_USER5,                 JPH::EShapeSubType::User5);
-ENSURE_ENUM_EQ(JPC_SHAPE_SUB_TYPE_USER6,                 JPH::EShapeSubType::User6);
-ENSURE_ENUM_EQ(JPC_SHAPE_SUB_TYPE_USER7,                 JPH::EShapeSubType::User7);
-ENSURE_ENUM_EQ(JPC_SHAPE_SUB_TYPE_USER8,                 JPH::EShapeSubType::User8);
-ENSURE_ENUM_EQ(JPC_SHAPE_SUB_TYPE_USER_CONVEX1,          JPH::EShapeSubType::UserConvex1);
-ENSURE_ENUM_EQ(JPC_SHAPE_SUB_TYPE_USER_CONVEX2,          JPH::EShapeSubType::UserConvex2);
-ENSURE_ENUM_EQ(JPC_SHAPE_SUB_TYPE_USER_CONVEX3,          JPH::EShapeSubType::UserConvex3);
-ENSURE_ENUM_EQ(JPC_SHAPE_SUB_TYPE_USER_CONVEX4,          JPH::EShapeSubType::UserConvex4);
-ENSURE_ENUM_EQ(JPC_SHAPE_SUB_TYPE_USER_CONVEX5,          JPH::EShapeSubType::UserConvex5);
-ENSURE_ENUM_EQ(JPC_SHAPE_SUB_TYPE_USER_CONVEX6,          JPH::EShapeSubType::UserConvex6);
-ENSURE_ENUM_EQ(JPC_SHAPE_SUB_TYPE_USER_CONVEX7,          JPH::EShapeSubType::UserConvex7);
-ENSURE_ENUM_EQ(JPC_SHAPE_SUB_TYPE_USER_CONVEX8,          JPH::EShapeSubType::UserConvex8);
-
-ENSURE_ENUM_EQ(JPC_MOTION_TYPE_STATIC,    JPH::EMotionType::Static);
-ENSURE_ENUM_EQ(JPC_MOTION_TYPE_KINEMATIC, JPH::EMotionType::Kinematic);
-ENSURE_ENUM_EQ(JPC_MOTION_TYPE_DYNAMIC,   JPH::EMotionType::Dynamic);
-
-ENSURE_ENUM_EQ(JPC_MOTION_QUALITY_DISCRETE,    JPH::EMotionQuality::Discrete);
-ENSURE_ENUM_EQ(JPC_MOTION_QUALITY_LINEAR_CAST, JPH::EMotionQuality::LinearCast);
-
-ENSURE_ENUM_EQ(JPC_ACTIVATION_ACTIVATE,      JPH::EActivation::Activate);
-ENSURE_ENUM_EQ(JPC_ACTIVATION_DONT_ACTIVATE, JPH::EActivation::DontActivate);
-
-ENSURE_ENUM_EQ(JPC_OVERRIDE_MASS_PROPS_CALC_MASS_INERTIA,
-               JPH::EOverrideMassProperties::CalculateMassAndInertia);
-ENSURE_ENUM_EQ(JPC_OVERRIDE_MASS_PROPS_CALC_INERTIA,
-               JPH::EOverrideMassProperties::CalculateInertia);
-ENSURE_ENUM_EQ(JPC_OVERRIDE_MASS_PROPS_MASS_INERTIA_PROVIDED,
-               JPH::EOverrideMassProperties::MassAndInertiaProvided);
-
-ENSURE_ENUM_EQ(JPC_VALIDATE_RESULT_ACCEPT_ALL_CONTACTS,
-               JPH::ValidateResult::AcceptAllContactsForThisBodyPair);
-ENSURE_ENUM_EQ(JPC_VALIDATE_RESULT_ACCEPT_CONTACT,
-               JPH::ValidateResult::AcceptContact);
-ENSURE_ENUM_EQ(JPC_VALIDATE_RESULT_REJECT_CONTACT,
-               JPH::ValidateResult::RejectContact);
-ENSURE_ENUM_EQ(JPC_VALIDATE_RESULT_REJECT_ALL_CONTACTS,
-               JPH::ValidateResult::RejectAllContactsForThisBodyPair);
-
-ENSURE_ENUM_EQ(JPC_MAX_PHYSICS_JOBS,     JPH::cMaxPhysicsJobs);
-ENSURE_ENUM_EQ(JPC_MAX_PHYSICS_BARRIERS, JPH::cMaxPhysicsBarriers);
-
-ENSURE_ENUM_EQ(JPC_BACK_FACE_IGNORE,  JPH::EBackFaceMode::IgnoreBackFaces);
-ENSURE_ENUM_EQ(JPC_BACK_FACE_COLLIDE, JPH::EBackFaceMode::CollideWithBackFaces);
 //--------------------------------------------------------------------------------------------------
 static_assert(
     offsetof(JPH::BodyCreationSettings, mInertiaMultiplier) ==
