@@ -4,10 +4,10 @@
 #include "Jolt/Core/Memory.h"
 #include "Jolt/Core/Factory.h"
 
-void JPC_RegisterDefaultAllocator() {
+JPC_API void JPC_RegisterDefaultAllocator() {
 	JPH::RegisterDefaultAllocator();
 }
 
-void JPC_FactoryInit() {
+JPC_API void JPC_FactoryInit() {
 	JPH::Factory::sInstance = new JPH::Factory();
 }

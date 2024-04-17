@@ -1,4 +1,6 @@
 #pragma once
 
-void JPC_RegisterDefaultAllocator();
-void JPC_FactoryInit();
+#define JPC_API extern __declspec(dllexport)
+
+JPC_API void JPC_RegisterDefaultAllocator();
+JPC_API void JPC_FactoryInit();
