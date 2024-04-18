@@ -5,6 +5,7 @@
 #include "Jolt/Core/JobSystemThreadPool.h"
 #include "Jolt/Core/Memory.h"
 #include "Jolt/Core/TempAllocator.h"
+#include "Jolt/Physics/PhysicsSystem.h"
 #include "Jolt/RegisterTypes.h"
 
 #include "JoltC/JoltC.h"
@@ -13,7 +14,13 @@
 	static auto to_jpc(cpp_type *in) { return reinterpret_cast<c_type*>(in); } \
 	static auto to_jph(c_type *in) { return reinterpret_cast<cpp_type*>(in); }
 
+#define DESTRUCTOR(c_type) \
+	JPC_API void c_type##_delete(c_type* object) { \
+		delete to_jph(object); \
+	}
+
 OPAQUE_WRAPPER(JPC_TempAllocatorImpl, JPH::TempAllocatorImpl)
+DESTRUCTOR(JPC_TempAllocatorImpl)
 
 JPC_API void JPC_RegisterDefaultAllocator() {
 	JPH::RegisterDefaultAllocator();
@@ -31,11 +38,8 @@ JPC_API JPC_TempAllocatorImpl* JPC_TempAllocatorImpl_new(uint size) {
 	return to_jpc(new JPH::TempAllocatorImpl(size));
 }
 
-JPC_API void JPC_TempAllocatorImpl_delete(JPC_TempAllocatorImpl* object) {
-	delete to_jph(object);
-}
-
 OPAQUE_WRAPPER(JPC_JobSystemThreadPool, JPH::JobSystemThreadPool)
+DESTRUCTOR(JPC_JobSystemThreadPool)
 
 JPC_API JPC_JobSystemThreadPool* JPC_JobSystemThreadPool_new2(
 	uint inMaxJobs,
@@ -52,6 +56,9 @@ JPC_API JPC_JobSystemThreadPool* JPC_JobSystemThreadPool_new3(
 	return to_jpc(new JPH::JobSystemThreadPool(inMaxJobs, inMaxBarriers, inNumThreads));
 }
 
-JPC_API void JPC_JobSystemThreadPool_delete(JPC_JobSystemThreadPool* object) {
-	delete to_jph(object);
+OPAQUE_WRAPPER(JPC_PhysicsSystem, JPH::PhysicsSystem)
+DESTRUCTOR(JPC_PhysicsSystem)
+
+JPC_API JPC_PhysicsSystem* JPC_PhysicsSystem_new() {
+	return to_jpc(new JPH::PhysicsSystem());
 }

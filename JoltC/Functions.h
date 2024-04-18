@@ -30,6 +30,11 @@ JPC_API JPC_JobSystemThreadPool* JPC_JobSystemThreadPool_new3(
 
 JPC_API void JPC_JobSystemThreadPool_delete(JPC_JobSystemThreadPool* object);
 
+typedef struct JPC_PhysicsSystem JPC_PhysicsSystem;
+
+JPC_API JPC_PhysicsSystem* JPC_PhysicsSystem_new();
+JPC_API void JPC_PhysicsSystem_delete(JPC_PhysicsSystem* object);
+
 #ifdef __cplusplus
 }
 #endif
