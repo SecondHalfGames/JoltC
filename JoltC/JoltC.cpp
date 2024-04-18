@@ -27,8 +27,17 @@ JPC_API void JPC_FactoryInit() {
 	JPH::Factory::sInstance = new JPH::Factory();
 }
 
+JPC_API void JPC_FactoryDelete() {
+	delete JPH::Factory::sInstance;
+	JPH::Factory::sInstance = nullptr;
+}
+
 JPC_API void JPC_RegisterTypes() {
 	JPH::RegisterTypes();
+}
+
+JPC_API void JPC_UnregisterTypes() {
+	JPH::UnregisterTypes();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

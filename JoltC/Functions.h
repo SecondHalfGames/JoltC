@@ -11,7 +11,9 @@ extern "C" {
 
 JPC_API void JPC_RegisterDefaultAllocator();
 JPC_API void JPC_FactoryInit();
+JPC_API void JPC_FactoryDelete();
 JPC_API void JPC_RegisterTypes();
+JPC_API void JPC_UnregisterTypes();
 
 ////////////////////////////////////////////////////////////////////////////////
 // TempAllocatorImpl

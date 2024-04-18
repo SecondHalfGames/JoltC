@@ -119,9 +119,20 @@ int main() {
 		object_vs_broad_phase_layer_filter,
 		object_vs_object_layer_filter);
 
+	// TODO: register body activation listener
+	// TODO: register contact listener
+	// TODO: body interface
+	// TODO: creating bodies
+	// TODO: PhysicsSystem::OptimizeBroadPhase
+
+	// TODO: Update loop
+
 	JPC_PhysicsSystem_delete(physics_system);
 	JPC_JobSystemThreadPool_delete(job_system);
 	JPC_TempAllocatorImpl_delete(temp_allocator);
+
+	JPC_UnregisterTypes();
+	JPC_FactoryDelete();
 
 	printf("Hello, world!\n");
 }
