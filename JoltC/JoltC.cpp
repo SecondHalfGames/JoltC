@@ -81,7 +81,7 @@ public:
 	}
 
 #if defined(JPH_EXTERNAL_PROFILE) || defined(JPH_PROFILE_ENABLED)
-	const char * GetBroadPhaseLayerName(JPH::BroadPhaseLayer inLayer) const override {
+	const char * GetBroadPhaseLayerName([[maybe_unused]] JPH::BroadPhaseLayer inLayer) const override {
 		return "FIXME";
 	}
 #endif
@@ -93,6 +93,26 @@ private:
 
 static JPC_BroadPhaseLayerInterface_Impl to_jph(JPC_BroadPhaseLayerInterface in) {
 	return JPC_BroadPhaseLayerInterface_Impl(in);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// ObjectVsBroadPhaseLayerFilter
+
+class JPC_ObjectVsBroadPhaseLayerFilter_Impl : public JPH::ObjectVsBroadPhaseLayerFilter {
+public:
+	explicit JPC_ObjectVsBroadPhaseLayerFilter_Impl(JPC_ObjectVsBroadPhaseLayerFilter in) : fns(*in.fns), self(in.self) {}
+
+	bool ShouldCollide(JPH::ObjectLayer inLayer1, JPH::BroadPhaseLayer inLayer2) const override {
+		return fns.ShouldCollide(self, inLayer1, to_jpc(inLayer2));
+	}
+
+private:
+	JPC_ObjectVsBroadPhaseLayerFilterFns fns;
+	void* self;
+};
+
+static JPC_ObjectVsBroadPhaseLayerFilter_Impl to_jph(JPC_ObjectVsBroadPhaseLayerFilter in) {
+	return JPC_ObjectVsBroadPhaseLayerFilter_Impl(in);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -111,13 +131,13 @@ JPC_API void JPC_PhysicsSystem_Init(
 	uint inNumBodyMutexes,
 	uint inMaxBodyPairs,
 	uint inMaxContactConstraints,
-	JPC_BroadPhaseLayerInterface inBroadPhaseLayerInterface)
-	// const ObjectVsBroadPhaseLayerFilter &inObjectVsBroadPhaseLayerFilter,
+	JPC_BroadPhaseLayerInterface inBroadPhaseLayerInterface,
+	JPC_ObjectVsBroadPhaseLayerFilter inObjectVsBroadPhaseLayerFilter)
 	// const ObjectLayerPairFilter &inObjectLayerPairFilter);
 {
 	auto impl_inBroadPhaseLayerInterface = to_jph(inBroadPhaseLayerInterface);
+	auto impl_inObjectVsBroadPhaseLayerFilter = to_jph(inObjectVsBroadPhaseLayerFilter);
 
-	JPH::ObjectVsBroadPhaseLayerFilter impl_inObjectVsBroadPhaseLayerFilter;
 	JPH::ObjectLayerPairFilter impl_inObjectLayerPairFilter;
 
 	to_jph(self)->Init(

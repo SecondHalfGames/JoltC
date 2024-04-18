@@ -56,6 +56,18 @@ typedef struct JPC_BroadPhaseLayerInterface {
 } JPC_BroadPhaseLayerInterface;
 
 ////////////////////////////////////////////////////////////////////////////////
+// ObjectVsBroadPhaseLayerFilter
+
+typedef struct JPC_ObjectVsBroadPhaseLayerFilterFns {
+	bool (*ShouldCollide)(void *self, JPC_ObjectLayer inLayer1, JPC_BroadPhaseLayer inLayer2);
+} JPC_ObjectVsBroadPhaseLayerFilterFns;
+
+typedef struct JPC_ObjectVsBroadPhaseLayerFilter {
+	JPC_ObjectVsBroadPhaseLayerFilterFns *fns;
+	void *self;
+} JPC_ObjectVsBroadPhaseLayerFilter;
+
+////////////////////////////////////////////////////////////////////////////////
 // PhysicsSystem
 
 typedef struct JPC_PhysicsSystem JPC_PhysicsSystem;

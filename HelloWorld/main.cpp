@@ -26,11 +26,14 @@ unsigned int Hello_GetNumBroadPhaseLayers(void* self) {
 }
 
 JPC_BroadPhaseLayer Hello_GetBroadPhaseLayer(void* self, JPC_ObjectLayer inLayer) {
-	if (inLayer == HELLO_OL_NON_MOVING) {
+	switch (inLayer) {
+	case HELLO_OL_NON_MOVING:
 		return HELLO_BPL_NON_MOVING;
-	} else if (inLayer == HELLO_OL_MOVING) {
+
+	case HELLO_OL_MOVING:
 		return HELLO_BPL_MOVING;
-	} else {
+
+	default:
 		unreachable();
 	}
 }
@@ -38,6 +41,23 @@ JPC_BroadPhaseLayer Hello_GetBroadPhaseLayer(void* self, JPC_ObjectLayer inLayer
 static JPC_BroadPhaseLayerInterfaceFns Hello_BPL = {
 	.GetNumBroadPhaseLayers = Hello_GetNumBroadPhaseLayers,
 	.GetBroadPhaseLayer = Hello_GetBroadPhaseLayer,
+};
+
+bool Hello_ShouldCollide(void* self, JPC_ObjectLayer inLayer1, JPC_BroadPhaseLayer inLayer2) {
+	switch (inLayer1) {
+	case HELLO_OL_NON_MOVING:
+		return inLayer2 == HELLO_BPL_MOVING;
+
+	case HELLO_OL_MOVING:
+		return true;
+
+	default:
+		unreachable();
+	}
+}
+
+static JPC_ObjectVsBroadPhaseLayerFilterFns Hello_OVB = {
+	.ShouldCollide = Hello_ShouldCollide,
 };
 
 int main() {
@@ -54,7 +74,10 @@ int main() {
 		.self = nullptr,
 	};
 
-	// create object_vs_broadphase_layer_filter
+	JPC_ObjectVsBroadPhaseLayerFilter object_vs_broad_phase_layer_filter = {
+		.fns = &Hello_OVB,
+		.self = nullptr,
+	};
 
 	// create object_vs_object_layer_filter
 
