@@ -26,7 +26,8 @@ constexpr auto to_integral(E e) -> typename std::underlying_type<E>::type
 #define ENSURE_TESTS
 
 #define ENSURE_EQUAL(c_const, cpp_const) \
-    static_assert(c_const == cpp_const, #c_const " did not match " #cpp_const);
+    static_assert(c_const == cpp_const, #c_const " did not match " #cpp_const); \
+    static_assert(std::is_same_v<decltype(c_const), decltype(cpp_const)>, "type of " #c_const " did not match type of " #cpp_const);
 
 #define ENSURE_ENUM_EQ(c_const, cpp_enum) \
     static_assert(c_const == to_integral(cpp_enum), #c_const " did not match " #cpp_enum); \

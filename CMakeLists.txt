@@ -18,6 +18,12 @@ target_compile_features(joltc PUBLIC cxx_std_17)
 target_include_directories(joltc PUBLIC . JoltPhysics)
 target_link_libraries(joltc PUBLIC Jolt)
 
+if(MSVC)
+  target_compile_options(joltc PRIVATE /W4 /WX)
+else()
+  target_compile_options(joltc PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+
 add_executable(HelloWorld
     HelloWorld/main.cpp
 )

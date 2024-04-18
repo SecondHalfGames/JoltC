@@ -9,11 +9,8 @@
     #define ENSURE_FIELD(a, b, c, d)
 #endif
 
-// JPC_JobSystem_Create()
-enum JPC_JobSystemConstants {
-    JPC_MAX_PHYSICS_JOBS     = 2048,
-    JPC_MAX_PHYSICS_BARRIERS = 8
-};
+const int JPC_MAX_PHYSICS_JOBS = 2048;
+const int JPC_MAX_PHYSICS_BARRIERS = 8;
 
 ENSURE_EQUAL(JPC_MAX_PHYSICS_JOBS, JPH::cMaxPhysicsJobs);
 ENSURE_EQUAL(JPC_MAX_PHYSICS_BARRIERS, JPH::cMaxPhysicsBarriers);
