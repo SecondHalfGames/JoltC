@@ -16,6 +16,8 @@
 #include "Jolt/Physics/EPhysicsUpdateError.h"
 #include "Jolt/Physics/PhysicsSettings.h"
 #include "Jolt/Physics/Body/AllowedDOFs.h"
+#include "Jolt/Physics/Collision/BroadPhase/BroadPhaseLayer.h"
+#include "Jolt/Physics/Collision/ObjectLayer.h"
 
 template<typename E>
 constexpr auto to_integral(E e) -> typename std::underlying_type<E>::type 
@@ -34,8 +36,8 @@ constexpr auto to_integral(E e) -> typename std::underlying_type<E>::type
     static_assert(sizeof(c_const) == sizeof(cpp_enum), #c_const " did not have same size as " #cpp_enum);
 
 #define ENSURE_SIZE_ALIGN(type0, type1) \
-    static_assert(sizeof(type0) == sizeof(type1)); \
-    static_assert(alignof(type0) == alignof(type1));
+    static_assert(sizeof(type0) == sizeof(type1), "size of " #type0 " did not match size of " #type1); \
+    static_assert(alignof(type0) == alignof(type1), "align of " #type0 " did not match align of " #type1);
 
 #define unsafe_offsetof(st, m) ((size_t) ( (char *)&((st *)(0))->m - (char *)0 ))
 #define unsafe_fieldtype(st, m) decltype((st *)(0)->m)

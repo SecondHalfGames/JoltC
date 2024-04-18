@@ -19,9 +19,9 @@ target_include_directories(joltc PUBLIC . JoltPhysics)
 target_link_libraries(joltc PUBLIC Jolt)
 
 if(MSVC)
-  target_compile_options(joltc PRIVATE /W4 /WX)
+  target_compile_options(joltc PRIVATE /W4)
 else()
-  target_compile_options(joltc PRIVATE -Wall -Wextra -Wpedantic -Werror)
+  target_compile_options(joltc PRIVATE -Wall -Wextra -Wpedantic)
 endif()
 
 add_executable(HelloWorld

@@ -2,13 +2,6 @@
 
 #include <stdint.h>
 
-#ifndef ENSURE_TESTS
-    #define ENSURE_EQUAL(a, b)
-    #define ENSURE_ENUM_EQ(a, b)
-    #define ENSURE_SIZE_ALIGN(a, b)
-    #define ENSURE_FIELD(a, b, c, d)
-#endif
-
 const int JPC_MAX_PHYSICS_JOBS = 2048;
 const int JPC_MAX_PHYSICS_BARRIERS = 8;
 

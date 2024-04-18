@@ -19,9 +19,6 @@
 		delete to_jph(object); \
 	}
 
-OPAQUE_WRAPPER(JPC_TempAllocatorImpl, JPH::TempAllocatorImpl)
-DESTRUCTOR(JPC_TempAllocatorImpl)
-
 JPC_API void JPC_RegisterDefaultAllocator() {
 	JPH::RegisterDefaultAllocator();
 }
@@ -34,9 +31,18 @@ JPC_API void JPC_RegisterTypes() {
 	JPH::RegisterTypes();
 }
 
+////////////////////////////////////////////////////////////////////////////////
+// TempAllocatorImpl
+
+OPAQUE_WRAPPER(JPC_TempAllocatorImpl, JPH::TempAllocatorImpl)
+DESTRUCTOR(JPC_TempAllocatorImpl)
+
 JPC_API JPC_TempAllocatorImpl* JPC_TempAllocatorImpl_new(uint size) {
 	return to_jpc(new JPH::TempAllocatorImpl(size));
 }
+
+////////////////////////////////////////////////////////////////////////////////
+// JobSystemThreadPool
 
 OPAQUE_WRAPPER(JPC_JobSystemThreadPool, JPH::JobSystemThreadPool)
 DESTRUCTOR(JPC_JobSystemThreadPool)
@@ -56,9 +62,70 @@ JPC_API JPC_JobSystemThreadPool* JPC_JobSystemThreadPool_new3(
 	return to_jpc(new JPH::JobSystemThreadPool(inMaxJobs, inMaxBarriers, inNumThreads));
 }
 
+////////////////////////////////////////////////////////////////////////////////
+// BroadPhaseLayerInterface
+
+static auto to_jpc(JPH::BroadPhaseLayer in) { return in.GetValue(); }
+static auto to_jph(JPC_BroadPhaseLayer in) { return JPH::BroadPhaseLayer(in); }
+
+class JPC_BroadPhaseLayerInterface_Impl : public JPH::BroadPhaseLayerInterface {
+public:
+	explicit JPC_BroadPhaseLayerInterface_Impl(JPC_BroadPhaseLayerInterface in) : fns(*in.fns), self(in.self) {}
+
+	uint GetNumBroadPhaseLayers() const override {
+		return fns.GetNumBroadPhaseLayers(self);
+	}
+
+	JPH::BroadPhaseLayer GetBroadPhaseLayer(JPH::ObjectLayer inLayer) const override {
+		return to_jph(fns.GetBroadPhaseLayer(self, inLayer));
+	}
+
+#if defined(JPH_EXTERNAL_PROFILE) || defined(JPH_PROFILE_ENABLED)
+	const char * GetBroadPhaseLayerName(JPH::BroadPhaseLayer inLayer) const override {
+		return "FIXME";
+	}
+#endif
+
+private:
+	JPC_BroadPhaseLayerInterfaceFns fns;
+	void* self;
+};
+
+static JPC_BroadPhaseLayerInterface_Impl to_jph(JPC_BroadPhaseLayerInterface in) {
+	return JPC_BroadPhaseLayerInterface_Impl(in);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// PhysicsSystem
+
 OPAQUE_WRAPPER(JPC_PhysicsSystem, JPH::PhysicsSystem)
 DESTRUCTOR(JPC_PhysicsSystem)
 
 JPC_API JPC_PhysicsSystem* JPC_PhysicsSystem_new() {
 	return to_jpc(new JPH::PhysicsSystem());
+}
+
+JPC_API void JPC_PhysicsSystem_Init(
+	JPC_PhysicsSystem* self,
+	uint inMaxBodies,
+	uint inNumBodyMutexes,
+	uint inMaxBodyPairs,
+	uint inMaxContactConstraints,
+	JPC_BroadPhaseLayerInterface inBroadPhaseLayerInterface)
+	// const ObjectVsBroadPhaseLayerFilter &inObjectVsBroadPhaseLayerFilter,
+	// const ObjectLayerPairFilter &inObjectLayerPairFilter);
+{
+	auto impl_inBroadPhaseLayerInterface = to_jph(inBroadPhaseLayerInterface);
+
+	JPH::ObjectVsBroadPhaseLayerFilter impl_inObjectVsBroadPhaseLayerFilter;
+	JPH::ObjectLayerPairFilter impl_inObjectLayerPairFilter;
+
+	to_jph(self)->Init(
+		inMaxBodies,
+		inNumBodyMutexes,
+		inMaxBodyPairs,
+		inMaxContactConstraints,
+		impl_inBroadPhaseLayerInterface,
+		impl_inObjectVsBroadPhaseLayerFilter,
+		impl_inObjectLayerPairFilter);
 }
