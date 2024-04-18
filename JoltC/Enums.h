@@ -97,12 +97,13 @@ ENSURE_ENUM_EQ(JPC_SHAPE_SUB_TYPE_USER_CONVEX6, JPH::EShapeSubType::UserConvex6)
 ENSURE_ENUM_EQ(JPC_SHAPE_SUB_TYPE_USER_CONVEX7, JPH::EShapeSubType::UserConvex7)
 ENSURE_ENUM_EQ(JPC_SHAPE_SUB_TYPE_USER_CONVEX8, JPH::EShapeSubType::UserConvex8)
 
-typedef enum JPC_PhysicsUpdateError: uint32_t {
+typedef uint32_t JPC_PhysicsUpdateError;
+typedef enum JPC_EPhysicsUpdateError: uint32_t {
     JPC_PHYSICS_UPDATE_ERROR_NONE                     = 0,
     JPC_PHYSICS_UPDATE_ERROR_MANIFOLD_CACHE_FULL      = 1 << 0,
     JPC_PHYSICS_UPDATE_ERROR_BODY_PAIR_CACHE_FULL     = 1 << 1,
     JPC_PHYSICS_UPDATE_ERROR_CONTACT_CONSTRAINTS_FULL = 1 << 2,
-} JPC_PhysicsUpdateError;
+} JPC_EPhysicsUpdateError;
 
 ENSURE_ENUM_EQ(JPC_PHYSICS_UPDATE_ERROR_NONE, JPH::EPhysicsUpdateError::None)
 ENSURE_ENUM_EQ(JPC_PHYSICS_UPDATE_ERROR_MANIFOLD_CACHE_FULL, JPH::EPhysicsUpdateError::ManifoldCacheFull)

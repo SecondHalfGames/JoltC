@@ -125,7 +125,15 @@ int main() {
 	// TODO: creating bodies
 	// TODO: PhysicsSystem::OptimizeBroadPhase
 
+	const float cDeltaTime = 1.0f / 60.0f;
+	const int cCollisionSteps = 1;
+
 	// TODO: Update loop
+	for (int i = 0; i < 100; i++) {
+		JPC_PhysicsSystem_Update(physics_system, cDeltaTime, cCollisionSteps, temp_allocator, job_system);
+	}
+
+	// TODO: RemoveBody and DestroyBody
 
 	JPC_PhysicsSystem_delete(physics_system);
 	JPC_JobSystemThreadPool_delete(job_system);

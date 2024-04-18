@@ -19,6 +19,12 @@
 		delete to_jph(object); \
 	}
 
+template<typename E>
+constexpr auto to_integral(E e) -> typename std::underlying_type<E>::type 
+{
+	return static_cast<typename std::underlying_type<E>::type>(e);
+}
+
 JPC_API void JPC_RegisterDefaultAllocator() {
 	JPH::RegisterDefaultAllocator();
 }
@@ -176,4 +182,20 @@ JPC_API void JPC_PhysicsSystem_Init(
 		impl_inBroadPhaseLayerInterface,
 		impl_inObjectVsBroadPhaseLayerFilter,
 		impl_inObjectLayerPairFilter);
+}
+
+JPC_API JPC_PhysicsUpdateError JPC_PhysicsSystem_Update(
+	JPC_PhysicsSystem* self,
+	float inDeltaTime,
+	int inCollisionSteps,
+	JPC_TempAllocatorImpl *inTempAllocator,
+	JPC_JobSystemThreadPool *inJobSystem)
+{
+	auto res = to_jph(self)->Update(
+		inDeltaTime,
+		inCollisionSteps,
+		to_jph(inTempAllocator),
+		to_jph(inJobSystem));
+
+	return to_integral(res);
 }

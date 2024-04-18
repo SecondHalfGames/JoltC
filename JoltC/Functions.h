@@ -98,6 +98,13 @@ JPC_API void JPC_PhysicsSystem_Init(
 	JPC_ObjectVsBroadPhaseLayerFilter inObjectVsBroadPhaseLayerFilter,
 	JPC_ObjectLayerPairFilter inObjectLayerPairFilter);
 
+JPC_API JPC_PhysicsUpdateError JPC_PhysicsSystem_Update(
+	JPC_PhysicsSystem* self,
+	float inDeltaTime,
+	int inCollisionSteps,
+	JPC_TempAllocatorImpl *inTempAllocator, // FIXME: un-specialize
+	JPC_JobSystemThreadPool *inJobSystem); // FIXME: un-specialize
+
 #ifdef __cplusplus
 }
 #endif
