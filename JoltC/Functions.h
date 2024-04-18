@@ -1,5 +1,8 @@
 #pragma once
 
+#include <stdint.h>
+#include <stdbool.h>
+
 #define JPC_API extern __declspec(dllexport)
 
 // C-compatible typedefs that match Jolt's internal primitive typedefs.
