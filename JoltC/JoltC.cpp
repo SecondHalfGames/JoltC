@@ -116,6 +116,26 @@ static JPC_ObjectVsBroadPhaseLayerFilter_Impl to_jph(JPC_ObjectVsBroadPhaseLayer
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// JPC_ObjectLayerPairFilter
+
+class JPC_ObjectLayerPairFilter_Impl : public JPH::ObjectLayerPairFilter {
+public:
+	explicit JPC_ObjectLayerPairFilter_Impl(JPC_ObjectLayerPairFilter in) : fns(*in.fns), self(in.self) {}
+
+	bool ShouldCollide(JPH::ObjectLayer inLayer1, JPH::ObjectLayer inLayer2) const override {
+		return fns.ShouldCollide(self, inLayer1, inLayer2);
+	}
+
+private:
+	JPC_ObjectLayerPairFilterFns fns;
+	void* self;
+};
+
+static JPC_ObjectLayerPairFilter_Impl to_jph(JPC_ObjectLayerPairFilter in) {
+	return JPC_ObjectLayerPairFilter_Impl(in);
+}
+
+////////////////////////////////////////////////////////////////////////////////
 // PhysicsSystem
 
 OPAQUE_WRAPPER(JPC_PhysicsSystem, JPH::PhysicsSystem)
@@ -132,13 +152,12 @@ JPC_API void JPC_PhysicsSystem_Init(
 	uint inMaxBodyPairs,
 	uint inMaxContactConstraints,
 	JPC_BroadPhaseLayerInterface inBroadPhaseLayerInterface,
-	JPC_ObjectVsBroadPhaseLayerFilter inObjectVsBroadPhaseLayerFilter)
-	// const ObjectLayerPairFilter &inObjectLayerPairFilter);
+	JPC_ObjectVsBroadPhaseLayerFilter inObjectVsBroadPhaseLayerFilter,
+	JPC_ObjectLayerPairFilter inObjectLayerPairFilter)
 {
 	auto impl_inBroadPhaseLayerInterface = to_jph(inBroadPhaseLayerInterface);
 	auto impl_inObjectVsBroadPhaseLayerFilter = to_jph(inObjectVsBroadPhaseLayerFilter);
-
-	JPH::ObjectLayerPairFilter impl_inObjectLayerPairFilter;
+	auto impl_inObjectLayerPairFilter = to_jph(inObjectLayerPairFilter);
 
 	to_jph(self)->Init(
 		inMaxBodies,

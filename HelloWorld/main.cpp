@@ -21,11 +21,11 @@ typedef enum Hello_BroadPhaseLayers {
 	HELLO_BPL_COUNT,
 } Hello_BroadPhaseLayers;
 
-unsigned int Hello_GetNumBroadPhaseLayers(void* self) {
+unsigned int Hello_BPL_GetNumBroadPhaseLayers(void *self) {
 	return HELLO_BPL_COUNT;
 }
 
-JPC_BroadPhaseLayer Hello_GetBroadPhaseLayer(void* self, JPC_ObjectLayer inLayer) {
+JPC_BroadPhaseLayer Hello_BPL_GetBroadPhaseLayer(void *self, JPC_ObjectLayer inLayer) {
 	switch (inLayer) {
 	case HELLO_OL_NON_MOVING:
 		return HELLO_BPL_NON_MOVING;
@@ -39,11 +39,11 @@ JPC_BroadPhaseLayer Hello_GetBroadPhaseLayer(void* self, JPC_ObjectLayer inLayer
 }
 
 static JPC_BroadPhaseLayerInterfaceFns Hello_BPL = {
-	.GetNumBroadPhaseLayers = Hello_GetNumBroadPhaseLayers,
-	.GetBroadPhaseLayer = Hello_GetBroadPhaseLayer,
+	.GetNumBroadPhaseLayers = Hello_BPL_GetNumBroadPhaseLayers,
+	.GetBroadPhaseLayer = Hello_BPL_GetBroadPhaseLayer,
 };
 
-bool Hello_ShouldCollide(void* self, JPC_ObjectLayer inLayer1, JPC_BroadPhaseLayer inLayer2) {
+bool Hello_OVB_ShouldCollide(void *self, JPC_ObjectLayer inLayer1, JPC_BroadPhaseLayer inLayer2) {
 	switch (inLayer1) {
 	case HELLO_OL_NON_MOVING:
 		return inLayer2 == HELLO_BPL_MOVING;
@@ -57,7 +57,25 @@ bool Hello_ShouldCollide(void* self, JPC_ObjectLayer inLayer1, JPC_BroadPhaseLay
 }
 
 static JPC_ObjectVsBroadPhaseLayerFilterFns Hello_OVB = {
-	.ShouldCollide = Hello_ShouldCollide,
+	.ShouldCollide = Hello_OVB_ShouldCollide,
+};
+
+bool Hello_OVO_ShouldCollide(void *self, JPC_ObjectLayer inLayer1, JPC_ObjectLayer inLayer2) {
+	switch (inLayer1)
+	{
+	case HELLO_OL_NON_MOVING:
+		return inLayer2 == HELLO_OL_MOVING; // Non moving only collides with moving
+
+	case HELLO_OL_MOVING:
+		return true; // Moving collides with everything
+
+	default:
+		unreachable();
+	}
+}
+
+static JPC_ObjectLayerPairFilterFns Hello_OVO = {
+	.ShouldCollide = Hello_OVO_ShouldCollide,
 };
 
 int main() {
@@ -79,11 +97,27 @@ int main() {
 		.self = nullptr,
 	};
 
-	// create object_vs_object_layer_filter
+	JPC_ObjectLayerPairFilter object_vs_object_layer_filter = {
+		.fns = &Hello_OVO,
+		.self = nullptr,
+	};
 
 	JPC_PhysicsSystem* physics_system = JPC_PhysicsSystem_new();
 
-	// JPC_PhysicsSystem_Init();
+	const unsigned int cMaxBodies = 1024;
+	const unsigned int cNumBodyMutexes = 0;
+	const unsigned int cMaxBodyPairs = 1024;
+	const unsigned int cMaxContactConstraints = 1024;
+
+	JPC_PhysicsSystem_Init(
+		physics_system,
+		cMaxBodies,
+		cNumBodyMutexes,
+		cMaxBodyPairs,
+		cMaxContactConstraints,
+		broad_phase_layer_interface,
+		object_vs_broad_phase_layer_filter,
+		object_vs_object_layer_filter);
 
 	JPC_PhysicsSystem_delete(physics_system);
 	JPC_JobSystemThreadPool_delete(job_system);

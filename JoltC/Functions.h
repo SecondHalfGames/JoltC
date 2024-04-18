@@ -68,6 +68,18 @@ typedef struct JPC_ObjectVsBroadPhaseLayerFilter {
 } JPC_ObjectVsBroadPhaseLayerFilter;
 
 ////////////////////////////////////////////////////////////////////////////////
+// ObjectLayerPairFilter
+
+typedef struct JPC_ObjectLayerPairFilterFns {
+	bool (*ShouldCollide)(void *self, JPC_ObjectLayer inLayer1, JPC_ObjectLayer inLayer2);
+} JPC_ObjectLayerPairFilterFns;
+
+typedef struct JPC_ObjectLayerPairFilter {
+	JPC_ObjectLayerPairFilterFns *fns;
+	void *self;
+} JPC_ObjectLayerPairFilter;
+
+////////////////////////////////////////////////////////////////////////////////
 // PhysicsSystem
 
 typedef struct JPC_PhysicsSystem JPC_PhysicsSystem;
@@ -75,13 +87,14 @@ typedef struct JPC_PhysicsSystem JPC_PhysicsSystem;
 JPC_API JPC_PhysicsSystem* JPC_PhysicsSystem_new();
 JPC_API void JPC_PhysicsSystem_delete(JPC_PhysicsSystem* object);
 JPC_API void JPC_PhysicsSystem_Init(
+	JPC_PhysicsSystem* self,
 	uint inMaxBodies,
 	uint inNumBodyMutexes,
 	uint inMaxBodyPairs,
 	uint inMaxContactConstraints,
-	JPC_BroadPhaseLayerInterface inBroadPhaseLayerInterface);
-	// const ObjectVsBroadPhaseLayerFilter &inObjectVsBroadPhaseLayerFilter,
-	// const ObjectLayerPairFilter &inObjectLayerPairFilter);
+	JPC_BroadPhaseLayerInterface inBroadPhaseLayerInterface,
+	JPC_ObjectVsBroadPhaseLayerFilter inObjectVsBroadPhaseLayerFilter,
+	JPC_ObjectLayerPairFilter inObjectLayerPairFilter);
 
 #ifdef __cplusplus
 }
