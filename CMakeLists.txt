@@ -28,6 +28,12 @@ add_executable(HelloWorld
     HelloWorld/main.cpp
 )
 
+# cxx_std_20 gives us designated initializers, bringing us closer to Actual C.
+target_compile_features(HelloWorld PRIVATE cxx_std_20)
+
+# Eventually we should switch back to Actual C:
+# set_property(TARGET HelloWorld PROPERTY C_STANDARD 23)
+
 target_include_directories(HelloWorld PUBLIC .)
 target_link_libraries(HelloWorld PUBLIC joltc)
 
