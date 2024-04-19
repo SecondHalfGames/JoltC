@@ -51,8 +51,8 @@ typedef uint16_t JPC_ObjectLayer; // FIXME: Branch on JPH_OBJECT_LAYER_BITS?
 ENSURE_SIZE_ALIGN(JPC_ObjectLayer, JPH::ObjectLayer)
 
 typedef struct JPC_BroadPhaseLayerInterfaceFns {
-	uint (*GetNumBroadPhaseLayers)(void *self);
-	JPC_BroadPhaseLayer (*GetBroadPhaseLayer)(void *self, JPC_ObjectLayer inLayer);
+	uint (*GetNumBroadPhaseLayers)(const void *self);
+	JPC_BroadPhaseLayer (*GetBroadPhaseLayer)(const void *self, JPC_ObjectLayer inLayer);
 } JPC_BroadPhaseLayerInterfaceFns;
 
 typedef struct JPC_BroadPhaseLayerInterface {
@@ -64,7 +64,7 @@ typedef struct JPC_BroadPhaseLayerInterface {
 // ObjectVsBroadPhaseLayerFilter
 
 typedef struct JPC_ObjectVsBroadPhaseLayerFilterFns {
-	bool (*ShouldCollide)(void *self, JPC_ObjectLayer inLayer1, JPC_BroadPhaseLayer inLayer2);
+	bool (*ShouldCollide)(const void *self, JPC_ObjectLayer inLayer1, JPC_BroadPhaseLayer inLayer2);
 } JPC_ObjectVsBroadPhaseLayerFilterFns;
 
 typedef struct JPC_ObjectVsBroadPhaseLayerFilter {
@@ -76,7 +76,7 @@ typedef struct JPC_ObjectVsBroadPhaseLayerFilter {
 // ObjectLayerPairFilter
 
 typedef struct JPC_ObjectLayerPairFilterFns {
-	bool (*ShouldCollide)(void *self, JPC_ObjectLayer inLayer1, JPC_ObjectLayer inLayer2);
+	bool (*ShouldCollide)(const void *self, JPC_ObjectLayer inLayer1, JPC_ObjectLayer inLayer2);
 } JPC_ObjectLayerPairFilterFns;
 
 typedef struct JPC_ObjectLayerPairFilter {

@@ -21,11 +21,11 @@ typedef enum Hello_BroadPhaseLayers {
 	HELLO_BPL_COUNT,
 } Hello_BroadPhaseLayers;
 
-unsigned int Hello_BPL_GetNumBroadPhaseLayers(void *self) {
+unsigned int Hello_BPL_GetNumBroadPhaseLayers(const void *self) {
 	return HELLO_BPL_COUNT;
 }
 
-JPC_BroadPhaseLayer Hello_BPL_GetBroadPhaseLayer(void *self, JPC_ObjectLayer inLayer) {
+JPC_BroadPhaseLayer Hello_BPL_GetBroadPhaseLayer(const void *self, JPC_ObjectLayer inLayer) {
 	switch (inLayer) {
 	case HELLO_OL_NON_MOVING:
 		return HELLO_BPL_NON_MOVING;
