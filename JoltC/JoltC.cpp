@@ -1,19 +1,23 @@
-#include "Jolt/Jolt.h"
+#include <Jolt/Jolt.h>
 
-#include "Jolt/Core/Core.h"
-#include "Jolt/Core/Factory.h"
-#include "Jolt/Core/JobSystemThreadPool.h"
-#include "Jolt/Core/Memory.h"
-#include "Jolt/Core/TempAllocator.h"
-#include "Jolt/Physics/PhysicsSystem.h"
-#include "Jolt/RegisterTypes.h"
+#include <Jolt/RegisterTypes.h>
+#include <Jolt/Core/Factory.h>
+#include <Jolt/Core/TempAllocator.h>
+#include <Jolt/Core/JobSystemThreadPool.h>
+#include <Jolt/Physics/PhysicsSettings.h>
+#include <Jolt/Physics/PhysicsSystem.h>
+#include <Jolt/Physics/Collision/Shape/BoxShape.h>
+#include <Jolt/Physics/Collision/Shape/SphereShape.h>
+#include <Jolt/Physics/Body/BodyCreationSettings.h>
+#include <Jolt/Physics/Body/BodyActivationListener.h>
 
-#include "JoltC/JoltC.h"
+#include <JoltC/JoltC.h>
 
 #define OPAQUE_WRAPPER(c_type, cpp_type) \
 	static c_type* to_jpc(cpp_type *in) { return reinterpret_cast<c_type*>(in); } \
 	static const c_type* to_jpc(const cpp_type *in) { return reinterpret_cast<const c_type*>(in); } \
-	static cpp_type* to_jph(c_type *in) { return reinterpret_cast<cpp_type*>(in); }
+	static cpp_type* to_jph(c_type *in) { return reinterpret_cast<cpp_type*>(in); } \
+	static const cpp_type* to_jph(const c_type *in) { return reinterpret_cast<const cpp_type*>(in); }
 
 #define DESTRUCTOR(c_type) \
 	JPC_API void c_type##_delete(c_type* object) { \
@@ -37,8 +41,25 @@ DESTRUCTOR(JPC_TempAllocatorImpl)
 OPAQUE_WRAPPER(JPC_JobSystemThreadPool, JPH::JobSystemThreadPool)
 DESTRUCTOR(JPC_JobSystemThreadPool)
 
+OPAQUE_WRAPPER(JPC_ConvexShapeSettings, JPH::ConvexShapeSettings)
+OPAQUE_WRAPPER(JPC_ShapeSettings, JPH::ShapeSettings)
+OPAQUE_WRAPPER(JPC_Shape, JPH::Shape)
+
+OPAQUE_WRAPPER(JPC_String, JPH::String)
+DESTRUCTOR(JPC_String)
+
+OPAQUE_WRAPPER(JPC_BoxShapeSettings, JPH::BoxShapeSettings)
+DESTRUCTOR(JPC_BoxShapeSettings)
+
 static auto to_jpc(JPH::BroadPhaseLayer in) { return in.GetValue(); }
 static auto to_jph(JPC_BroadPhaseLayer in) { return JPH::BroadPhaseLayer(in); }
+
+static JPC_Vec3 to_jpc(JPH::Vec3 in) {
+	return JPC_Vec3{in.GetX(), in.GetY(), in.GetZ(), in.GetZ()};
+}
+static JPH::Vec3 to_jph(JPC_Vec3 in) {
+	return JPH::Vec3(in.x, in.y, in.z);
+}
 
 JPC_API void JPC_RegisterDefaultAllocator() {
 	JPH::RegisterDefaultAllocator();
@@ -154,6 +175,53 @@ private:
 
 static JPC_ObjectLayerPairFilter_Impl to_jph(JPC_ObjectLayerPairFilter in) {
 	return JPC_ObjectLayerPairFilter_Impl(in);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// String
+
+JPC_API const char* JPC_String_c_str(JPC_String* self) {
+	return to_jph(self)->c_str();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// ShapeSettings
+
+JPC_API bool JPC_ShapeSettings_Create(
+	JPC_ShapeSettings* self,
+	JPC_Shape** outShape,
+	JPC_String** outError)
+{
+	auto res = to_jph(self)->Create();
+
+	if (res.HasError()) {
+		JPH::String* created = new JPH::String(std::move(res.GetError()));
+		*outError = to_jpc(created);
+
+		return false;
+	} else {
+		*outShape = to_jpc(res.Get());
+
+		return true;
+	}
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// ConvexShapeSettings
+
+JPC_API float JPC_ConvexShapeSettings_GetDensity(JPC_ConvexShapeSettings* self) {
+	return to_jph(self)->mDensity;
+}
+
+JPC_API void JPC_ConvexShapeSettings_SetDensity(JPC_ConvexShapeSettings* self, float inDensity) {
+	to_jph(self)->SetDensity(inDensity);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// BoxShapeSettings
+
+JPC_API JPC_BoxShapeSettings* JPC_BoxShapeSettings_new(JPC_Vec3 inHalfExtent) {
+	return to_jpc(new JPH::BoxShapeSettings(to_jph(inHalfExtent)));
 }
 
 ////////////////////////////////////////////////////////////////////////////////

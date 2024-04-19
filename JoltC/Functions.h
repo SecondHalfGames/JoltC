@@ -139,6 +139,45 @@ typedef struct JPC_ObjectLayerPairFilter {
 } JPC_ObjectLayerPairFilter;
 
 ////////////////////////////////////////////////////////////////////////////////
+// String
+
+typedef struct JPC_String JPC_String;
+
+JPC_API void JPC_String_delete(JPC_String* self);
+JPC_API const char* JPC_String_c_str(JPC_String* self);
+
+////////////////////////////////////////////////////////////////////////////////
+// Shapes
+
+typedef struct JPC_Shape JPC_Shape;
+
+////////////////////////////////////////////////////////////////////////////////
+// ShapeSettings
+
+typedef struct JPC_ShapeSettings JPC_ShapeSettings;
+
+JPC_API bool JPC_ShapeSettings_Create(
+	JPC_ShapeSettings* self,
+	JPC_Shape** outShape,
+	JPC_String** outError);
+
+////////////////////////////////////////////////////////////////////////////////
+// ConvexShapeSettings
+
+typedef struct JPC_ConvexShapeSettings JPC_ConvexShapeSettings;
+
+JPC_API float JPC_ConvexShapeSettings_GetDensity(JPC_ConvexShapeSettings* self);
+JPC_API void JPC_ConvexShapeSettings_SetDensity(JPC_ConvexShapeSettings* self, float inDensity);
+
+////////////////////////////////////////////////////////////////////////////////
+// BoxShapeSettings
+
+typedef struct JPC_BoxShapeSettings JPC_BoxShapeSettings;
+
+JPC_API JPC_BoxShapeSettings* JPC_BoxShapeSettings_new(JPC_Vec3 inHalfExtent);
+JPC_API void JPC_BoxShapeSettings_delete(JPC_BoxShapeSettings* object);
+
+////////////////////////////////////////////////////////////////////////////////
 // BodyInterface
 
 typedef struct JPC_BodyInterface JPC_BodyInterface;

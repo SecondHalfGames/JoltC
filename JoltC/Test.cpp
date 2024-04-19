@@ -2,22 +2,18 @@
 #include <stddef.h>
 #include <type_traits>
 
-#include "Jolt/Jolt.h"
-#include "Jolt/Physics/Body/BodyCreationSettings.h"
-#include "Jolt/Physics/Body/BodyType.h"
-#include "Jolt/Physics/Body/MotionQuality.h"
-#include "Jolt/Physics/Body/MotionType.h"
-#include "Jolt/Physics/Character/CharacterBase.h"
-#include "Jolt/Physics/Collision/BackFaceMode.h"
-#include "Jolt/Physics/Collision/ContactListener.h"
-#include "Jolt/Physics/Collision/Shape/Shape.h"
-#include "Jolt/Physics/Constraints/Constraint.h"
-#include "Jolt/Physics/EActivation.h"
-#include "Jolt/Physics/EPhysicsUpdateError.h"
-#include "Jolt/Physics/PhysicsSettings.h"
-#include "Jolt/Physics/Body/AllowedDOFs.h"
-#include "Jolt/Physics/Collision/BroadPhase/BroadPhaseLayer.h"
-#include "Jolt/Physics/Collision/ObjectLayer.h"
+#include <Jolt/Jolt.h>
+
+#include <Jolt/RegisterTypes.h>
+#include <Jolt/Core/Factory.h>
+#include <Jolt/Core/TempAllocator.h>
+#include <Jolt/Core/JobSystemThreadPool.h>
+#include <Jolt/Physics/PhysicsSettings.h>
+#include <Jolt/Physics/PhysicsSystem.h>
+#include <Jolt/Physics/Collision/Shape/BoxShape.h>
+#include <Jolt/Physics/Collision/Shape/SphereShape.h>
+#include <Jolt/Physics/Body/BodyCreationSettings.h>
+#include <Jolt/Physics/Body/BodyActivationListener.h>
 
 template<typename E>
 constexpr auto to_integral(E e) -> typename std::underlying_type<E>::type 

@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdint.h>
+#include <stdlib.h>
 
 #include "JoltC/JoltC.h"
 
@@ -123,6 +124,25 @@ int main() {
 	// TODO: register contact listener
 
 	const JPC_BodyInterface* body_interface = JPC_PhysicsSystem_GetBodyInterface(physics_system);
+
+	JPC_BoxShapeSettings* floor_shape_settings = JPC_BoxShapeSettings_new(JPC_Vec3{100.0f, 100.0f, 100.0f});
+	JPC_ConvexShapeSettings_SetDensity((JPC_ConvexShapeSettings*)floor_shape_settings, 1000.0f);
+
+	JPC_Shape* shape;
+	JPC_String* err;
+	if (!JPC_ShapeSettings_Create((JPC_ShapeSettings*)floor_shape_settings, &shape, &err)) {
+		printf("fatal error: %s\n", JPC_String_c_str(err));
+
+		// the world is ending, but I guess we can still free memory
+		JPC_String_delete(err);
+
+		exit(1);
+	}
+
+	// BodyCreationSettings floor_settings(floor_shape, RVec3(0.0_r, -1.0_r, 0.0_r), Quat::sIdentity(), EMotionType::Static, Layers::NON_MOVING);
+
+	// Body *floor = body_interface.CreateBody(floor_settings);
+	// body_interface.AddBody(floor->GetID(), EActivation::DontActivate);
 
 	// TODO: creating bodies
 	// TODO: PhysicsSystem::OptimizeBroadPhase
