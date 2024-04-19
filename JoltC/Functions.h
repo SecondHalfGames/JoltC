@@ -85,6 +85,11 @@ typedef struct JPC_ObjectLayerPairFilter {
 } JPC_ObjectLayerPairFilter;
 
 ////////////////////////////////////////////////////////////////////////////////
+// BodyInterface
+
+typedef struct JPC_BodyInterface JPC_BodyInterface;
+
+////////////////////////////////////////////////////////////////////////////////
 // PhysicsSystem
 
 typedef struct JPC_PhysicsSystem JPC_PhysicsSystem;
@@ -107,6 +112,8 @@ JPC_API JPC_PhysicsUpdateError JPC_PhysicsSystem_Update(
 	int inCollisionSteps,
 	JPC_TempAllocatorImpl *inTempAllocator, // FIXME: un-specialize
 	JPC_JobSystemThreadPool *inJobSystem); // FIXME: un-specialize
+
+JPC_API const JPC_BodyInterface* JPC_PhysicsSystem_GetBodyInterface(JPC_PhysicsSystem* self);
 
 #ifdef __cplusplus
 }

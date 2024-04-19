@@ -20,6 +20,9 @@ target_link_libraries(joltc PUBLIC Jolt)
 
 if(MSVC)
   target_compile_options(joltc PRIVATE /W4)
+
+  # Ignore 'unreferenced function with internal linkage'
+  target_compile_options(joltc PRIVATE /wd4505)
 else()
   target_compile_options(joltc PRIVATE -Wall -Wextra -Wpedantic)
 endif()

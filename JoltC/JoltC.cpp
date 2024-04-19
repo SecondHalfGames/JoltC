@@ -11,8 +11,9 @@
 #include "JoltC/JoltC.h"
 
 #define OPAQUE_WRAPPER(c_type, cpp_type) \
-	static auto to_jpc(cpp_type *in) { return reinterpret_cast<c_type*>(in); } \
-	static auto to_jph(c_type *in) { return reinterpret_cast<cpp_type*>(in); }
+	static c_type* to_jpc(cpp_type *in) { return reinterpret_cast<c_type*>(in); } \
+	static const c_type* to_jpc(const cpp_type *in) { return reinterpret_cast<const c_type*>(in); } \
+	static cpp_type* to_jph(c_type *in) { return reinterpret_cast<cpp_type*>(in); }
 
 #define DESTRUCTOR(c_type) \
 	JPC_API void c_type##_delete(c_type* object) { \
@@ -24,6 +25,20 @@ constexpr auto to_integral(E e) -> typename std::underlying_type<E>::type
 {
 	return static_cast<typename std::underlying_type<E>::type>(e);
 }
+
+OPAQUE_WRAPPER(JPC_PhysicsSystem, JPH::PhysicsSystem)
+DESTRUCTOR(JPC_PhysicsSystem)
+
+OPAQUE_WRAPPER(JPC_BodyInterface, JPH::BodyInterface)
+
+OPAQUE_WRAPPER(JPC_TempAllocatorImpl, JPH::TempAllocatorImpl)
+DESTRUCTOR(JPC_TempAllocatorImpl)
+
+OPAQUE_WRAPPER(JPC_JobSystemThreadPool, JPH::JobSystemThreadPool)
+DESTRUCTOR(JPC_JobSystemThreadPool)
+
+static auto to_jpc(JPH::BroadPhaseLayer in) { return in.GetValue(); }
+static auto to_jph(JPC_BroadPhaseLayer in) { return JPH::BroadPhaseLayer(in); }
 
 JPC_API void JPC_RegisterDefaultAllocator() {
 	JPH::RegisterDefaultAllocator();
@@ -49,18 +64,12 @@ JPC_API void JPC_UnregisterTypes() {
 ////////////////////////////////////////////////////////////////////////////////
 // TempAllocatorImpl
 
-OPAQUE_WRAPPER(JPC_TempAllocatorImpl, JPH::TempAllocatorImpl)
-DESTRUCTOR(JPC_TempAllocatorImpl)
-
 JPC_API JPC_TempAllocatorImpl* JPC_TempAllocatorImpl_new(uint size) {
 	return to_jpc(new JPH::TempAllocatorImpl(size));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // JobSystemThreadPool
-
-OPAQUE_WRAPPER(JPC_JobSystemThreadPool, JPH::JobSystemThreadPool)
-DESTRUCTOR(JPC_JobSystemThreadPool)
 
 JPC_API JPC_JobSystemThreadPool* JPC_JobSystemThreadPool_new2(
 	uint inMaxJobs,
@@ -79,9 +88,6 @@ JPC_API JPC_JobSystemThreadPool* JPC_JobSystemThreadPool_new3(
 
 ////////////////////////////////////////////////////////////////////////////////
 // BroadPhaseLayerInterface
-
-static auto to_jpc(JPH::BroadPhaseLayer in) { return in.GetValue(); }
-static auto to_jph(JPC_BroadPhaseLayer in) { return JPH::BroadPhaseLayer(in); }
 
 class JPC_BroadPhaseLayerInterface_Impl final : public JPH::BroadPhaseLayerInterface {
 public:
@@ -151,10 +157,14 @@ static JPC_ObjectLayerPairFilter_Impl to_jph(JPC_ObjectLayerPairFilter in) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// PhysicsSystem
+// BodyInterface
 
-OPAQUE_WRAPPER(JPC_PhysicsSystem, JPH::PhysicsSystem)
-DESTRUCTOR(JPC_PhysicsSystem)
+JPC_API const JPC_BodyInterface* JPC_PhysicsSystem_GetBodyInterface(JPC_PhysicsSystem* self) {
+	return to_jpc(&to_jph(self)->GetBodyInterface());
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// PhysicsSystem
 
 JPC_API JPC_PhysicsSystem* JPC_PhysicsSystem_new() {
 	return to_jpc(new JPH::PhysicsSystem());

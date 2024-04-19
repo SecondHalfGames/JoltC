@@ -121,6 +121,8 @@ int main() {
 
 	// TODO: register body activation listener
 	// TODO: register contact listener
+
+	const JPC_BodyInterface* body_interface = JPC_PhysicsSystem_GetBodyInterface(physics_system);
 	// TODO: body interface
 	// TODO: creating bodies
 	// TODO: PhysicsSystem::OptimizeBroadPhase
