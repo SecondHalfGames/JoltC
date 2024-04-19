@@ -83,20 +83,20 @@ JPC_API JPC_JobSystemThreadPool* JPC_JobSystemThreadPool_new3(
 static auto to_jpc(JPH::BroadPhaseLayer in) { return in.GetValue(); }
 static auto to_jph(JPC_BroadPhaseLayer in) { return JPH::BroadPhaseLayer(in); }
 
-class JPC_BroadPhaseLayerInterface_Impl : public JPH::BroadPhaseLayerInterface {
+class JPC_BroadPhaseLayerInterface_Impl final : public JPH::BroadPhaseLayerInterface {
 public:
 	explicit JPC_BroadPhaseLayerInterface_Impl(JPC_BroadPhaseLayerInterface in) : fns(*in.fns), self(in.self) {}
 
-	uint GetNumBroadPhaseLayers() const override {
+	virtual uint GetNumBroadPhaseLayers() const override {
 		return fns.GetNumBroadPhaseLayers(self);
 	}
 
-	JPH::BroadPhaseLayer GetBroadPhaseLayer(JPH::ObjectLayer inLayer) const override {
+	virtual JPH::BroadPhaseLayer GetBroadPhaseLayer(JPH::ObjectLayer inLayer) const override {
 		return to_jph(fns.GetBroadPhaseLayer(self, inLayer));
 	}
 
 #if defined(JPH_EXTERNAL_PROFILE) || defined(JPH_PROFILE_ENABLED)
-	const char * GetBroadPhaseLayerName([[maybe_unused]] JPH::BroadPhaseLayer inLayer) const override {
+	virtual const char * GetBroadPhaseLayerName([[maybe_unused]] JPH::BroadPhaseLayer inLayer) const override {
 		return "FIXME";
 	}
 #endif
@@ -113,11 +113,11 @@ static JPC_BroadPhaseLayerInterface_Impl to_jph(JPC_BroadPhaseLayerInterface in)
 ////////////////////////////////////////////////////////////////////////////////
 // ObjectVsBroadPhaseLayerFilter
 
-class JPC_ObjectVsBroadPhaseLayerFilter_Impl : public JPH::ObjectVsBroadPhaseLayerFilter {
+class JPC_ObjectVsBroadPhaseLayerFilter_Impl final : public JPH::ObjectVsBroadPhaseLayerFilter {
 public:
 	explicit JPC_ObjectVsBroadPhaseLayerFilter_Impl(JPC_ObjectVsBroadPhaseLayerFilter in) : fns(*in.fns), self(in.self) {}
 
-	bool ShouldCollide(JPH::ObjectLayer inLayer1, JPH::BroadPhaseLayer inLayer2) const override {
+	virtual bool ShouldCollide(JPH::ObjectLayer inLayer1, JPH::BroadPhaseLayer inLayer2) const override {
 		return fns.ShouldCollide(self, inLayer1, to_jpc(inLayer2));
 	}
 
@@ -133,11 +133,11 @@ static JPC_ObjectVsBroadPhaseLayerFilter_Impl to_jph(JPC_ObjectVsBroadPhaseLayer
 ////////////////////////////////////////////////////////////////////////////////
 // JPC_ObjectLayerPairFilter
 
-class JPC_ObjectLayerPairFilter_Impl : public JPH::ObjectLayerPairFilter {
+class JPC_ObjectLayerPairFilter_Impl final : public JPH::ObjectLayerPairFilter {
 public:
 	explicit JPC_ObjectLayerPairFilter_Impl(JPC_ObjectLayerPairFilter in) : fns(*in.fns), self(in.self) {}
 
-	bool ShouldCollide(JPH::ObjectLayer inLayer1, JPH::ObjectLayer inLayer2) const override {
+	virtual bool ShouldCollide(JPH::ObjectLayer inLayer1, JPH::ObjectLayer inLayer2) const override {
 		return fns.ShouldCollide(self, inLayer1, inLayer2);
 	}
 
