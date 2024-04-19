@@ -102,7 +102,7 @@ public:
 #endif
 
 private:
-	void* self;
+	const void* self;
 	JPC_BroadPhaseLayerInterfaceFns fns;
 };
 
@@ -122,7 +122,7 @@ public:
 	}
 
 private:
-	void* self;
+	const void* self;
 	JPC_ObjectVsBroadPhaseLayerFilterFns fns;
 };
 
@@ -142,7 +142,7 @@ public:
 	}
 
 private:
-	void* self;
+	const void* self;
 	JPC_ObjectLayerPairFilterFns fns;
 };
 

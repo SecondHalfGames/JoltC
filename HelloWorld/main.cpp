@@ -43,7 +43,7 @@ static JPC_BroadPhaseLayerInterfaceFns Hello_BPL = {
 	.GetBroadPhaseLayer = Hello_BPL_GetBroadPhaseLayer,
 };
 
-bool Hello_OVB_ShouldCollide(void *self, JPC_ObjectLayer inLayer1, JPC_BroadPhaseLayer inLayer2) {
+bool Hello_OVB_ShouldCollide(const void *self, JPC_ObjectLayer inLayer1, JPC_BroadPhaseLayer inLayer2) {
 	switch (inLayer1) {
 	case HELLO_OL_NON_MOVING:
 		return inLayer2 == HELLO_BPL_MOVING;
@@ -60,7 +60,7 @@ static JPC_ObjectVsBroadPhaseLayerFilterFns Hello_OVB = {
 	.ShouldCollide = Hello_OVB_ShouldCollide,
 };
 
-bool Hello_OVO_ShouldCollide(void *self, JPC_ObjectLayer inLayer1, JPC_ObjectLayer inLayer2) {
+bool Hello_OVO_ShouldCollide(const void *self, JPC_ObjectLayer inLayer1, JPC_ObjectLayer inLayer2) {
 	switch (inLayer1)
 	{
 	case HELLO_OL_NON_MOVING:
