@@ -85,7 +85,7 @@ static auto to_jph(JPC_BroadPhaseLayer in) { return JPH::BroadPhaseLayer(in); }
 
 class JPC_BroadPhaseLayerInterface_Impl final : public JPH::BroadPhaseLayerInterface {
 public:
-	explicit JPC_BroadPhaseLayerInterface_Impl(JPC_BroadPhaseLayerInterface in) : fns(*in.fns), self(in.self) {}
+	explicit JPC_BroadPhaseLayerInterface_Impl(JPC_BroadPhaseLayerInterface in) : self(in.self), fns(in.fns) {}
 
 	virtual uint GetNumBroadPhaseLayers() const override {
 		return fns.GetNumBroadPhaseLayers(self);
@@ -102,8 +102,8 @@ public:
 #endif
 
 private:
-	JPC_BroadPhaseLayerInterfaceFns fns;
 	void* self;
+	JPC_BroadPhaseLayerInterfaceFns fns;
 };
 
 static JPC_BroadPhaseLayerInterface_Impl to_jph(JPC_BroadPhaseLayerInterface in) {
@@ -115,15 +115,15 @@ static JPC_BroadPhaseLayerInterface_Impl to_jph(JPC_BroadPhaseLayerInterface in)
 
 class JPC_ObjectVsBroadPhaseLayerFilter_Impl final : public JPH::ObjectVsBroadPhaseLayerFilter {
 public:
-	explicit JPC_ObjectVsBroadPhaseLayerFilter_Impl(JPC_ObjectVsBroadPhaseLayerFilter in) : fns(*in.fns), self(in.self) {}
+	explicit JPC_ObjectVsBroadPhaseLayerFilter_Impl(JPC_ObjectVsBroadPhaseLayerFilter in) : self(in.self), fns(in.fns) {}
 
 	virtual bool ShouldCollide(JPH::ObjectLayer inLayer1, JPH::BroadPhaseLayer inLayer2) const override {
 		return fns.ShouldCollide(self, inLayer1, to_jpc(inLayer2));
 	}
 
 private:
-	JPC_ObjectVsBroadPhaseLayerFilterFns fns;
 	void* self;
+	JPC_ObjectVsBroadPhaseLayerFilterFns fns;
 };
 
 static JPC_ObjectVsBroadPhaseLayerFilter_Impl to_jph(JPC_ObjectVsBroadPhaseLayerFilter in) {
@@ -135,15 +135,15 @@ static JPC_ObjectVsBroadPhaseLayerFilter_Impl to_jph(JPC_ObjectVsBroadPhaseLayer
 
 class JPC_ObjectLayerPairFilter_Impl final : public JPH::ObjectLayerPairFilter {
 public:
-	explicit JPC_ObjectLayerPairFilter_Impl(JPC_ObjectLayerPairFilter in) : fns(*in.fns), self(in.self) {}
+	explicit JPC_ObjectLayerPairFilter_Impl(JPC_ObjectLayerPairFilter in) : self(in.self), fns(in.fns) {}
 
 	virtual bool ShouldCollide(JPH::ObjectLayer inLayer1, JPH::ObjectLayer inLayer2) const override {
 		return fns.ShouldCollide(self, inLayer1, inLayer2);
 	}
 
 private:
-	JPC_ObjectLayerPairFilterFns fns;
 	void* self;
+	JPC_ObjectLayerPairFilterFns fns;
 };
 
 static JPC_ObjectLayerPairFilter_Impl to_jph(JPC_ObjectLayerPairFilter in) {

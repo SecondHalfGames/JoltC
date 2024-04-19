@@ -56,8 +56,8 @@ typedef struct JPC_BroadPhaseLayerInterfaceFns {
 } JPC_BroadPhaseLayerInterfaceFns;
 
 typedef struct JPC_BroadPhaseLayerInterface {
-	JPC_BroadPhaseLayerInterfaceFns *fns;
 	void *self;
+	JPC_BroadPhaseLayerInterfaceFns fns;
 } JPC_BroadPhaseLayerInterface;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -68,8 +68,8 @@ typedef struct JPC_ObjectVsBroadPhaseLayerFilterFns {
 } JPC_ObjectVsBroadPhaseLayerFilterFns;
 
 typedef struct JPC_ObjectVsBroadPhaseLayerFilter {
-	JPC_ObjectVsBroadPhaseLayerFilterFns *fns;
 	void *self;
+	JPC_ObjectVsBroadPhaseLayerFilterFns fns;
 } JPC_ObjectVsBroadPhaseLayerFilter;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -80,8 +80,8 @@ typedef struct JPC_ObjectLayerPairFilterFns {
 } JPC_ObjectLayerPairFilterFns;
 
 typedef struct JPC_ObjectLayerPairFilter {
-	JPC_ObjectLayerPairFilterFns *fns;
 	void *self;
+	JPC_ObjectLayerPairFilterFns fns;
 } JPC_ObjectLayerPairFilter;
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -88,18 +88,18 @@ int main() {
 	JPC_JobSystemThreadPool* job_system = JPC_JobSystemThreadPool_new2(JPC_MAX_PHYSICS_JOBS, JPC_MAX_PHYSICS_BARRIERS);
 
 	JPC_BroadPhaseLayerInterface broad_phase_layer_interface = {
-		.fns = &Hello_BPL,
 		.self = nullptr,
+		.fns = Hello_BPL,
 	};
 
 	JPC_ObjectVsBroadPhaseLayerFilter object_vs_broad_phase_layer_filter = {
-		.fns = &Hello_OVB,
 		.self = nullptr,
+		.fns = Hello_OVB,
 	};
 
 	JPC_ObjectLayerPairFilter object_vs_object_layer_filter = {
-		.fns = &Hello_OVO,
 		.self = nullptr,
+		.fns = Hello_OVO,
 	};
 
 	JPC_PhysicsSystem* physics_system = JPC_PhysicsSystem_new();
