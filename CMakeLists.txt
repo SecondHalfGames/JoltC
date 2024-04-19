@@ -6,6 +6,17 @@ project(JoltC VERSION 0.1
     DESCRIPTION "C Wrapper for Jolt Physics"
     LANGUAGES C CXX)
 
+# When turning this option on, the library will be compiled using doubles for positions. This allows for much bigger worlds.
+option(DOUBLE_PRECISION "Use double precision math" OFF)
+
+# Number of bits to use in ObjectLayer. Can be 16 or 32.
+option(OBJECT_LAYER_BITS "Number of bits in ObjectLayer" 16)
+
+# Only do this when we're at the top level, see: https://gitlab.kitware.com/cmake/cmake/-/issues/24181
+if (CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
+    set(CMAKE_CONFIGURATION_TYPES "Debug;Release")
+endif()
+
 add_library(joltc STATIC
     JoltC/JoltC.h
     JoltC/JoltC.cpp
@@ -25,6 +36,14 @@ if(MSVC)
   target_compile_options(joltc PRIVATE /wd4505)
 else()
   target_compile_options(joltc PRIVATE -Wall -Wextra -Wpedantic)
+endif()
+
+if (DOUBLE_PRECISION)
+    target_compile_definitions(joltc PUBLIC JPC_DOUBLE_PRECISION)
+endif()
+
+if (OBJECT_LAYER_BITS)
+    target_compile_definitions(joltc PUBLIC JPC_OBJECT_LAYER_BITS=${OBJECT_LAYER_BITS})
 endif()
 
 add_executable(HelloWorld

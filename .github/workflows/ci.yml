@@ -1,0 +1,51 @@
+name: Test Suite
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test-suite:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        build_type: [Debug, Release]
+        build_flags: ['', '-DDOUBLE_PRECISION=ON', '-DOBJECT_LAYER_BITS=32']
+
+    runs-on: ${{ matrix.os }}
+    name: Tests - ${{ matrix.os }} ${{ matrix.build_type }} ${{ matrix.build_flags }}
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: true
+
+    - name: Setup C++ Tooling
+      uses: aminya/setup-cpp@v1
+      with:
+        compiler: ${{ contains(matrix.os, 'windows') && 'msvc' || 'clang' }}
+        cmake: true
+
+    - name: Configure CMake
+      run: cmake -B build ${{ matrix.build_flags }} -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+
+    - name: Build
+      run: cmake --build build --config=${{ matrix.build_type }}
+
+    - name: Run Hello World
+      shell: bash
+      run: |
+        ./build/${{ matrix.build_type }}/HelloWorld
+      if: ${{ contains(matrix.os, 'windows') }}
+
+    - name: Run Hello World
+      shell: bash
+      run: |
+        ./build/HelloWorld
+      if: ${{ !contains(matrix.os, 'windows') }}
