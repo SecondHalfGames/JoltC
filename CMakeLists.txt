@@ -46,17 +46,20 @@ if (OBJECT_LAYER_BITS)
     target_compile_definitions(joltc PUBLIC JPC_OBJECT_LAYER_BITS=${OBJECT_LAYER_BITS})
 endif()
 
-add_executable(HelloWorld
-    HelloWorld/main.cpp
-)
+if (CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
+    add_executable(HelloWorld
+        HelloWorld/main.cpp
+    )
 
-# cxx_std_20 gives us designated initializers, bringing us closer to Actual C.
-target_compile_features(HelloWorld PRIVATE cxx_std_20)
+    # cxx_std_20 gives us designated initializers, bringing us closer to Actual C.
+    target_compile_features(HelloWorld PRIVATE cxx_std_20)
 
-# Eventually we should switch back to Actual C:
-# set_property(TARGET HelloWorld PROPERTY C_STANDARD 23)
+    # Eventually we should switch back to Actual C:
+    # set_property(TARGET HelloWorld PROPERTY C_STANDARD 23)
 
-target_include_directories(HelloWorld PUBLIC .)
-target_link_libraries(HelloWorld PUBLIC joltc)
+    target_include_directories(HelloWorld PUBLIC .)
+    target_link_libraries(HelloWorld PUBLIC joltc)
+endif()
+
 
 add_subdirectory(JoltPhysics/Build)
