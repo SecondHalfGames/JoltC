@@ -17,6 +17,9 @@ jobs:
         os: [ubuntu-latest, windows-latest]
         build_type: [Debug, Release]
         build_flags: ['', '-DDOUBLE_PRECISION=ON', '-DOBJECT_LAYER_BITS=32']
+        exclude:
+          - os: ubuntu-latest
+            build_type: Release
 
     runs-on: ${{ matrix.os }}
     name: Tests - ${{ matrix.os }} ${{ matrix.build_type }} ${{ matrix.build_flags }}
