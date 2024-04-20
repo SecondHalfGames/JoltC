@@ -61,6 +61,9 @@ ENSURE_SIZE_ALIGN(JPC_Quat, JPH::Quat);
 
 ENSURE_SIZE_ALIGN(JPC_RVec3, JPH::RVec3);
 
+typedef uint32_t JPC_BodyID;
+ENSURE_SIZE_ALIGN(JPC_BodyID, JPH::BodyID);
+
 typedef uint8_t JPC_BroadPhaseLayer;
 ENSURE_SIZE_ALIGN(JPC_BroadPhaseLayer, JPH::BroadPhaseLayer)
 
@@ -178,9 +181,43 @@ JPC_API JPC_BoxShapeSettings* JPC_BoxShapeSettings_new(JPC_Vec3 inHalfExtent);
 JPC_API void JPC_BoxShapeSettings_delete(JPC_BoxShapeSettings* object);
 
 ////////////////////////////////////////////////////////////////////////////////
+// BodyCreationSettings
+
+typedef struct JPC_BodyCreationSettings {
+	JPC_RVec3 Position;
+	JPC_Quat Rotation;
+	JPC_Vec3 LinearVelocity;
+	JPC_Vec3 AngularVelocity;
+
+	uint64_t UserData;
+
+	JPC_ObjectLayer ObjectLayer;
+	// TODO: CollisionGroup;
+
+	JPC_MotionType MotionType;
+	JPC_AllowedDOFs AllowedDOFs;
+
+	// TODO: More
+
+	JPC_Shape* Shape;
+} JPC_BodyCreationSettings;
+
+JPC_API void JPC_BodyCreationSettings_default(JPC_BodyCreationSettings* settings);
+
+typedef struct JPC_BodyCreationSettings JPC_BodyCreationSettings;
+
+JPC_API JPC_BodyCreationSettings* JPC_BodyCreationSettings_new();
+
+////////////////////////////////////////////////////////////////////////////////
 // BodyInterface
 
 typedef struct JPC_BodyInterface JPC_BodyInterface;
+
+typedef struct JPC_Body JPC_Body;
+
+JPC_API JPC_Body* JPC_BodyInterface_CreateBody(JPC_BodyInterface* self, JPC_BodyCreationSettings* inSettingsC);
+JPC_API void JPC_BodyInterface_AddBody(JPC_BodyInterface* self, JPC_BodyID inBodyID, JPC_Activation inActivationMode);
+JPC_API void JPC_BodyInterface_RemoveBody(JPC_BodyInterface* self, JPC_BodyID inBodyID);
 
 ////////////////////////////////////////////////////////////////////////////////
 // PhysicsSystem
@@ -206,7 +243,7 @@ JPC_API JPC_PhysicsUpdateError JPC_PhysicsSystem_Update(
 	JPC_TempAllocatorImpl *inTempAllocator, // FIXME: un-specialize
 	JPC_JobSystemThreadPool *inJobSystem); // FIXME: un-specialize
 
-JPC_API const JPC_BodyInterface* JPC_PhysicsSystem_GetBodyInterface(JPC_PhysicsSystem* self);
+JPC_API JPC_BodyInterface* JPC_PhysicsSystem_GetBodyInterface(JPC_PhysicsSystem* self);
 
 #ifdef __cplusplus
 }

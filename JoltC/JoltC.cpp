@@ -24,11 +24,18 @@
 		delete to_jph(object); \
 	}
 
+#define ENUM_CONVERSION(c_type, cpp_type) \
+	static c_type to_jpc(cpp_type in) { return static_cast<c_type>(in); } \
+	static cpp_type to_jph(c_type in) { return static_cast<cpp_type>(in); }
+
 template<typename E>
 constexpr auto to_integral(E e) -> typename std::underlying_type<E>::type 
 {
 	return static_cast<typename std::underlying_type<E>::type>(e);
 }
+
+ENUM_CONVERSION(JPC_MotionType, JPH::EMotionType)
+ENUM_CONVERSION(JPC_AllowedDOFs, JPH::EAllowedDOFs)
 
 OPAQUE_WRAPPER(JPC_PhysicsSystem, JPH::PhysicsSystem)
 DESTRUCTOR(JPC_PhysicsSystem)
@@ -44,6 +51,7 @@ DESTRUCTOR(JPC_JobSystemThreadPool)
 OPAQUE_WRAPPER(JPC_ConvexShapeSettings, JPH::ConvexShapeSettings)
 OPAQUE_WRAPPER(JPC_ShapeSettings, JPH::ShapeSettings)
 OPAQUE_WRAPPER(JPC_Shape, JPH::Shape)
+OPAQUE_WRAPPER(JPC_Body, JPH::Body)
 
 OPAQUE_WRAPPER(JPC_String, JPH::String)
 DESTRUCTOR(JPC_String)
@@ -60,6 +68,14 @@ static JPC_Vec3 to_jpc(JPH::Vec3 in) {
 static JPH::Vec3 to_jph(JPC_Vec3 in) {
 	return JPH::Vec3(in.x, in.y, in.z);
 }
+
+static JPC_Quat to_jpc(JPH::Quat in) {
+	return JPC_Quat{in.GetX(), in.GetY(), in.GetZ(), in.GetW()};
+}
+static JPH::Quat to_jph(JPC_Quat in) {
+	return JPH::Quat(in.x, in.y, in.z, in.w);
+}
+
 
 JPC_API void JPC_RegisterDefaultAllocator() {
 	JPH::RegisterDefaultAllocator();
@@ -195,8 +211,10 @@ JPC_API bool JPC_ShapeSettings_Create(
 	auto res = to_jph(self)->Create();
 
 	if (res.HasError()) {
-		JPH::String* created = new JPH::String(std::move(res.GetError()));
-		*outError = to_jpc(created);
+		if (outError != nullptr) {
+			JPH::String* created = new JPH::String(std::move(res.GetError()));
+			*outError = to_jpc(created);
+		}
 
 		return false;
 	} else {
@@ -225,10 +243,41 @@ JPC_API JPC_BoxShapeSettings* JPC_BoxShapeSettings_new(JPC_Vec3 inHalfExtent) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// BodyCreationSettings
+
+JPC_API void JPC_BodyCreationSettings_default(JPC_BodyCreationSettings* settings) {
+	settings->Position = JPC_RVec3{0, 0, 0};
+	settings->Rotation = JPC_Quat{0, 0, 0, 1};
+	settings->LinearVelocity = JPC_Vec3{0, 0, 0};
+	settings->AngularVelocity = JPC_Vec3{0, 0, 0};
+
+	settings->UserData = 0;
+	settings->ObjectLayer = 0;
+
+	settings->MotionType = JPC_MOTION_TYPE_DYNAMIC;
+	settings->AllowedDOFs = JPC_ALLOWED_DOFS_ALL;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 // BodyInterface
 
-JPC_API const JPC_BodyInterface* JPC_PhysicsSystem_GetBodyInterface(JPC_PhysicsSystem* self) {
-	return to_jpc(&to_jph(self)->GetBodyInterface());
+JPC_API JPC_Body* JPC_BodyInterface_CreateBody(JPC_BodyInterface* self, JPC_BodyCreationSettings* inSettingsC) {
+	JPH::BodyCreationSettings inSettings{};
+	inSettings.mPosition = to_jph(inSettingsC->Position);
+	inSettings.mRotation = to_jph(inSettingsC->Rotation);
+	inSettings.mLinearVelocity = to_jph(inSettingsC->LinearVelocity);
+	inSettings.mAngularVelocity = to_jph(inSettingsC->AngularVelocity);
+
+	inSettings.mUserData = inSettingsC->UserData;
+	inSettings.mObjectLayer = inSettingsC->ObjectLayer;
+
+	inSettings.mMotionType = to_jph(inSettingsC->MotionType);
+	inSettings.mAllowedDOFs = to_jph(inSettingsC->AllowedDOFs);
+
+	inSettings.SetShape(to_jph(inSettingsC->Shape));
+
+	JPH::Body* body = to_jph(self)->CreateBody(inSettings);
+	return to_jpc(body);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -260,6 +309,10 @@ JPC_API void JPC_PhysicsSystem_Init(
 		impl_inBroadPhaseLayerInterface,
 		impl_inObjectVsBroadPhaseLayerFilter,
 		impl_inObjectLayerPairFilter);
+}
+
+JPC_API JPC_BodyInterface* JPC_PhysicsSystem_GetBodyInterface(JPC_PhysicsSystem* self) {
+	return to_jpc(&to_jph(self)->GetBodyInterface());
 }
 
 JPC_API JPC_PhysicsUpdateError JPC_PhysicsSystem_Update(

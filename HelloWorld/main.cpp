@@ -103,6 +103,8 @@ int main() {
 		.fns = Hello_OVO,
 	};
 
+	// FIXME: These types get freed on accident
+
 	JPC_PhysicsSystem* physics_system = JPC_PhysicsSystem_new();
 
 	const unsigned int cMaxBodies = 1024;
@@ -123,7 +125,7 @@ int main() {
 	// TODO: register body activation listener
 	// TODO: register contact listener
 
-	const JPC_BodyInterface* body_interface = JPC_PhysicsSystem_GetBodyInterface(physics_system);
+	JPC_BodyInterface* body_interface = JPC_PhysicsSystem_GetBodyInterface(physics_system);
 
 	JPC_BoxShapeSettings* floor_shape_settings = JPC_BoxShapeSettings_new(JPC_Vec3{100.0f, 100.0f, 100.0f});
 	JPC_ConvexShapeSettings_SetDensity((JPC_ConvexShapeSettings*)floor_shape_settings, 1000.0f);
@@ -139,9 +141,15 @@ int main() {
 		exit(1);
 	}
 
-	// BodyCreationSettings floor_settings(floor_shape, RVec3(0.0_r, -1.0_r, 0.0_r), Quat::sIdentity(), EMotionType::Static, Layers::NON_MOVING);
+	JPC_BodyCreationSettings floor_settings;
+	JPC_BodyCreationSettings_default(&floor_settings);
+	floor_settings.Position = JPC_RVec3{0.0, -1.0, 0.0};
+	floor_settings.MotionType = JPC_MOTION_TYPE_STATIC;
+	floor_settings.ObjectLayer = HELLO_OL_NON_MOVING;
+	floor_settings.Shape = shape;
 
-	// Body *floor = body_interface.CreateBody(floor_settings);
+	JPC_Body* floor = JPC_BodyInterface_CreateBody(body_interface, &floor_settings);
+
 	// body_interface.AddBody(floor->GetID(), EActivation::DontActivate);
 
 	// TODO: creating bodies
