@@ -26,6 +26,14 @@ JPC_API void JPC_UnregisterTypes();
 ////////////////////////////////////////////////////////////////////////////////
 // Primitive types
 
+typedef struct JPC_Float3 {
+	float x;
+	float y;
+	float z;
+} JPC_Float3;
+
+ENSURE_SIZE_ALIGN(JPC_Float3, JPH::Float3)
+
 typedef struct JPC_Vec3 {
 	alignas(16) float x;
 	float y;
@@ -33,7 +41,7 @@ typedef struct JPC_Vec3 {
 	float _w;
 } JPC_Vec3;
 
-ENSURE_SIZE_ALIGN(JPC_Vec3, JPH::Vec3);
+ENSURE_SIZE_ALIGN(JPC_Vec3, JPH::Vec3)
 
 typedef struct JPC_DVec3 {
 	alignas(32) double x;
@@ -42,7 +50,7 @@ typedef struct JPC_DVec3 {
 	double _w;
 } JPC_DVec3;
 
-ENSURE_SIZE_ALIGN(JPC_DVec3, JPH::DVec3);
+ENSURE_SIZE_ALIGN(JPC_DVec3, JPH::DVec3)
 
 typedef struct JPC_Quat {
 	alignas(16) float x;
@@ -51,7 +59,7 @@ typedef struct JPC_Quat {
 	float w;
 } JPC_Quat;
 
-ENSURE_SIZE_ALIGN(JPC_Quat, JPH::Quat);
+ENSURE_SIZE_ALIGN(JPC_Quat, JPH::Quat)
 
 #ifdef JPC_DOUBLE_PRECISION
 	typedef JPC_DVec3 JPC_RVec3;
@@ -61,10 +69,10 @@ ENSURE_SIZE_ALIGN(JPC_Quat, JPH::Quat);
 	typedef float Real;
 #endif
 
-ENSURE_SIZE_ALIGN(JPC_RVec3, JPH::RVec3);
+ENSURE_SIZE_ALIGN(JPC_RVec3, JPH::RVec3)
 
 typedef uint32_t JPC_BodyID;
-ENSURE_SIZE_ALIGN(JPC_BodyID, JPH::BodyID);
+ENSURE_SIZE_ALIGN(JPC_BodyID, JPH::BodyID)
 
 typedef uint8_t JPC_BroadPhaseLayer;
 ENSURE_SIZE_ALIGN(JPC_BroadPhaseLayer, JPH::BroadPhaseLayer)
@@ -82,6 +90,14 @@ ENSURE_SIZE_ALIGN(JPC_BroadPhaseLayer, JPH::BroadPhaseLayer)
 #endif
 
 ENSURE_SIZE_ALIGN(JPC_ObjectLayer, JPH::ObjectLayer)
+
+////////////////////////////////////////////////////////////////////////////////
+// VertexList == Array<Float3> == std::vector<Float3>
+
+typedef struct JPC_VertexList JPC_VertexList;
+
+JPC_API JPC_VertexList* JPC_VertexList_new(const JPC_Float3* storage, size_t len);
+JPC_API void JPC_VertexList_delete(JPC_VertexList* object);
 
 ////////////////////////////////////////////////////////////////////////////////
 // TempAllocatorImpl

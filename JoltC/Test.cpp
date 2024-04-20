@@ -31,9 +31,12 @@ constexpr auto to_integral(E e) -> typename std::underlying_type<E>::type
     static_assert(c_const == to_integral(cpp_enum), #c_const " did not match " #cpp_enum); \
     static_assert(sizeof(c_const) == sizeof(cpp_enum), #c_const " did not have same size as " #cpp_enum);
 
-#define ENSURE_SIZE_ALIGN(type0, type1) \
-    static_assert(sizeof(type0) == sizeof(type1), "size of " #type0 " did not match size of " #type1); \
-    static_assert(alignof(type0) == alignof(type1), "align of " #type0 " did not match align of " #type1);
+// Ensures that a C struct we define is compatible in layout with its
+// corresponding C++ type, and that the C++ type is safe to represent in C.
+#define ENSURE_SIZE_ALIGN(c_type, cpp_type) \
+    static_assert(sizeof(c_type) == sizeof(cpp_type), "size of " #c_type " did not match size of " #cpp_type); \
+    static_assert(alignof(c_type) == alignof(cpp_type), "align of " #c_type " did not match align of " #cpp_type); \
+    static_assert(std::is_standard_layout<cpp_type>::value, #cpp_type " is not standard layout");
 
 #define unsafe_offsetof(st, m) ((size_t) ( (char *)&((st *)(0))->m - (char *)0 ))
 #define unsafe_fieldtype(st, m) decltype((st *)(0)->m)
