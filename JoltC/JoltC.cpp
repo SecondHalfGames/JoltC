@@ -126,9 +126,9 @@ JPC_API JPC_JobSystemThreadPool* JPC_JobSystemThreadPool_new3(
 ////////////////////////////////////////////////////////////////////////////////
 // BroadPhaseLayerInterface
 
-class JPC_BroadPhaseLayerInterface_Impl final : public JPH::BroadPhaseLayerInterface {
+class JPC_BroadPhaseLayerInterfaceBridge final : public JPH::BroadPhaseLayerInterface {
 public:
-	explicit JPC_BroadPhaseLayerInterface_Impl(JPC_BroadPhaseLayerInterface in) : self(in.self), fns(in.fns) {}
+	explicit JPC_BroadPhaseLayerInterfaceBridge(const void *self, JPC_BroadPhaseLayerInterfaceFns fns) : self(self), fns(fns) {}
 
 	virtual uint GetNumBroadPhaseLayers() const override {
 		return fns.GetNumBroadPhaseLayers(self);
@@ -149,8 +149,13 @@ private:
 	JPC_BroadPhaseLayerInterfaceFns fns;
 };
 
-static JPC_BroadPhaseLayerInterface_Impl to_jph(JPC_BroadPhaseLayerInterface in) {
-	return JPC_BroadPhaseLayerInterface_Impl(in);
+OPAQUE_WRAPPER(JPC_BroadPhaseLayerInterface, JPC_BroadPhaseLayerInterfaceBridge)
+
+JPC_API JPC_BroadPhaseLayerInterface* JPC_BroadPhaseLayerInterface_new(
+	const void *self,
+	JPC_BroadPhaseLayerInterfaceFns fns)
+{
+	return to_jpc(new JPC_BroadPhaseLayerInterfaceBridge(self, fns));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -293,11 +298,11 @@ JPC_API void JPC_PhysicsSystem_Init(
 	uint inNumBodyMutexes,
 	uint inMaxBodyPairs,
 	uint inMaxContactConstraints,
-	JPC_BroadPhaseLayerInterface inBroadPhaseLayerInterface,
+	JPC_BroadPhaseLayerInterface* inBroadPhaseLayerInterface,
 	JPC_ObjectVsBroadPhaseLayerFilter inObjectVsBroadPhaseLayerFilter,
 	JPC_ObjectLayerPairFilter inObjectLayerPairFilter)
 {
-	auto impl_inBroadPhaseLayerInterface = to_jph(inBroadPhaseLayerInterface);
+	JPC_BroadPhaseLayerInterfaceBridge* impl_inBroadPhaseLayerInterface = to_jph(inBroadPhaseLayerInterface);
 	auto impl_inObjectVsBroadPhaseLayerFilter = to_jph(inObjectVsBroadPhaseLayerFilter);
 	auto impl_inObjectLayerPairFilter = to_jph(inObjectLayerPairFilter);
 
@@ -306,7 +311,7 @@ JPC_API void JPC_PhysicsSystem_Init(
 		inNumBodyMutexes,
 		inMaxBodyPairs,
 		inMaxContactConstraints,
-		impl_inBroadPhaseLayerInterface,
+		*impl_inBroadPhaseLayerInterface,
 		impl_inObjectVsBroadPhaseLayerFilter,
 		impl_inObjectLayerPairFilter);
 }

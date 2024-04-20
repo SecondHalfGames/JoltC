@@ -112,10 +112,11 @@ typedef struct JPC_BroadPhaseLayerInterfaceFns {
 	JPC_BroadPhaseLayer (*GetBroadPhaseLayer)(const void *self, JPC_ObjectLayer inLayer);
 } JPC_BroadPhaseLayerInterfaceFns;
 
-typedef struct JPC_BroadPhaseLayerInterface {
-	const void *self;
-	JPC_BroadPhaseLayerInterfaceFns fns;
-} JPC_BroadPhaseLayerInterface;
+typedef struct JPC_BroadPhaseLayerInterface JPC_BroadPhaseLayerInterface;
+
+JPC_API JPC_BroadPhaseLayerInterface* JPC_BroadPhaseLayerInterface_new(
+	const void *self,
+	JPC_BroadPhaseLayerInterfaceFns fns);
 
 ////////////////////////////////////////////////////////////////////////////////
 // ObjectVsBroadPhaseLayerFilter
@@ -232,7 +233,7 @@ JPC_API void JPC_PhysicsSystem_Init(
 	uint inNumBodyMutexes,
 	uint inMaxBodyPairs,
 	uint inMaxContactConstraints,
-	JPC_BroadPhaseLayerInterface inBroadPhaseLayerInterface,
+	JPC_BroadPhaseLayerInterface* inBroadPhaseLayerInterface,
 	JPC_ObjectVsBroadPhaseLayerFilter inObjectVsBroadPhaseLayerFilter,
 	JPC_ObjectLayerPairFilter inObjectLayerPairFilter);
 
