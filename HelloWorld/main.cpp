@@ -160,9 +160,7 @@ int main() {
 	JPC_BodyID sphere_id = JPC_Body_GetID(sphere);
 	JPC_BodyInterface_AddBody(body_interface, sphere_id, JPC_ACTIVATION_ACTIVATE);
 
-	// BodyID sphere_id = body_interface.CreateAndAddBody(sphere_settings, EActivation::Activate);
-
-	// body_interface.SetLinearVelocity(sphere_id, Vec3(0.0f, -5.0f, 0.0f));
+	JPC_BodyInterface_SetLinearVelocity(body_interface, sphere_id, JPC_Vec3{0.0, -5.0, 0.0});
 
 	// TODO: PhysicsSystem::OptimizeBroadPhase
 
@@ -170,12 +168,14 @@ int main() {
 	const int cCollisionSteps = 1;
 
 	// TODO: Update loop
-	for (int i = 0; i < 35; i++) {
+	int step = 0;
+	while (JPC_BodyInterface_IsActive(body_interface, sphere_id)) {
+		++step;
+
 		JPC_RVec3 position = JPC_BodyInterface_GetCenterOfMassPosition(body_interface, sphere_id);
 		JPC_Vec3 velocity = JPC_BodyInterface_GetLinearVelocity(body_interface, sphere_id);
 
-		printf("Step %d: Position = (%f, %f, %f), Velocity = (%f, %f, %f)\n", i, position.x, position.y, position.z, velocity.x, velocity.y, velocity.z);
-		// cout << "Step " << step << ": Position = (" << position.GetX() << ", " << position.GetY() << ", " << position.GetZ() << "), Velocity = (" << velocity.GetX() << ", " << velocity.GetY() << ", " << velocity.GetZ() << ")" << endl;
+		printf("Step %d: Position = (%f, %f, %f), Velocity = (%f, %f, %f)\n", step, position.x, position.y, position.z, velocity.x, velocity.y, velocity.z);
 
 		JPC_PhysicsSystem_Update(physics_system, cDeltaTime, cCollisionSteps, temp_allocator, job_system);
 	}

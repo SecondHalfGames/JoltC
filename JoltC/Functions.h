@@ -287,8 +287,10 @@ JPC_API void JPC_BodyInterface_AddBody(JPC_BodyInterface* self, JPC_BodyID inBod
 JPC_API void JPC_BodyInterface_RemoveBody(JPC_BodyInterface* self, JPC_BodyID inBodyID);
 JPC_API void JPC_BodyInterface_DestroyBody(JPC_BodyInterface* self, JPC_BodyID inBodyID);
 
+JPC_API bool JPC_BodyInterface_IsActive(JPC_BodyInterface* self, JPC_BodyID inBodyID);
 JPC_API JPC_RVec3 JPC_BodyInterface_GetCenterOfMassPosition(JPC_BodyInterface* self, JPC_BodyID inBodyID);
 JPC_API JPC_Vec3 JPC_BodyInterface_GetLinearVelocity(JPC_BodyInterface* self, JPC_BodyID inBodyID);
+JPC_API void JPC_BodyInterface_SetLinearVelocity(JPC_BodyInterface* self, JPC_BodyID inBodyID, JPC_Vec3 inVelocity);
 
 ////////////////////////////////////////////////////////////////////////////////
 // PhysicsSystem
