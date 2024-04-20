@@ -55,8 +55,10 @@ ENSURE_SIZE_ALIGN(JPC_Quat, JPH::Quat);
 
 #ifdef JPC_DOUBLE_PRECISION
 	typedef JPC_DVec3 JPC_RVec3;
+	typedef double Real;
 #else
 	typedef JPC_Vec3 JPC_RVec3;
+	typedef float Real;
 #endif
 
 ENSURE_SIZE_ALIGN(JPC_RVec3, JPH::RVec3);
