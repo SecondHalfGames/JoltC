@@ -79,6 +79,15 @@ static JPC_ObjectLayerPairFilterFns Hello_OVO = {
 	.ShouldCollide = Hello_OVO_ShouldCollide,
 };
 
+void Hello_Debug_DrawLine(const void *self, JPC_RVec3 inFrom, JPC_RVec3 inTo, JPC_Color inColor) {
+	printf("Draw line from (%f, %f, %f) to (%f, %f, %f) with color (%d, %d, %d)\n",
+		inFrom.x, inFrom.y, inFrom.z, inTo.x, inTo.y, inTo.z, inColor.r, inColor.g, inColor.b);
+}
+
+static JPC_DebugRendererSimpleFns Hello_DebugRenderer = {
+	.DrawLine = Hello_Debug_DrawLine,
+};
+
 int main() {
 	JPC_RegisterDefaultAllocator();
 	JPC_FactoryInit();
@@ -162,12 +171,16 @@ int main() {
 
 	JPC_BodyInterface_SetLinearVelocity(body_interface, sphere_id, JPC_Vec3{0.0, -5.0, 0.0});
 
+	JPC_DebugRendererSimple* debug_renderer = JPC_DebugRendererSimple_new(nullptr, Hello_DebugRenderer);
+	JPC_BodyManager_DrawSettings draw_settings;
+	JPC_BodyManager_DrawSettings_default(&draw_settings);
+	JPC_PhysicsSystem_DrawBodies(physics_system, &draw_settings, debug_renderer, nullptr);
+
 	// TODO: PhysicsSystem::OptimizeBroadPhase
 
 	const float cDeltaTime = 1.0f / 60.0f;
 	const int cCollisionSteps = 1;
 
-	// TODO: Update loop
 	int step = 0;
 	while (JPC_BodyInterface_IsActive(body_interface, sphere_id)) {
 		++step;
@@ -179,8 +192,6 @@ int main() {
 
 		JPC_PhysicsSystem_Update(physics_system, cDeltaTime, cCollisionSteps, temp_allocator, job_system);
 	}
-
-	// TODO: RemoveBody and DestroyBody
 
 	JPC_BodyInterface_RemoveBody(body_interface, sphere_id);
 	JPC_BodyInterface_DestroyBody(body_interface, sphere_id);

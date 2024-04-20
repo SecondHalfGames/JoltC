@@ -30,6 +30,21 @@
 	static c_type to_jpc(cpp_type in) { return static_cast<c_type>(in); } \
 	static cpp_type to_jph(c_type in) { return static_cast<cpp_type>(in); }
 
+#define LAYOUT_COMPATIBLE(c_type, cpp_type) \
+	static c_type to_jpc(cpp_type in) { \
+		c_type out; \
+		memcpy(&out, &in, sizeof(c_type)); \
+		return out; \
+	} \
+	static cpp_type to_jph(c_type in) { \
+		cpp_type out; \
+		memcpy(&out, &in, sizeof(cpp_type)); \
+		return out; \
+	} \
+	static_assert(sizeof(c_type) == sizeof(cpp_type), "size of " #c_type " did not match size of " #cpp_type); \
+	static_assert(alignof(c_type) == alignof(cpp_type), "align of " #c_type " did not match align of " #cpp_type); \
+	static_assert(!std::is_polymorphic_v<cpp_type>, #cpp_type " is polymorphic and cannot be made layout compatible");
+
 template<typename E>
 constexpr auto to_integral(E e) -> typename std::underlying_type<E>::type 
 {
@@ -70,6 +85,8 @@ DESTRUCTOR(JPC_BoxShapeSettings)
 
 OPAQUE_WRAPPER(JPC_SphereShapeSettings, JPH::SphereShapeSettings)
 DESTRUCTOR(JPC_SphereShapeSettings)
+
+LAYOUT_COMPATIBLE(JPC_BodyManager_DrawSettings, JPH::BodyManager::DrawSettings)
 
 static auto to_jpc(JPH::BroadPhaseLayer in) { return in.GetValue(); }
 static auto to_jph(JPC_BroadPhaseLayer in) { return JPH::BroadPhaseLayer(in); }
@@ -257,6 +274,13 @@ JPC_API JPC_ObjectLayerPairFilter* JPC_ObjectLayerPairFilter_new(
 	JPC_ObjectLayerPairFilterFns fns)
 {
 	return to_jpc(new JPC_ObjectLayerPairFilterBridge(self, fns));
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// BodyManager::DrawSettings
+
+JPC_API void JPC_BodyManager_DrawSettings_default(JPC_BodyManager_DrawSettings* object) {
+	*object = to_jpc(JPH::BodyManager::DrawSettings());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -475,4 +499,13 @@ JPC_API JPC_PhysicsUpdateError JPC_PhysicsSystem_Update(
 		to_jph(inJobSystem));
 
 	return to_integral(res);
+}
+
+JPC_API void JPC_PhysicsSystem_DrawBodies(
+	JPC_PhysicsSystem* self,
+	JPC_BodyManager_DrawSettings* inSettings,
+	JPC_DebugRendererSimple* inRenderer,
+	[[maybe_unused]] const void* inBodyFilter)
+{
+	to_jph(self)->DrawBodies(to_jph(*inSettings), to_jph(inRenderer), nullptr);
 }

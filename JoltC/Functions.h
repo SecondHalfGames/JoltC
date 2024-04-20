@@ -199,6 +199,36 @@ JPC_API JPC_ObjectLayerPairFilter* JPC_ObjectLayerPairFilter_new(
 JPC_API void JPC_ObjectLayerPairFilter_delete(JPC_ObjectLayerPairFilter* object);
 
 ////////////////////////////////////////////////////////////////////////////////
+// DrawSettings
+
+typedef struct JPC_BodyManager_DrawSettings {
+	bool mDrawGetSupportFunction;
+	bool mDrawSupportDirection;
+	bool mDrawGetSupportingFace;
+	bool mDrawShape;
+	bool mDrawShapeWireframe;
+	JPC_ShapeColor mDrawShapeColor;
+	bool mDrawBoundingBox;
+	bool mDrawCenterOfMassTransform;
+	bool mDrawWorldTransform;
+	bool mDrawVelocity;
+	bool mDrawMassAndInertia;
+	bool mDrawSleepStats;
+	bool mDrawSoftBodyVertices;
+	bool mDrawSoftBodyVertexVelocities;
+	bool mDrawSoftBodyEdgeConstraints;
+	bool mDrawSoftBodyBendConstraints;
+	bool mDrawSoftBodyVolumeConstraints;
+	bool mDrawSoftBodySkinConstraints;
+	bool mDrawSoftBodyLRAConstraints;
+	bool mDrawSoftBodyPredictedBounds;
+} JPC_BodyManager_DrawSettings;
+
+ENSURE_SIZE_ALIGN(JPC_BodyManager_DrawSettings, JPH::BodyManager::DrawSettings)
+
+JPC_API void JPC_BodyManager_DrawSettings_default(JPC_BodyManager_DrawSettings* object);
+
+////////////////////////////////////////////////////////////////////////////////
 // DebugRendererSimple
 
 typedef struct JPC_DebugRendererSimpleFns {
@@ -335,6 +365,12 @@ JPC_API JPC_PhysicsUpdateError JPC_PhysicsSystem_Update(
 	JPC_JobSystemThreadPool *inJobSystem); // FIXME: un-specialize
 
 JPC_API JPC_BodyInterface* JPC_PhysicsSystem_GetBodyInterface(JPC_PhysicsSystem* self);
+
+JPC_API void JPC_PhysicsSystem_DrawBodies(
+	JPC_PhysicsSystem* self,
+	JPC_BodyManager_DrawSettings* inSettings,
+	JPC_DebugRendererSimple* inRenderer, // FIXME: un-specialize
+	const void* inBodyFilter); // FIXME: BodyDrawFilter
 
 #ifdef __cplusplus
 }
