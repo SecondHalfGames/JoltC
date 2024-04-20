@@ -224,15 +224,21 @@ typedef struct JPC_BodyCreationSettings JPC_BodyCreationSettings;
 JPC_API JPC_BodyCreationSettings* JPC_BodyCreationSettings_new();
 
 ////////////////////////////////////////////////////////////////////////////////
+// Body
+
+typedef struct JPC_Body JPC_Body;
+
+JPC_API JPC_BodyID JPC_Body_GetID(JPC_Body* self);
+
+////////////////////////////////////////////////////////////////////////////////
 // BodyInterface
 
 typedef struct JPC_BodyInterface JPC_BodyInterface;
 
-typedef struct JPC_Body JPC_Body;
-
 JPC_API JPC_Body* JPC_BodyInterface_CreateBody(JPC_BodyInterface* self, JPC_BodyCreationSettings* inSettingsC);
 JPC_API void JPC_BodyInterface_AddBody(JPC_BodyInterface* self, JPC_BodyID inBodyID, JPC_Activation inActivationMode);
 JPC_API void JPC_BodyInterface_RemoveBody(JPC_BodyInterface* self, JPC_BodyID inBodyID);
+JPC_API void JPC_BodyInterface_DestroyBody(JPC_BodyInterface* self, JPC_BodyID inBodyID);
 
 ////////////////////////////////////////////////////////////////////////////////
 // PhysicsSystem

@@ -36,6 +36,7 @@ constexpr auto to_integral(E e) -> typename std::underlying_type<E>::type
 
 ENUM_CONVERSION(JPC_MotionType, JPH::EMotionType)
 ENUM_CONVERSION(JPC_AllowedDOFs, JPH::EAllowedDOFs)
+ENUM_CONVERSION(JPC_Activation, JPH::EActivation)
 
 OPAQUE_WRAPPER(JPC_PhysicsSystem, JPH::PhysicsSystem)
 DESTRUCTOR(JPC_PhysicsSystem)
@@ -83,6 +84,12 @@ static JPH::Quat to_jph(JPC_Quat in) {
 	return JPH::Quat(in.x, in.y, in.z, in.w);
 }
 
+static JPC_BodyID to_jpc(JPH::BodyID in) {
+	return in.GetIndexAndSequenceNumber();
+}
+static JPH::BodyID to_jph(JPC_BodyID in) {
+	return JPH::BodyID(in);
+}
 
 JPC_API void JPC_RegisterDefaultAllocator() {
 	JPH::RegisterDefaultAllocator();
@@ -293,6 +300,13 @@ JPC_API void JPC_BodyCreationSettings_default(JPC_BodyCreationSettings* settings
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// Body
+
+JPC_API JPC_BodyID JPC_Body_GetID(JPC_Body* self) {
+	return to_jpc(to_jph(self)->GetID());
+}
+
+////////////////////////////////////////////////////////////////////////////////
 // BodyInterface
 
 JPC_API JPC_Body* JPC_BodyInterface_CreateBody(JPC_BodyInterface* self, JPC_BodyCreationSettings* inSettingsC) {
@@ -312,6 +326,18 @@ JPC_API JPC_Body* JPC_BodyInterface_CreateBody(JPC_BodyInterface* self, JPC_Body
 
 	JPH::Body* body = to_jph(self)->CreateBody(inSettings);
 	return to_jpc(body);
+}
+
+JPC_API void JPC_BodyInterface_AddBody(JPC_BodyInterface* self, JPC_BodyID inBodyID, JPC_Activation inActivationMode) {
+	to_jph(self)->AddBody(to_jph(inBodyID), to_jph(inActivationMode));
+}
+
+JPC_API void JPC_BodyInterface_RemoveBody(JPC_BodyInterface* self, JPC_BodyID inBodyID) {
+	to_jph(self)->RemoveBody(to_jph(inBodyID));
+}
+
+JPC_API void JPC_BodyInterface_DestroyBody(JPC_BodyInterface* self, JPC_BodyID inBodyID) {
+	to_jph(self)->DestroyBody(to_jph(inBodyID));
 }
 
 ////////////////////////////////////////////////////////////////////////////////

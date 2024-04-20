@@ -135,10 +135,13 @@ int main() {
 	floor_settings.Shape = shape;
 
 	JPC_Body* floor = JPC_BodyInterface_CreateBody(body_interface, &floor_settings);
+	JPC_BodyInterface_AddBody(body_interface, JPC_Body_GetID(floor), JPC_ACTIVATION_DONT_ACTIVATE);
 
-	// body_interface.AddBody(floor->GetID(), EActivation::DontActivate);
+	// BodyCreationSettings sphere_settings(new SphereShape(0.5f), RVec3(0.0_r, 2.0_r, 0.0_r), Quat::sIdentity(), EMotionType::Dynamic, Layers::MOVING);
+	// BodyID sphere_id = body_interface.CreateAndAddBody(sphere_settings, EActivation::Activate);
 
-	// TODO: creating bodies
+	// body_interface.SetLinearVelocity(sphere_id, Vec3(0.0f, -5.0f, 0.0f));
+
 	// TODO: PhysicsSystem::OptimizeBroadPhase
 
 	const float cDeltaTime = 1.0f / 60.0f;
@@ -150,6 +153,9 @@ int main() {
 	}
 
 	// TODO: RemoveBody and DestroyBody
+
+	JPC_BodyInterface_RemoveBody(body_interface, JPC_Body_GetID(floor));
+	JPC_BodyInterface_DestroyBody(body_interface, JPC_Body_GetID(floor));
 
 	JPC_PhysicsSystem_delete(physics_system);
 	JPC_BroadPhaseLayerInterface_delete(broad_phase_layer_interface);
