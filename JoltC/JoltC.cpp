@@ -60,6 +60,9 @@ DESTRUCTOR(JPC_String)
 OPAQUE_WRAPPER(JPC_BoxShapeSettings, JPH::BoxShapeSettings)
 DESTRUCTOR(JPC_BoxShapeSettings)
 
+OPAQUE_WRAPPER(JPC_SphereShapeSettings, JPH::SphereShapeSettings)
+DESTRUCTOR(JPC_SphereShapeSettings)
+
 static auto to_jpc(JPH::BroadPhaseLayer in) { return in.GetValue(); }
 static auto to_jph(JPC_BroadPhaseLayer in) { return JPH::BroadPhaseLayer(in); }
 
@@ -281,6 +284,16 @@ JPC_API void JPC_ConvexShapeSettings_SetDensity(JPC_ConvexShapeSettings* self, f
 
 JPC_API JPC_BoxShapeSettings* JPC_BoxShapeSettings_new(JPC_Vec3 inHalfExtent) {
 	return to_jpc(new JPH::BoxShapeSettings(to_jph(inHalfExtent)));
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// SphereShapeSettings
+
+JPC_API JPC_SphereShapeSettings* JPC_SphereShapeSettings_new(float inRadius) {
+	auto settings = new JPH::SphereShapeSettings{};
+	settings->mRadius = inRadius;
+
+	return to_jpc(settings);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

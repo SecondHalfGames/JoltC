@@ -113,12 +113,12 @@ int main() {
 
 	JPC_BodyInterface* body_interface = JPC_PhysicsSystem_GetBodyInterface(physics_system);
 
-	JPC_BoxShapeSettings* floor_shape_settings = JPC_BoxShapeSettings_new(JPC_Vec3{100.0f, 100.0f, 100.0f});
+	JPC_BoxShapeSettings* floor_shape_settings = JPC_BoxShapeSettings_new(JPC_Vec3{100.0f, 1.0f, 100.0f});
 	JPC_ConvexShapeSettings_SetDensity((JPC_ConvexShapeSettings*)floor_shape_settings, 1000.0f);
 
-	JPC_Shape* shape;
+	JPC_Shape* floor_shape;
 	JPC_String* err;
-	if (!JPC_ShapeSettings_Create((JPC_ShapeSettings*)floor_shape_settings, &shape, &err)) {
+	if (!JPC_ShapeSettings_Create((JPC_ShapeSettings*)floor_shape_settings, &floor_shape, &err)) {
 		printf("fatal error: %s\n", JPC_String_c_str(err));
 
 		// the world is ending, but I guess we can still free memory
@@ -132,12 +132,34 @@ int main() {
 	floor_settings.Position = JPC_RVec3{0.0, -1.0, 0.0};
 	floor_settings.MotionType = JPC_MOTION_TYPE_STATIC;
 	floor_settings.ObjectLayer = HELLO_OL_NON_MOVING;
-	floor_settings.Shape = shape;
+	floor_settings.Shape = floor_shape;
 
 	JPC_Body* floor = JPC_BodyInterface_CreateBody(body_interface, &floor_settings);
 	JPC_BodyInterface_AddBody(body_interface, JPC_Body_GetID(floor), JPC_ACTIVATION_DONT_ACTIVATE);
 
-	// BodyCreationSettings sphere_settings(new SphereShape(0.5f), RVec3(0.0_r, 2.0_r, 0.0_r), Quat::sIdentity(), EMotionType::Dynamic, Layers::MOVING);
+	JPC_SphereShapeSettings* sphere_shape_settings = JPC_SphereShapeSettings_new(0.5);
+
+	JPC_Shape* sphere_shape;
+	if (!JPC_ShapeSettings_Create((JPC_ShapeSettings*)sphere_shape_settings, &sphere_shape, &err)) {
+		printf("fatal error: %s\n", JPC_String_c_str(err));
+
+		// the world is ending, but I guess we can still free memory
+		JPC_String_delete(err);
+
+		exit(1);
+	}
+
+	JPC_BodyCreationSettings sphere_settings;
+	JPC_BodyCreationSettings_default(&sphere_settings);
+	sphere_settings.Position = JPC_RVec3{0.0, 2.0, 0.0};
+	sphere_settings.MotionType = JPC_MOTION_TYPE_DYNAMIC;
+	sphere_settings.ObjectLayer = HELLO_OL_MOVING;
+	sphere_settings.Shape = sphere_shape;
+
+	JPC_Body* sphere = JPC_BodyInterface_CreateBody(body_interface, &sphere_settings);
+	JPC_BodyID sphere_id = JPC_Body_GetID(sphere);
+	JPC_BodyInterface_AddBody(body_interface, sphere_id, JPC_ACTIVATION_ACTIVATE);
+
 	// BodyID sphere_id = body_interface.CreateAndAddBody(sphere_settings, EActivation::Activate);
 
 	// body_interface.SetLinearVelocity(sphere_id, Vec3(0.0f, -5.0f, 0.0f));
@@ -153,6 +175,9 @@ int main() {
 	}
 
 	// TODO: RemoveBody and DestroyBody
+
+	JPC_BodyInterface_RemoveBody(body_interface, sphere_id);
+	JPC_BodyInterface_DestroyBody(body_interface, sphere_id);
 
 	JPC_BodyInterface_RemoveBody(body_interface, JPC_Body_GetID(floor));
 	JPC_BodyInterface_DestroyBody(body_interface, JPC_Body_GetID(floor));

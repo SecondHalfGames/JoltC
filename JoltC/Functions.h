@@ -196,6 +196,14 @@ JPC_API JPC_BoxShapeSettings* JPC_BoxShapeSettings_new(JPC_Vec3 inHalfExtent);
 JPC_API void JPC_BoxShapeSettings_delete(JPC_BoxShapeSettings* object);
 
 ////////////////////////////////////////////////////////////////////////////////
+// SphereShapeSettings
+
+typedef struct JPC_SphereShapeSettings JPC_SphereShapeSettings;
+
+JPC_API JPC_SphereShapeSettings* JPC_SphereShapeSettings_new(float inRadius);
+JPC_API void JPC_SphereShapeSettings_delete(JPC_SphereShapeSettings* object);
+
+////////////////////////////////////////////////////////////////////////////////
 // BodyCreationSettings
 
 typedef struct JPC_BodyCreationSettings {
