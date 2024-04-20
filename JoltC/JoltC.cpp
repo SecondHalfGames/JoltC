@@ -69,6 +69,13 @@ static JPH::Vec3 to_jph(JPC_Vec3 in) {
 	return JPH::Vec3(in.x, in.y, in.z);
 }
 
+static JPC_DVec3 to_jpc(JPH::DVec3 in) {
+	return JPC_DVec3{in.GetX(), in.GetY(), in.GetZ(), in.GetZ()};
+}
+static JPH::DVec3 to_jph(JPC_DVec3 in) {
+	return JPH::DVec3(in.x, in.y, in.z);
+}
+
 static JPC_Quat to_jpc(JPH::Quat in) {
 	return JPC_Quat{in.GetX(), in.GetY(), in.GetZ(), in.GetW()};
 }
