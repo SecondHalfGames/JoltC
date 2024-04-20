@@ -1,5 +1,5 @@
 # JoltC
-C wrapper for [Jolt Physics](https://github.com/jrouwe/JoltPhysics).
+C wrapper for [Jolt Physics](https://github.com/jrouwe/JoltPhysics) 5.0.0.
 
 Currently a work in progress. Bindings contain functions that we've needed as part of our game or the Rust bindings we're working on in [jolt-rust](https://github.com/SecondHalfGames/jolt-rust).
 
@@ -14,6 +14,9 @@ Use CMake:
 cmake -B build
 cmake --build build
 ```
+
+## Hello, world!
+A port of Jolt's "HelloWorld" example is provided in [HelloWorld/main.cpp](HelloWorld/main.cpp).
 
 ## Other C Wrappers
 Other C wrappers for Jolt Physics include:
