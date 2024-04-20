@@ -163,6 +163,8 @@ int main() {
 	// TODO: RemoveBody and DestroyBody
 
 	JPC_PhysicsSystem_delete(physics_system);
+	JPC_BroadPhaseLayerInterface_delete(broad_phase_layer_interface);
+
 	JPC_JobSystemThreadPool_delete(job_system);
 	JPC_TempAllocatorImpl_delete(temp_allocator);
 

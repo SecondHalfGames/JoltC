@@ -118,6 +118,8 @@ JPC_API JPC_BroadPhaseLayerInterface* JPC_BroadPhaseLayerInterface_new(
 	const void *self,
 	JPC_BroadPhaseLayerInterfaceFns fns);
 
+JPC_API void JPC_BroadPhaseLayerInterface_delete(JPC_BroadPhaseLayerInterface* object);
+
 ////////////////////////////////////////////////////////////////////////////////
 // ObjectVsBroadPhaseLayerFilter
 
