@@ -36,7 +36,7 @@ constexpr auto to_integral(E e) -> typename std::underlying_type<E>::type
 #define ENSURE_SIZE_ALIGN(c_type, cpp_type) \
     static_assert(sizeof(c_type) == sizeof(cpp_type), "size of " #c_type " did not match size of " #cpp_type); \
     static_assert(alignof(c_type) == alignof(cpp_type), "align of " #c_type " did not match align of " #cpp_type); \
-    static_assert(std::is_standard_layout<cpp_type>::value, #cpp_type " is not standard layout");
+    static_assert(!std::is_polymorphic_v<cpp_type>, #cpp_type " is polymorphic and cannot be mirrored");
 
 #define unsafe_offsetof(st, m) ((size_t) ( (char *)&((st *)(0))->m - (char *)0 ))
 #define unsafe_fieldtype(st, m) decltype((st *)(0)->m)

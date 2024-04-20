@@ -91,6 +91,19 @@ ENSURE_SIZE_ALIGN(JPC_BroadPhaseLayer, JPH::BroadPhaseLayer)
 
 ENSURE_SIZE_ALIGN(JPC_ObjectLayer, JPH::ObjectLayer)
 
+typedef struct JPC_IndexedTriangleNoMaterial {
+	uint32_t idx[3];
+} JPC_IndexedTriangleNoMaterial;
+
+ENSURE_SIZE_ALIGN(JPC_IndexedTriangleNoMaterial, JPH::IndexedTriangleNoMaterial)
+
+typedef struct JPC_IndexedTriangle {
+	uint32_t idx[3];
+	uint32_t materialIndex;
+} JPC_IndexedTriangle;
+
+ENSURE_SIZE_ALIGN(JPC_IndexedTriangle, JPH::IndexedTriangle)
+
 ////////////////////////////////////////////////////////////////////////////////
 // VertexList == Array<Float3> == std::vector<Float3>
 
@@ -98,6 +111,14 @@ typedef struct JPC_VertexList JPC_VertexList;
 
 JPC_API JPC_VertexList* JPC_VertexList_new(const JPC_Float3* storage, size_t len);
 JPC_API void JPC_VertexList_delete(JPC_VertexList* object);
+
+////////////////////////////////////////////////////////////////////////////////
+// IndexedTriangleList == Array<IndexedTriangle> == std::vector<IndexedTriangle>
+
+typedef struct JPC_IndexedTriangleList JPC_IndexedTriangleList;
+
+JPC_API JPC_IndexedTriangleList* JPC_IndexedTriangleList_new(const JPC_IndexedTriangle* storage, size_t len);
+JPC_API void JPC_IndexedTriangleList_delete(JPC_IndexedTriangleList* object);
 
 ////////////////////////////////////////////////////////////////////////////////
 // TempAllocatorImpl

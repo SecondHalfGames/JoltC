@@ -57,6 +57,9 @@ OPAQUE_WRAPPER(JPC_Body, JPH::Body)
 OPAQUE_WRAPPER(JPC_VertexList, JPH::VertexList)
 DESTRUCTOR(JPC_VertexList)
 
+OPAQUE_WRAPPER(JPC_IndexedTriangleList, JPH::IndexedTriangleList)
+DESTRUCTOR(JPC_IndexedTriangleList)
+
 OPAQUE_WRAPPER(JPC_String, JPH::String)
 DESTRUCTOR(JPC_String)
 
@@ -124,6 +127,14 @@ JPC_API void JPC_UnregisterTypes() {
 JPC_API JPC_VertexList* JPC_VertexList_new(const JPC_Float3* storage, size_t len) {
 	const JPH::Float3* new_storage = (const JPH::Float3*)storage;
 	return to_jpc(new JPH::VertexList(new_storage, new_storage + len));
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// IndexedTriangleList == Array<IndexedTriangle> == std::vector<IndexedTriangle>
+
+JPC_API JPC_IndexedTriangleList* JPC_IndexedTriangleList_new(const JPC_IndexedTriangle* storage, size_t len) {
+	const JPH::IndexedTriangle* new_storage = (const JPH::IndexedTriangle*)storage;
+	return to_jpc(new JPH::IndexedTriangleList(new_storage, new_storage + len));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
