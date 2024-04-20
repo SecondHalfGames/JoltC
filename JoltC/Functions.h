@@ -132,6 +132,12 @@ typedef struct JPC_ObjectVsBroadPhaseLayerFilter {
 	JPC_ObjectVsBroadPhaseLayerFilterFns fns;
 } JPC_ObjectVsBroadPhaseLayerFilter;
 
+JPC_API JPC_ObjectVsBroadPhaseLayerFilter* JPC_ObjectVsBroadPhaseLayerFilter_new(
+	const void *self,
+	JPC_ObjectVsBroadPhaseLayerFilterFns fns);
+
+JPC_API void JPC_ObjectVsBroadPhaseLayerFilter_delete(JPC_ObjectVsBroadPhaseLayerFilter* object);
+
 ////////////////////////////////////////////////////////////////////////////////
 // ObjectLayerPairFilter
 
@@ -143,6 +149,12 @@ typedef struct JPC_ObjectLayerPairFilter {
 	const void *self;
 	JPC_ObjectLayerPairFilterFns fns;
 } JPC_ObjectLayerPairFilter;
+
+JPC_API JPC_ObjectLayerPairFilter* JPC_ObjectLayerPairFilter_new(
+	const void *self,
+	JPC_ObjectLayerPairFilterFns fns);
+
+JPC_API void JPC_ObjectLayerPairFilter_delete(JPC_ObjectLayerPairFilter* object);
 
 ////////////////////////////////////////////////////////////////////////////////
 // String
@@ -236,8 +248,8 @@ JPC_API void JPC_PhysicsSystem_Init(
 	uint inMaxBodyPairs,
 	uint inMaxContactConstraints,
 	JPC_BroadPhaseLayerInterface* inBroadPhaseLayerInterface,
-	JPC_ObjectVsBroadPhaseLayerFilter inObjectVsBroadPhaseLayerFilter,
-	JPC_ObjectLayerPairFilter inObjectLayerPairFilter);
+	JPC_ObjectVsBroadPhaseLayerFilter* inObjectVsBroadPhaseLayerFilter,
+	JPC_ObjectLayerPairFilter* inObjectLayerPairFilter);
 
 JPC_API JPC_PhysicsUpdateError JPC_PhysicsSystem_Update(
 	JPC_PhysicsSystem* self,

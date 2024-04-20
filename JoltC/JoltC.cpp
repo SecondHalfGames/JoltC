@@ -165,9 +165,9 @@ JPC_API void JPC_BroadPhaseLayerInterface_delete(JPC_BroadPhaseLayerInterface* o
 ////////////////////////////////////////////////////////////////////////////////
 // ObjectVsBroadPhaseLayerFilter
 
-class JPC_ObjectVsBroadPhaseLayerFilter_Impl final : public JPH::ObjectVsBroadPhaseLayerFilter {
+class JPC_ObjectVsBroadPhaseLayerFilterBridge final : public JPH::ObjectVsBroadPhaseLayerFilter {
 public:
-	explicit JPC_ObjectVsBroadPhaseLayerFilter_Impl(JPC_ObjectVsBroadPhaseLayerFilter in) : self(in.self), fns(in.fns) {}
+	explicit JPC_ObjectVsBroadPhaseLayerFilterBridge(const void *self, JPC_ObjectVsBroadPhaseLayerFilterFns fns) : self(self), fns(fns) {}
 
 	virtual bool ShouldCollide(JPH::ObjectLayer inLayer1, JPH::BroadPhaseLayer inLayer2) const override {
 		return fns.ShouldCollide(self, inLayer1, to_jpc(inLayer2));
@@ -178,16 +178,25 @@ private:
 	JPC_ObjectVsBroadPhaseLayerFilterFns fns;
 };
 
-static JPC_ObjectVsBroadPhaseLayerFilter_Impl to_jph(JPC_ObjectVsBroadPhaseLayerFilter in) {
-	return JPC_ObjectVsBroadPhaseLayerFilter_Impl(in);
+OPAQUE_WRAPPER(JPC_ObjectVsBroadPhaseLayerFilter, JPC_ObjectVsBroadPhaseLayerFilterBridge)
+
+JPC_API JPC_ObjectVsBroadPhaseLayerFilter* JPC_ObjectVsBroadPhaseLayerFilter_new(
+	const void *self,
+	JPC_ObjectVsBroadPhaseLayerFilterFns fns)
+{
+	return to_jpc(new JPC_ObjectVsBroadPhaseLayerFilterBridge(self, fns));
+}
+
+JPC_API void JPC_ObjectVsBroadPhaseLayerFilter_delete(JPC_ObjectVsBroadPhaseLayerFilter* object) {
+	delete to_jph(object);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // JPC_ObjectLayerPairFilter
 
-class JPC_ObjectLayerPairFilter_Impl final : public JPH::ObjectLayerPairFilter {
+class JPC_ObjectLayerPairFilterBridge final : public JPH::ObjectLayerPairFilter {
 public:
-	explicit JPC_ObjectLayerPairFilter_Impl(JPC_ObjectLayerPairFilter in) : self(in.self), fns(in.fns) {}
+	explicit JPC_ObjectLayerPairFilterBridge(const void *self, JPC_ObjectLayerPairFilterFns fns) : self(self), fns(fns) {}
 
 	virtual bool ShouldCollide(JPH::ObjectLayer inLayer1, JPH::ObjectLayer inLayer2) const override {
 		return fns.ShouldCollide(self, inLayer1, inLayer2);
@@ -198,8 +207,17 @@ private:
 	JPC_ObjectLayerPairFilterFns fns;
 };
 
-static JPC_ObjectLayerPairFilter_Impl to_jph(JPC_ObjectLayerPairFilter in) {
-	return JPC_ObjectLayerPairFilter_Impl(in);
+OPAQUE_WRAPPER(JPC_ObjectLayerPairFilter, JPC_ObjectLayerPairFilterBridge)
+
+JPC_API JPC_ObjectLayerPairFilter* JPC_ObjectLayerPairFilter_new(
+	const void *self,
+	JPC_ObjectLayerPairFilterFns fns)
+{
+	return to_jpc(new JPC_ObjectLayerPairFilterBridge(self, fns));
+}
+
+JPC_API void JPC_ObjectLayerPairFilter_delete(JPC_ObjectLayerPairFilter* object) {
+	delete to_jph(object);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -303,12 +321,12 @@ JPC_API void JPC_PhysicsSystem_Init(
 	uint inMaxBodyPairs,
 	uint inMaxContactConstraints,
 	JPC_BroadPhaseLayerInterface* inBroadPhaseLayerInterface,
-	JPC_ObjectVsBroadPhaseLayerFilter inObjectVsBroadPhaseLayerFilter,
-	JPC_ObjectLayerPairFilter inObjectLayerPairFilter)
+	JPC_ObjectVsBroadPhaseLayerFilter* inObjectVsBroadPhaseLayerFilter,
+	JPC_ObjectLayerPairFilter* inObjectLayerPairFilter)
 {
 	JPC_BroadPhaseLayerInterfaceBridge* impl_inBroadPhaseLayerInterface = to_jph(inBroadPhaseLayerInterface);
-	auto impl_inObjectVsBroadPhaseLayerFilter = to_jph(inObjectVsBroadPhaseLayerFilter);
-	auto impl_inObjectLayerPairFilter = to_jph(inObjectLayerPairFilter);
+	JPC_ObjectVsBroadPhaseLayerFilterBridge* impl_inObjectVsBroadPhaseLayerFilter = to_jph(inObjectVsBroadPhaseLayerFilter);
+	JPC_ObjectLayerPairFilterBridge* impl_inObjectLayerPairFilter = to_jph(inObjectLayerPairFilter);
 
 	to_jph(self)->Init(
 		inMaxBodies,
@@ -316,8 +334,8 @@ JPC_API void JPC_PhysicsSystem_Init(
 		inMaxBodyPairs,
 		inMaxContactConstraints,
 		*impl_inBroadPhaseLayerInterface,
-		impl_inObjectVsBroadPhaseLayerFilter,
-		impl_inObjectLayerPairFilter);
+		*impl_inObjectVsBroadPhaseLayerFilter,
+		*impl_inObjectLayerPairFilter);
 }
 
 JPC_API JPC_BodyInterface* JPC_PhysicsSystem_GetBodyInterface(JPC_PhysicsSystem* self) {

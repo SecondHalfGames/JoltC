@@ -89,26 +89,15 @@ int main() {
 	JPC_JobSystemThreadPool* job_system = JPC_JobSystemThreadPool_new2(JPC_MAX_PHYSICS_JOBS, JPC_MAX_PHYSICS_BARRIERS);
 
 	JPC_BroadPhaseLayerInterface* broad_phase_layer_interface = JPC_BroadPhaseLayerInterface_new(nullptr, Hello_BPL);
-
-	JPC_ObjectVsBroadPhaseLayerFilter object_vs_broad_phase_layer_filter = {
-		.self = nullptr,
-		.fns = Hello_OVB,
-	};
-
-	JPC_ObjectLayerPairFilter object_vs_object_layer_filter = {
-		.self = nullptr,
-		.fns = Hello_OVO,
-	};
-
-	// FIXME: These types get freed on accident
-
-	JPC_PhysicsSystem* physics_system = JPC_PhysicsSystem_new();
+	JPC_ObjectVsBroadPhaseLayerFilter* object_vs_broad_phase_layer_filter = JPC_ObjectVsBroadPhaseLayerFilter_new(nullptr, Hello_OVB);
+	JPC_ObjectLayerPairFilter* object_vs_object_layer_filter = JPC_ObjectLayerPairFilter_new(nullptr, Hello_OVO);
 
 	const unsigned int cMaxBodies = 1024;
 	const unsigned int cNumBodyMutexes = 0;
 	const unsigned int cMaxBodyPairs = 1024;
 	const unsigned int cMaxContactConstraints = 1024;
 
+	JPC_PhysicsSystem* physics_system = JPC_PhysicsSystem_new();
 	JPC_PhysicsSystem_Init(
 		physics_system,
 		cMaxBodies,
@@ -164,6 +153,8 @@ int main() {
 
 	JPC_PhysicsSystem_delete(physics_system);
 	JPC_BroadPhaseLayerInterface_delete(broad_phase_layer_interface);
+	JPC_ObjectVsBroadPhaseLayerFilter_delete(object_vs_broad_phase_layer_filter);
+	JPC_ObjectLayerPairFilter_delete(object_vs_object_layer_filter);
 
 	JPC_JobSystemThreadPool_delete(job_system);
 	JPC_TempAllocatorImpl_delete(temp_allocator);
