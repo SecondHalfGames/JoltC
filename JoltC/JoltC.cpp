@@ -353,6 +353,14 @@ JPC_API void JPC_BodyInterface_DestroyBody(JPC_BodyInterface* self, JPC_BodyID i
 	to_jph(self)->DestroyBody(to_jph(inBodyID));
 }
 
+JPC_API JPC_RVec3 JPC_BodyInterface_GetCenterOfMassPosition(JPC_BodyInterface* self, JPC_BodyID inBodyID) {
+	return to_jpc(to_jph(self)->GetCenterOfMassPosition(to_jph(inBodyID)));
+}
+
+JPC_API JPC_Vec3 JPC_BodyInterface_GetLinearVelocity(JPC_BodyInterface* self, JPC_BodyID inBodyID) {
+	return to_jpc(to_jph(self)->GetLinearVelocity(to_jph(inBodyID)));
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 // PhysicsSystem
 

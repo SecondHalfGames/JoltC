@@ -170,7 +170,13 @@ int main() {
 	const int cCollisionSteps = 1;
 
 	// TODO: Update loop
-	for (int i = 0; i < 100; i++) {
+	for (int i = 0; i < 35; i++) {
+		JPC_RVec3 position = JPC_BodyInterface_GetCenterOfMassPosition(body_interface, sphere_id);
+		JPC_Vec3 velocity = JPC_BodyInterface_GetLinearVelocity(body_interface, sphere_id);
+
+		printf("Step %d: Position = (%f, %f, %f), Velocity = (%f, %f, %f)\n", i, position.x, position.y, position.z, velocity.x, velocity.y, velocity.z);
+		// cout << "Step " << step << ": Position = (" << position.GetX() << ", " << position.GetY() << ", " << position.GetZ() << "), Velocity = (" << velocity.GetX() << ", " << velocity.GetY() << ", " << velocity.GetZ() << ")" << endl;
+
 		JPC_PhysicsSystem_Update(physics_system, cDeltaTime, cCollisionSteps, temp_allocator, job_system);
 	}
 
