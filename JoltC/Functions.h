@@ -61,6 +61,15 @@ typedef struct JPC_Quat {
 
 ENSURE_SIZE_ALIGN(JPC_Quat, JPH::Quat)
 
+typedef struct JPC_Color {
+	alignas(uint32_t) uint8_t r;
+	uint8_t g;
+	uint8_t b;
+	uint8_t a;
+} JPC_Color;
+
+ENSURE_SIZE_ALIGN(JPC_Color, JPH::Color)
+
 #ifdef JPC_DOUBLE_PRECISION
 	typedef JPC_DVec3 JPC_RVec3;
 	typedef double Real;
@@ -166,10 +175,7 @@ typedef struct JPC_ObjectVsBroadPhaseLayerFilterFns {
 	bool (*ShouldCollide)(const void *self, JPC_ObjectLayer inLayer1, JPC_BroadPhaseLayer inLayer2);
 } JPC_ObjectVsBroadPhaseLayerFilterFns;
 
-typedef struct JPC_ObjectVsBroadPhaseLayerFilter {
-	const void *self;
-	JPC_ObjectVsBroadPhaseLayerFilterFns fns;
-} JPC_ObjectVsBroadPhaseLayerFilter;
+typedef struct JPC_ObjectVsBroadPhaseLayerFilter JPC_ObjectVsBroadPhaseLayerFilter;
 
 JPC_API JPC_ObjectVsBroadPhaseLayerFilter* JPC_ObjectVsBroadPhaseLayerFilter_new(
 	const void *self,
@@ -184,16 +190,28 @@ typedef struct JPC_ObjectLayerPairFilterFns {
 	bool (*ShouldCollide)(const void *self, JPC_ObjectLayer inLayer1, JPC_ObjectLayer inLayer2);
 } JPC_ObjectLayerPairFilterFns;
 
-typedef struct JPC_ObjectLayerPairFilter {
-	const void *self;
-	JPC_ObjectLayerPairFilterFns fns;
-} JPC_ObjectLayerPairFilter;
+typedef struct JPC_ObjectLayerPairFilter JPC_ObjectLayerPairFilter;
 
 JPC_API JPC_ObjectLayerPairFilter* JPC_ObjectLayerPairFilter_new(
 	const void *self,
 	JPC_ObjectLayerPairFilterFns fns);
 
 JPC_API void JPC_ObjectLayerPairFilter_delete(JPC_ObjectLayerPairFilter* object);
+
+////////////////////////////////////////////////////////////////////////////////
+// DebugRendererSimple
+
+typedef struct JPC_DebugRendererSimpleFns {
+	void (*DrawLine)(const void *self, JPC_RVec3 inFrom, JPC_RVec3 inTo, JPC_Color inColor);
+} JPC_DebugRendererSimpleFns;
+
+typedef struct JPC_DebugRendererSimple JPC_DebugRendererSimple;
+
+JPC_API JPC_DebugRendererSimple* JPC_DebugRendererSimple_new(
+	const void *self,
+	JPC_DebugRendererSimpleFns fns);
+
+JPC_API void JPC_DebugRendererSimple_delete(JPC_DebugRendererSimple* object);
 
 ////////////////////////////////////////////////////////////////////////////////
 // String

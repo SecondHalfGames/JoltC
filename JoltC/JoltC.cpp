@@ -11,6 +11,8 @@
 #include <Jolt/Physics/Body/BodyCreationSettings.h>
 #include <Jolt/Physics/Body/BodyActivationListener.h>
 
+#include <Jolt/Renderer/DebugRendererSimple.h>
+
 #include <JoltC/JoltC.h>
 
 #define OPAQUE_WRAPPER(c_type, cpp_type) \
@@ -91,6 +93,13 @@ static JPC_Quat to_jpc(JPH::Quat in) {
 }
 static JPH::Quat to_jph(JPC_Quat in) {
 	return JPH::Quat(in.x, in.y, in.z, in.w);
+}
+
+static JPC_Color to_jpc(JPH::Color in) {
+	return JPC_Color{in.r, in.g, in.b, in.a};
+}
+static JPH::Color to_jph(JPC_Color in) {
+	return JPH::Color(in.r, in.g, in.b, in.a);
 }
 
 static JPC_BodyID to_jpc(JPH::BodyID in) {
@@ -189,16 +198,13 @@ private:
 };
 
 OPAQUE_WRAPPER(JPC_BroadPhaseLayerInterface, JPC_BroadPhaseLayerInterfaceBridge)
+DESTRUCTOR(JPC_BroadPhaseLayerInterface)
 
 JPC_API JPC_BroadPhaseLayerInterface* JPC_BroadPhaseLayerInterface_new(
 	const void *self,
 	JPC_BroadPhaseLayerInterfaceFns fns)
 {
 	return to_jpc(new JPC_BroadPhaseLayerInterfaceBridge(self, fns));
-}
-
-JPC_API void JPC_BroadPhaseLayerInterface_delete(JPC_BroadPhaseLayerInterface* object) {
-	delete to_jph(object);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -218,16 +224,13 @@ private:
 };
 
 OPAQUE_WRAPPER(JPC_ObjectVsBroadPhaseLayerFilter, JPC_ObjectVsBroadPhaseLayerFilterBridge)
+DESTRUCTOR(JPC_ObjectVsBroadPhaseLayerFilter)
 
 JPC_API JPC_ObjectVsBroadPhaseLayerFilter* JPC_ObjectVsBroadPhaseLayerFilter_new(
 	const void *self,
 	JPC_ObjectVsBroadPhaseLayerFilterFns fns)
 {
 	return to_jpc(new JPC_ObjectVsBroadPhaseLayerFilterBridge(self, fns));
-}
-
-JPC_API void JPC_ObjectVsBroadPhaseLayerFilter_delete(JPC_ObjectVsBroadPhaseLayerFilter* object) {
-	delete to_jph(object);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -247,6 +250,7 @@ private:
 };
 
 OPAQUE_WRAPPER(JPC_ObjectLayerPairFilter, JPC_ObjectLayerPairFilterBridge)
+DESTRUCTOR(JPC_ObjectLayerPairFilter)
 
 JPC_API JPC_ObjectLayerPairFilter* JPC_ObjectLayerPairFilter_new(
 	const void *self,
@@ -255,8 +259,39 @@ JPC_API JPC_ObjectLayerPairFilter* JPC_ObjectLayerPairFilter_new(
 	return to_jpc(new JPC_ObjectLayerPairFilterBridge(self, fns));
 }
 
-JPC_API void JPC_ObjectLayerPairFilter_delete(JPC_ObjectLayerPairFilter* object) {
-	delete to_jph(object);
+////////////////////////////////////////////////////////////////////////////////
+// DebugRendererSimple
+
+class JPC_DebugRendererSimpleBridge final : public JPH::DebugRendererSimple {
+public:
+	explicit JPC_DebugRendererSimpleBridge(const void *self, JPC_DebugRendererSimpleFns fns) : self(self), fns(fns) {}
+
+	virtual void DrawLine(JPH::RVec3Arg inFrom, JPH::RVec3Arg inTo, JPH::ColorArg inColor) override {
+		fns.DrawLine(self, to_jpc(inFrom), to_jpc(inTo), to_jpc(inColor));
+	}
+
+	virtual void DrawText3D(
+		[[maybe_unused]] JPH::RVec3Arg inPosition,
+		[[maybe_unused]] const std::string_view &inString,
+		[[maybe_unused]] JPH::ColorArg inColor = JPH::Color::sWhite,
+		[[maybe_unused]] float inHeight = 0.5f) override
+	{
+		// TODO
+	}
+
+private:
+	const void* self;
+	JPC_DebugRendererSimpleFns fns;
+};
+
+OPAQUE_WRAPPER(JPC_DebugRendererSimple, JPC_DebugRendererSimpleBridge)
+DESTRUCTOR(JPC_DebugRendererSimple)
+
+JPC_API JPC_DebugRendererSimple* JPC_DebugRendererSimple_new(
+	const void *self,
+	JPC_DebugRendererSimpleFns fns)
+{
+	return to_jpc(new JPC_DebugRendererSimpleBridge(self, fns));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
