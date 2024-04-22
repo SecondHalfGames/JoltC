@@ -253,9 +253,13 @@ JPC_API void JPC_String_delete(JPC_String* self);
 JPC_API const char* JPC_String_c_str(JPC_String* self);
 
 ////////////////////////////////////////////////////////////////////////////////
-// Shapes
+// Shape -> RefTarget
 
 typedef struct JPC_Shape JPC_Shape;
+
+JPC_API uint32_t JPC_Shape_GetRefCount(JPC_Shape* self);
+JPC_API void JPC_Shape_AddRef(JPC_Shape* self);
+JPC_API void JPC_Shape_Release(JPC_Shape* self);
 
 ////////////////////////////////////////////////////////////////////////////////
 // ShapeSettings
@@ -324,7 +328,83 @@ JPC_API JPC_BodyCreationSettings* JPC_BodyCreationSettings_new();
 
 typedef struct JPC_Body JPC_Body;
 
-JPC_API JPC_BodyID JPC_Body_GetID(JPC_Body* self);
+JPC_API JPC_BodyID JPC_Body_GetID(const JPC_Body* self);
+JPC_API JPC_BodyType JPC_Body_GetBodyType(const JPC_Body* self);
+JPC_API bool JPC_Body_IsRigidBody(const JPC_Body* self);
+JPC_API bool JPC_Body_IsSoftBody(const JPC_Body* self);
+JPC_API bool JPC_Body_IsActive(const JPC_Body* self);
+JPC_API bool JPC_Body_IsStatic(const JPC_Body* self);
+JPC_API bool JPC_Body_IsKinematic(const JPC_Body* self);
+JPC_API bool JPC_Body_IsDynamic(const JPC_Body* self);
+JPC_API bool JPC_Body_CanBeKinematicOrDynamic(const JPC_Body* self);
+JPC_API void JPC_Body_SetIsSensor(JPC_Body* self, bool inIsSensor);
+JPC_API bool JPC_Body_IsSensor(const JPC_Body* self);
+JPC_API void JPC_Body_SetCollideKinematicVsNonDynamic(JPC_Body* self, bool inCollide);
+JPC_API bool JPC_Body_GetCollideKinematicVsNonDynamic(const JPC_Body* self);
+JPC_API void JPC_Body_SetUseManifoldReduction(JPC_Body* self, bool inUseReduction);
+JPC_API bool JPC_Body_GetUseManifoldReduction(const JPC_Body* self);
+JPC_API bool JPC_Body_GetUseManifoldReductionWithBody(const JPC_Body* self, const JPC_Body* inBody2);
+JPC_API void JPC_Body_SetApplyGyroscopicForce(JPC_Body* self, bool inApply);
+JPC_API bool JPC_Body_GetApplyGyroscopicForce(const JPC_Body* self);
+JPC_API void JPC_Body_SetEnhancedInternalEdgeRemoval(JPC_Body* self, bool inApply);
+JPC_API bool JPC_Body_GetEnhancedInternalEdgeRemoval(const JPC_Body* self);
+JPC_API bool JPC_Body_GetEnhancedInternalEdgeRemovalWithBody(const JPC_Body* self, const JPC_Body* inBody2);
+JPC_API JPC_MotionType JPC_Body_GetMotionType(const JPC_Body* self);
+JPC_API void JPC_Body_SetMotionType(JPC_Body* self, JPC_MotionType inMotionType);
+JPC_API JPC_BroadPhaseLayer JPC_Body_GetBroadPhaseLayer(const JPC_Body* self);
+JPC_API JPC_ObjectLayer JPC_Body_GetObjectLayer(const JPC_Body* self);
+// JPC_API const CollisionGroup & JPC_Body_GetCollisionGroup(const JPC_Body* self);
+// JPC_API CollisionGroup & JPC_Body_GetCollisionGroup(JPC_Body* self);
+// JPC_API void JPC_Body_SetCollisionGroup(JPC_Body* self, const CollisionGroup &inGroup);
+JPC_API bool JPC_Body_GetAllowSleeping(const JPC_Body* self);
+JPC_API void JPC_Body_SetAllowSleeping(JPC_Body* self, bool inAllow);
+JPC_API void JPC_Body_ResetSleepTimer(JPC_Body* self);
+JPC_API float JPC_Body_GetFriction(const JPC_Body* self);
+JPC_API void JPC_Body_SetFriction(JPC_Body* self, float inFriction);
+JPC_API float JPC_Body_GetRestitution(const JPC_Body* self);
+JPC_API void JPC_Body_SetRestitution(JPC_Body* self, float inRestitution);
+JPC_API JPC_Vec3 JPC_Body_GetLinearVelocity(const JPC_Body* self);
+JPC_API void JPC_Body_SetLinearVelocity(JPC_Body* self, JPC_Vec3 inLinearVelocity);
+JPC_API void JPC_Body_SetLinearVelocityClamped(JPC_Body* self, JPC_Vec3 inLinearVelocity);
+JPC_API JPC_Vec3 JPC_Body_GetAngularVelocity(const JPC_Body* self);
+JPC_API void JPC_Body_SetAngularVelocity(JPC_Body* self, JPC_Vec3 inAngularVelocity);
+JPC_API void JPC_Body_SetAngularVelocityClamped(JPC_Body* self, JPC_Vec3 inAngularVelocity);
+JPC_API JPC_Vec3 JPC_Body_GetPointVelocityCOM(const JPC_Body* self, JPC_Vec3 inPointRelativeToCOM);
+JPC_API JPC_Vec3 JPC_Body_GetPointVelocity(const JPC_Body* self, JPC_RVec3 inPoint);
+JPC_API void JPC_Body_AddForce(JPC_Body* self, JPC_Vec3 inForce);
+// JPC_API void JPC_Body_AddForce(JPC_Body* self, JPC_Vec3 inForce, JPC_RVec3 inPosition);
+JPC_API void JPC_Body_AddTorque(JPC_Body* self, JPC_Vec3 inTorque);
+JPC_API JPC_Vec3 JPC_Body_GetAccumulatedForce(const JPC_Body* self);
+JPC_API JPC_Vec3 JPC_Body_GetAccumulatedTorque(const JPC_Body* self);
+JPC_API void JPC_Body_ResetForce(JPC_Body* self);
+JPC_API void JPC_Body_ResetTorque(JPC_Body* self);
+JPC_API void JPC_Body_ResetMotion(JPC_Body* self);
+// JPC_API Mat44 JPC_Body_GetInverseInertia(const JPC_Body* self);
+JPC_API void JPC_Body_AddImpulse(JPC_Body* self, JPC_Vec3 inImpulse);
+// JPC_API void JPC_Body_AddImpulse(JPC_Body* self, JPC_Vec3 inImpulse, JPC_RVec3 inPosition);
+JPC_API void JPC_Body_AddAngularImpulse(JPC_Body* self, JPC_Vec3 inAngularImpulse);
+JPC_API void JPC_Body_MoveKinematic(JPC_Body* self, JPC_RVec3 inTargetPosition, JPC_Quat inTargetRotation, float inDeltaTime);
+JPC_API bool JPC_Body_ApplyBuoyancyImpulse(JPC_Body* self, JPC_RVec3 inSurfacePosition, JPC_Vec3 inSurfaceNormal, float inBuoyancy, float inLinearDrag, float inAngularDrag, JPC_Vec3 inFluidVelocity, JPC_Vec3 inGravity, float inDeltaTime);
+JPC_API bool JPC_Body_IsInBroadPhase(const JPC_Body* self);
+JPC_API bool JPC_Body_IsCollisionCacheInvalid(const JPC_Body* self);
+JPC_API const JPC_Shape* JPC_Body_GetShape(const JPC_Body* self);
+JPC_API JPC_RVec3 JPC_Body_GetPosition(const JPC_Body* self);
+JPC_API JPC_Quat JPC_Body_GetRotation(const JPC_Body* self);
+// JPC_API RMat44 JPC_Body_GetWorldTransform(const JPC_Body* self);
+JPC_API JPC_RVec3 JPC_Body_GetCenterOfMassPosition(const JPC_Body* self);
+// JPC_API RMat44 JPC_Body_GetCenterOfMassTransform(const JPC_Body* self);
+// JPC_API RMat44 JPC_Body_GetInverseCenterOfMassTransform(const JPC_Body* self);
+// JPC_API const AABox & JPC_Body_GetWorldSpaceBounds(const JPC_Body* self);
+// JPC_API const MotionProperties *JPC_Body_GetMotionProperties(const JPC_Body* self)
+// JPC_API MotionProperties * JPC_Body_GetMotionProperties(JPC_Body* self);
+// JPC_API const MotionProperties *JPC_Body_GetMotionPropertiesUnchecked(const JPC_Body* self)
+// JPC_API MotionProperties * JPC_Body_GetMotionPropertiesUnchecked(JPC_Body* self);
+JPC_API uint64_t JPC_Body_GetUserData(const JPC_Body* self);
+JPC_API void JPC_Body_SetUserData(JPC_Body* self, uint64_t inUserData);
+// JPC_API JPC_Vec3 JPC_Body_GetWorldSpaceSurfaceNormal(const JPC_Body* self, const SubShapeID &inSubShapeID, JPC_RVec3 inPosition);
+// JPC_API TransformedShape JPC_Body_GetTransformedShape(const JPC_Body* self);
+// JPC_API BodyCreationSettings JPC_Body_GetBodyCreationSettings(const JPC_Body* self);
+// JPC_API SoftBodyCreationSettings JPC_Body_GetSoftBodyCreationSettings(const JPC_Body* self);
 
 ////////////////////////////////////////////////////////////////////////////////
 // BodyInterface
