@@ -1,8 +1,9 @@
 #pragma once
 
-#include <stdint.h>
-#include <stdbool.h>
 #include <stdalign.h>
+#include <stdbool.h>
+#include <stddef.h>
+#include <stdint.h>
 
 #ifdef _MSC_VER
 	#define JPC_API extern __declspec(dllexport)
