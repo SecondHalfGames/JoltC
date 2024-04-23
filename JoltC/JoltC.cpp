@@ -138,6 +138,15 @@ static JPH::Quat to_jph(JPC_Quat in) {
 	return JPH::Quat(in.x, in.y, in.z, in.w);
 }
 
+static JPC_Mat44 to_jpc(JPH::Mat44 in) {
+	JPC_Mat44 out;
+	in.StoreFloat4x4(reinterpret_cast<JPH::Float4*>(&out));
+	return out;
+}
+static JPH::Mat44 to_jph(JPC_Mat44 in) {
+	return JPH::Mat44::sLoadFloat4x4Aligned(reinterpret_cast<const JPH::Float4*>(&in));
+}
+
 static JPC_Color to_jpc(JPH::Color in) {
 	return JPC_Color{in.r, in.g, in.b, in.a};
 }
@@ -707,7 +716,9 @@ JPC_API void JPC_Body_ResetMotion(JPC_Body* self) {
 	return to_jph(self)->ResetMotion();
 }
 
-// JPC_API Mat44 JPC_Body_GetInverseInertia(const JPC_Body* self);
+JPC_API void JPC_Body_GetInverseInertia(const JPC_Body* self, JPC_Mat44* outMatrix) {
+	to_jph(self)->GetInverseInertia().StoreFloat4x4(reinterpret_cast<JPH::Float4*>(outMatrix));
+}
 
 // JPC_API void JPC_Body_AddImpulse(JPC_Body* self, JPC_Vec3 inImpulse);
 // JPC_API void JPC_Body_AddImpulse(JPC_Body* self, JPC_Vec3 inImpulse, JPC_RVec3 inPosition);
@@ -1029,7 +1040,9 @@ JPC_API JPC_MotionQuality JPC_BodyInterface_GetMotionQuality(const JPC_BodyInter
 	return to_jpc(to_jph(self)->GetMotionQuality(to_jph(inBodyID)));
 }
 
-// Mat44 JPC_BodyInterface_GetInverseInertia(const JPC_BodyInterface *self, JPC_BodyID inBodyID);
+JPC_API void JPC_BodyInterface_GetInverseInertia(const JPC_BodyInterface *self, JPC_BodyID inBodyID, JPC_Mat44 *outMatrix) {
+	to_jph(self)->GetInverseInertia(to_jph(inBodyID)).StoreFloat4x4(reinterpret_cast<JPH::Float4*>(outMatrix));
+}
 
 JPC_API void JPC_BodyInterface_SetRestitution(JPC_BodyInterface *self, JPC_BodyID inBodyID, float inRestitution) {
 	return to_jph(self)->SetRestitution(to_jph(inBodyID), inRestitution);
