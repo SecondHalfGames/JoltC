@@ -11,6 +11,8 @@
 	#define JPC_API
 #endif
 
+static float JPC_PI = 3.14159265358979323846f;
+
 // C-compatible typedefs that match Jolt's internal primitive typedefs.
 #define uint unsigned int
 
@@ -303,16 +305,32 @@ typedef struct JPC_BodyCreationSettings {
 	JPC_Quat Rotation;
 	JPC_Vec3 LinearVelocity;
 	JPC_Vec3 AngularVelocity;
-
 	uint64_t UserData;
-
 	JPC_ObjectLayer ObjectLayer;
-	// TODO: CollisionGroup;
-
+	// CollisionGroup CollisionGroup;
 	JPC_MotionType MotionType;
 	JPC_AllowedDOFs AllowedDOFs;
+	bool AllowDynamicOrKinematic;
+	bool IsSensor;
+	bool CollideKinematicVsNonDynamic;
+	bool UseManifoldReduction;
+	bool ApplyGyroscopicForce;
+	JPC_MotionQuality MotionQuality;
+	bool EnhancedInternalEdgeRemoval;
+	bool AllowSleeping;
+	float Friction;
+	float Restitution;
+	float LinearDamping;
+	float AngularDamping;
+	float MaxLinearVelocity;
+	float MaxAngularVelocity;
+	float GravityFactor;
+	uint NumVelocityStepsOverride;
+	uint NumPositionStepsOverride;
+	JPC_OverrideMassProperties OverrideMassProperties;
+	float InertiaMultiplier;
 
-	// TODO: More
+	// MassProperties MassPropertiesOverride;
 
 	JPC_Shape* Shape;
 } JPC_BodyCreationSettings;

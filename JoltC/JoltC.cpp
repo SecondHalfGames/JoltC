@@ -69,6 +69,7 @@ ENUM_CONVERSION(JPC_AllowedDOFs, JPH::EAllowedDOFs)
 ENUM_CONVERSION(JPC_Activation, JPH::EActivation)
 ENUM_CONVERSION(JPC_BodyType, JPH::EBodyType)
 ENUM_CONVERSION(JPC_MotionQuality, JPH::EMotionQuality)
+ENUM_CONVERSION(JPC_OverrideMassProperties, JPH::EOverrideMassProperties)
 
 OPAQUE_WRAPPER(JPC_PhysicsSystem, JPH::PhysicsSystem)
 DESTRUCTOR(JPC_PhysicsSystem)
@@ -412,17 +413,73 @@ JPC_API JPC_SphereShapeSettings* JPC_SphereShapeSettings_new(float inRadius) {
 ////////////////////////////////////////////////////////////////////////////////
 // BodyCreationSettings
 
+static JPH::BodyCreationSettings to_jph(const JPC_BodyCreationSettings* settings) {
+	JPH::BodyCreationSettings output{};
+
+	output.mPosition = to_jph(settings->Position);
+	output.mRotation = to_jph(settings->Rotation);
+	output.mLinearVelocity = to_jph(settings->LinearVelocity);
+	output.mAngularVelocity = to_jph(settings->AngularVelocity);
+	output.mUserData = settings->UserData;
+	output.mObjectLayer = settings->ObjectLayer;
+	// CollisionGroup
+	output.mMotionType = to_jph(settings->MotionType);
+	output.mAllowedDOFs = to_jph(settings->AllowedDOFs);
+	output.mAllowDynamicOrKinematic = settings->AllowDynamicOrKinematic;
+	output.mIsSensor = settings->IsSensor;
+	output.mCollideKinematicVsNonDynamic = settings->CollideKinematicVsNonDynamic;
+	output.mUseManifoldReduction = settings->UseManifoldReduction;
+	output.mApplyGyroscopicForce = settings->ApplyGyroscopicForce;
+	output.mMotionQuality = to_jph(settings->MotionQuality);
+	output.mEnhancedInternalEdgeRemoval = settings->EnhancedInternalEdgeRemoval;
+	output.mAllowSleeping = settings->AllowSleeping;
+	output.mFriction = settings->Friction;
+	output.mRestitution = settings->Restitution;
+	output.mLinearDamping = settings->LinearDamping;
+	output.mAngularDamping = settings->AngularDamping;
+	output.mMaxLinearVelocity = settings->MaxLinearVelocity;
+	output.mMaxAngularVelocity = settings->MaxAngularVelocity;
+	output.mGravityFactor = settings->GravityFactor;
+	output.mNumVelocityStepsOverride = settings->NumVelocityStepsOverride;
+	output.mNumPositionStepsOverride = settings->NumPositionStepsOverride;
+	output.mOverrideMassProperties = to_jph(settings->OverrideMassProperties);
+	output.mInertiaMultiplier = settings->InertiaMultiplier;
+	// output.mMassPropertiesOverride = settings->MassPropertiesOverride;
+	output.SetShape(to_jph(settings->Shape));
+
+	return output;
+}
+
 JPC_API void JPC_BodyCreationSettings_default(JPC_BodyCreationSettings* settings) {
 	settings->Position = JPC_RVec3{0, 0, 0};
 	settings->Rotation = JPC_Quat{0, 0, 0, 1};
 	settings->LinearVelocity = JPC_Vec3{0, 0, 0};
 	settings->AngularVelocity = JPC_Vec3{0, 0, 0};
-
 	settings->UserData = 0;
 	settings->ObjectLayer = 0;
-
+	// CollisionGroup
 	settings->MotionType = JPC_MOTION_TYPE_DYNAMIC;
 	settings->AllowedDOFs = JPC_ALLOWED_DOFS_ALL;
+	settings->AllowDynamicOrKinematic = false;
+	settings->IsSensor = false;
+	settings->CollideKinematicVsNonDynamic = false;
+	settings->UseManifoldReduction = true;
+	settings->ApplyGyroscopicForce = false;
+	settings->MotionQuality = JPC_MOTION_QUALITY_DISCRETE;
+	settings->EnhancedInternalEdgeRemoval = false;
+	settings->AllowSleeping = true;
+	settings->Friction = 0.2f;
+	settings->Restitution = 0.0f;
+	settings->LinearDamping = 0.05f;
+	settings->AngularDamping = 0.05f;
+	settings->MaxLinearVelocity = 500.0f;
+	settings->MaxAngularVelocity = 0.25f * JPC_PI * 60.0f;
+	settings->GravityFactor = 1.0f;
+	settings->NumVelocityStepsOverride = 0;
+	settings->NumPositionStepsOverride = 0;
+	settings->OverrideMassProperties = JPC_OVERRIDE_MASS_PROPS_CALC_MASS_INERTIA;
+	settings->InertiaMultiplier = 1.0f;
+	// MassPropertiesOverride
 }
 
 ////////////////////////////////////////////////////////////////////////////////
