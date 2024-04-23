@@ -412,6 +412,22 @@ JPC_API JPC_SphereShapeSettings* JPC_SphereShapeSettings_new(float inRadius) {
 ////////////////////////////////////////////////////////////////////////////////
 // BodyCreationSettings
 
+static JPH::BodyCreationSettings to_jph(const JPC_BodyCreationSettings* settings) {
+	JPH::BodyCreationSettings output{};
+
+	output.mPosition = to_jph(settings->Position);
+	output.mRotation = to_jph(settings->Rotation);
+	output.mLinearVelocity = to_jph(settings->LinearVelocity);
+	output.mAngularVelocity = to_jph(settings->AngularVelocity);
+	output.mUserData = settings->UserData;
+	output.mObjectLayer = settings->ObjectLayer;
+	output.mMotionType = to_jph(settings->MotionType);
+	output.mAllowedDOFs = to_jph(settings->AllowedDOFs);
+	output.SetShape(to_jph(settings->Shape));
+
+	return output;
+}
+
 JPC_API void JPC_BodyCreationSettings_default(JPC_BodyCreationSettings* settings) {
 	settings->Position = JPC_RVec3{0, 0, 0};
 	settings->Rotation = JPC_Quat{0, 0, 0, 1};
@@ -685,22 +701,6 @@ JPC_API void JPC_Body_SetUserData(JPC_Body* self, uint64_t inUserData) {
 
 ////////////////////////////////////////////////////////////////////////////////
 // BodyInterface
-
-static JPH::BodyCreationSettings to_jph(const JPC_BodyCreationSettings* settings) {
-	JPH::BodyCreationSettings output{};
-
-	output.mPosition = to_jph(settings->Position);
-	output.mRotation = to_jph(settings->Rotation);
-	output.mLinearVelocity = to_jph(settings->LinearVelocity);
-	output.mAngularVelocity = to_jph(settings->AngularVelocity);
-	output.mUserData = settings->UserData;
-	output.mObjectLayer = settings->ObjectLayer;
-	output.mMotionType = to_jph(settings->MotionType);
-	output.mAllowedDOFs = to_jph(settings->AllowedDOFs);
-	output.SetShape(to_jph(settings->Shape));
-
-	return output;
-}
 
 JPC_API JPC_Body* JPC_BodyInterface_CreateBody(JPC_BodyInterface* self, const JPC_BodyCreationSettings* inSettings) {
 	return to_jpc(to_jph(self)->CreateBody(to_jph(inSettings)));
