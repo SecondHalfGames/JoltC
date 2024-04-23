@@ -1111,6 +1111,10 @@ JPC_API void JPC_PhysicsSystem_Init(
 		*impl_inObjectLayerPairFilter);
 }
 
+JPC_API void JPC_PhysicsSystem_OptimizeBroadPhase(JPC_PhysicsSystem* self) {
+	to_jph(self)->OptimizeBroadPhase();
+}
+
 JPC_API JPC_BodyInterface* JPC_PhysicsSystem_GetBodyInterface(JPC_PhysicsSystem* self) {
 	return to_jpc(&to_jph(self)->GetBodyInterface());
 }

@@ -176,7 +176,7 @@ int main() {
 	JPC_BodyManager_DrawSettings_default(&draw_settings);
 	JPC_PhysicsSystem_DrawBodies(physics_system, &draw_settings, debug_renderer, nullptr);
 
-	// TODO: PhysicsSystem::OptimizeBroadPhase
+	JPC_PhysicsSystem_OptimizeBroadPhase(physics_system);
 
 	const float cDeltaTime = 1.0f / 60.0f;
 	const int cCollisionSteps = 1;

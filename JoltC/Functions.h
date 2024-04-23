@@ -545,6 +545,8 @@ JPC_API void JPC_PhysicsSystem_Init(
 	JPC_ObjectVsBroadPhaseLayerFilter* inObjectVsBroadPhaseLayerFilter,
 	JPC_ObjectLayerPairFilter* inObjectLayerPairFilter);
 
+JPC_API void JPC_PhysicsSystem_OptimizeBroadPhase(JPC_PhysicsSystem* self);
+
 JPC_API JPC_PhysicsUpdateError JPC_PhysicsSystem_Update(
 	JPC_PhysicsSystem* self,
 	float inDeltaTime,
