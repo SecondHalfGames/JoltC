@@ -306,6 +306,14 @@ JPC_API float JPC_ConvexShapeSettings_GetDensity(JPC_ConvexShapeSettings* self);
 JPC_API void JPC_ConvexShapeSettings_SetDensity(JPC_ConvexShapeSettings* self, float inDensity);
 
 ////////////////////////////////////////////////////////////////////////////////
+// TriangleShapeSettings
+
+typedef struct JPC_TriangleShapeSettings JPC_TriangleShapeSettings;
+
+JPC_API JPC_TriangleShapeSettings* JPC_TriangleShapeSettings_new(JPC_Vec3 inV1, JPC_Vec3 inV2, JPC_Vec3 inV3);
+JPC_API void JPC_TriangleShapeSettings_delete(JPC_TriangleShapeSettings* object);
+
+////////////////////////////////////////////////////////////////////////////////
 // BoxShapeSettings
 
 typedef struct JPC_BoxShapeSettings JPC_BoxShapeSettings;

@@ -1,17 +1,18 @@
 #include <Jolt/Jolt.h>
 
-#include <Jolt/RegisterTypes.h>
 #include <Jolt/Core/Factory.h>
-#include <Jolt/Core/TempAllocator.h>
 #include <Jolt/Core/JobSystemThreadPool.h>
-#include <Jolt/Physics/PhysicsSettings.h>
-#include <Jolt/Physics/PhysicsSystem.h>
+#include <Jolt/Core/TempAllocator.h>
+#include <Jolt/Physics/Body/BodyActivationListener.h>
+#include <Jolt/Physics/Body/BodyCreationSettings.h>
 #include <Jolt/Physics/Collision/Shape/BoxShape.h>
-#include <Jolt/Physics/Collision/Shape/SphereShape.h>
 #include <Jolt/Physics/Collision/Shape/CapsuleShape.h>
 #include <Jolt/Physics/Collision/Shape/CylinderShape.h>
-#include <Jolt/Physics/Body/BodyCreationSettings.h>
-#include <Jolt/Physics/Body/BodyActivationListener.h>
+#include <Jolt/Physics/Collision/Shape/SphereShape.h>
+#include <Jolt/Physics/Collision/Shape/TriangleShape.h>
+#include <Jolt/Physics/PhysicsSettings.h>
+#include <Jolt/Physics/PhysicsSystem.h>
+#include <Jolt/RegisterTypes.h>
 
 #include <Jolt/Renderer/DebugRendererSimple.h>
 
@@ -97,6 +98,9 @@ DESTRUCTOR(JPC_IndexedTriangleList)
 
 OPAQUE_WRAPPER(JPC_String, JPH::String)
 DESTRUCTOR(JPC_String)
+
+OPAQUE_WRAPPER(JPC_TriangleShapeSettings, JPH::TriangleShapeSettings)
+DESTRUCTOR(JPC_TriangleShapeSettings)
 
 OPAQUE_WRAPPER(JPC_BoxShapeSettings, JPH::BoxShapeSettings)
 DESTRUCTOR(JPC_BoxShapeSettings)
@@ -408,6 +412,19 @@ JPC_API float JPC_ConvexShapeSettings_GetDensity(JPC_ConvexShapeSettings* self) 
 
 JPC_API void JPC_ConvexShapeSettings_SetDensity(JPC_ConvexShapeSettings* self, float inDensity) {
 	to_jph(self)->SetDensity(inDensity);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// TriangleShapeSettings
+
+JPC_API JPC_TriangleShapeSettings* JPC_TriangleShapeSettings_new(JPC_Vec3 inV1, JPC_Vec3 inV2, JPC_Vec3 inV3) {
+	auto settings = new JPH::TriangleShapeSettings{
+		to_jph(inV1),
+		to_jph(inV2),
+		to_jph(inV3),
+	};
+
+	return to_jpc(settings);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
