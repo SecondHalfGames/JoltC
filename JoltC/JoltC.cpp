@@ -8,6 +8,8 @@
 #include <Jolt/Physics/PhysicsSystem.h>
 #include <Jolt/Physics/Collision/Shape/BoxShape.h>
 #include <Jolt/Physics/Collision/Shape/SphereShape.h>
+#include <Jolt/Physics/Collision/Shape/CapsuleShape.h>
+#include <Jolt/Physics/Collision/Shape/CylinderShape.h>
 #include <Jolt/Physics/Body/BodyCreationSettings.h>
 #include <Jolt/Physics/Body/BodyActivationListener.h>
 
@@ -101,6 +103,12 @@ DESTRUCTOR(JPC_BoxShapeSettings)
 
 OPAQUE_WRAPPER(JPC_SphereShapeSettings, JPH::SphereShapeSettings)
 DESTRUCTOR(JPC_SphereShapeSettings)
+
+OPAQUE_WRAPPER(JPC_CapsuleShapeSettings, JPH::CapsuleShapeSettings)
+DESTRUCTOR(JPC_CapsuleShapeSettings)
+
+OPAQUE_WRAPPER(JPC_CylinderShapeSettings, JPH::CylinderShapeSettings)
+DESTRUCTOR(JPC_CylinderShapeSettings)
 
 LAYOUT_COMPATIBLE(JPC_BodyManager_DrawSettings, JPH::BodyManager::DrawSettings)
 
@@ -362,7 +370,7 @@ JPC_API void JPC_Shape_Release(JPC_Shape* self) {
 // ShapeSettings
 
 JPC_API bool JPC_ShapeSettings_Create(
-	JPC_ShapeSettings* self,
+	const JPC_ShapeSettings* self,
 	JPC_Shape** outShape,
 	JPC_String** outError)
 {
@@ -406,6 +414,29 @@ JPC_API JPC_BoxShapeSettings* JPC_BoxShapeSettings_new(JPC_Vec3 inHalfExtent) {
 JPC_API JPC_SphereShapeSettings* JPC_SphereShapeSettings_new(float inRadius) {
 	auto settings = new JPH::SphereShapeSettings{};
 	settings->mRadius = inRadius;
+
+	return to_jpc(settings);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// CapsuleShapeSettings
+
+JPC_API JPC_CapsuleShapeSettings* JPC_CapsuleShapeSettings_new(float inHalfHeightOfCylinder, float inRadius) {
+	auto settings = new JPH::CapsuleShapeSettings{};
+	settings->mHalfHeightOfCylinder = inHalfHeightOfCylinder;
+	settings->mRadius = inRadius;
+
+	return to_jpc(settings);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// CylinderShapeSettings
+
+JPC_API JPC_CylinderShapeSettings* JPC_CylinderShapeSettings_new(float inHalfHeight, float inRadius) {
+	auto settings = new JPH::CylinderShapeSettings{};
+	settings->mHalfHeight = inHalfHeight;
+	settings->mRadius = inRadius;
+	settings->mConvexRadius = JPH::cDefaultConvexRadius;
 
 	return to_jpc(settings);
 }
@@ -742,22 +773,6 @@ JPC_API void JPC_Body_SetUserData(JPC_Body* self, uint64_t inUserData) {
 
 ////////////////////////////////////////////////////////////////////////////////
 // BodyInterface
-
-static JPH::BodyCreationSettings to_jph(const JPC_BodyCreationSettings* settings) {
-	JPH::BodyCreationSettings output{};
-
-	output.mPosition = to_jph(settings->Position);
-	output.mRotation = to_jph(settings->Rotation);
-	output.mLinearVelocity = to_jph(settings->LinearVelocity);
-	output.mAngularVelocity = to_jph(settings->AngularVelocity);
-	output.mUserData = settings->UserData;
-	output.mObjectLayer = settings->ObjectLayer;
-	output.mMotionType = to_jph(settings->MotionType);
-	output.mAllowedDOFs = to_jph(settings->AllowedDOFs);
-	output.SetShape(to_jph(settings->Shape));
-
-	return output;
-}
 
 JPC_API JPC_Body* JPC_BodyInterface_CreateBody(JPC_BodyInterface* self, const JPC_BodyCreationSettings* inSettings) {
 	return to_jpc(to_jph(self)->CreateBody(to_jph(inSettings)));

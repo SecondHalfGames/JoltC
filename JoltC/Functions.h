@@ -264,12 +264,12 @@ JPC_API void JPC_Shape_AddRef(JPC_Shape* self);
 JPC_API void JPC_Shape_Release(JPC_Shape* self);
 
 ////////////////////////////////////////////////////////////////////////////////
-// ShapeSettings
+// ShapeSettings -> RefTarget
 
 typedef struct JPC_ShapeSettings JPC_ShapeSettings;
 
 JPC_API bool JPC_ShapeSettings_Create(
-	JPC_ShapeSettings* self,
+	const JPC_ShapeSettings* self,
 	JPC_Shape** outShape,
 	JPC_String** outError);
 
@@ -296,6 +296,22 @@ typedef struct JPC_SphereShapeSettings JPC_SphereShapeSettings;
 
 JPC_API JPC_SphereShapeSettings* JPC_SphereShapeSettings_new(float inRadius);
 JPC_API void JPC_SphereShapeSettings_delete(JPC_SphereShapeSettings* object);
+
+////////////////////////////////////////////////////////////////////////////////
+// CapsuleShapeSettings
+
+typedef struct JPC_CapsuleShapeSettings JPC_CapsuleShapeSettings;
+
+JPC_API JPC_CapsuleShapeSettings* JPC_CapsuleShapeSettings_new(float inHalfHeightOfCylinder, float inRadius);
+JPC_API void JPC_CapsuleShapeSettings_delete(JPC_CapsuleShapeSettings* object);
+
+////////////////////////////////////////////////////////////////////////////////
+// CylinderShapeSettings
+
+typedef struct JPC_CylinderShapeSettings JPC_CylinderShapeSettings;
+
+JPC_API JPC_CylinderShapeSettings* JPC_CylinderShapeSettings_new(float inHalfHeight, float inRadius);
+JPC_API void JPC_CylinderShapeSettings_delete(JPC_CapsuleShapeSettings* object);
 
 ////////////////////////////////////////////////////////////////////////////////
 // BodyCreationSettings
