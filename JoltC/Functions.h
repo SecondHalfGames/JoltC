@@ -348,7 +348,7 @@ typedef struct JPC_BodyCreationSettings {
 
 	// MassProperties MassPropertiesOverride;
 
-	JPC_Shape* Shape;
+	const JPC_Shape* Shape;
 } JPC_BodyCreationSettings;
 
 JPC_API void JPC_BodyCreationSettings_default(JPC_BodyCreationSettings* settings);
