@@ -382,13 +382,8 @@ JPC_API void JPC_Shape_Release(JPC_Shape* self) {
 ////////////////////////////////////////////////////////////////////////////////
 // ShapeSettings
 
-JPC_API bool JPC_ShapeSettings_Create(
-	const JPC_ShapeSettings* self,
-	JPC_Shape** outShape,
-	JPC_String** outError)
-{
-	auto res = to_jph(self)->Create();
-
+// Unpack a ShapeResult into a bool and two pointers to be friendlier to C.
+static bool HandleShapeResult(JPH::ShapeSettings::ShapeResult res, JPC_Shape** outShape, JPC_String** outError) {
 	if (res.HasError()) {
 		if (outError != nullptr) {
 			JPH::String* created = new JPH::String(std::move(res.GetError()));
@@ -397,10 +392,20 @@ JPC_API bool JPC_ShapeSettings_Create(
 
 		return false;
 	} else {
-		*outShape = to_jpc(res.Get());
+		JPH::Ref<JPH::Shape> shape = res.Get();
+		shape->AddRef();
+		*outShape = to_jpc((JPH::Shape*)shape);
 
 		return true;
 	}
+}
+
+JPC_API bool JPC_ShapeSettings_Create(
+	const JPC_ShapeSettings* self,
+	JPC_Shape** outShape,
+	JPC_String** outError)
+{
+	return HandleShapeResult(to_jph(self)->Create(), outShape, outError);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -429,6 +434,29 @@ JPC_API JPC_TriangleShapeSettings* JPC_TriangleShapeSettings_new(JPC_Vec3 inV1, 
 
 ////////////////////////////////////////////////////////////////////////////////
 // BoxShapeSettings
+
+static void to_jph(const JPC_BoxShapeSettings2* input, JPH::BoxShapeSettings* output) {
+	output->mUserData = input->UserData;
+	// TODO: Material
+	output->mDensity = input->Density;
+	output->mHalfExtent = to_jph(input->HalfExtent);
+	output->mConvexRadius = input->ConvexRadius;
+}
+
+JPC_API void JPC_BoxShapeSettings2_default(JPC_BoxShapeSettings2* object) {
+	object->UserData = 0;
+	// TODO: Material
+	object->Density = 1000.0;
+	object->HalfExtent = JPC_Vec3{0};
+	object->ConvexRadius = 0.0;
+}
+
+JPC_API bool JPC_BoxShapeSettings2_Create(const JPC_BoxShapeSettings2* self, JPC_Shape** outShape, JPC_String** outError) {
+	JPH::BoxShapeSettings settings;
+	to_jph(self, &settings);
+
+	return HandleShapeResult(settings.Create(), outShape, outError);
+}
 
 JPC_API JPC_BoxShapeSettings* JPC_BoxShapeSettings_new(JPC_Vec3 inHalfExtent) {
 	return to_jpc(new JPH::BoxShapeSettings(to_jph(inHalfExtent)));

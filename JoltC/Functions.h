@@ -316,6 +316,17 @@ JPC_API void JPC_TriangleShapeSettings_delete(JPC_TriangleShapeSettings* object)
 ////////////////////////////////////////////////////////////////////////////////
 // BoxShapeSettings
 
+typedef struct JPC_BoxShapeSettings2 {
+	uint64_t UserData;
+	// TODO: Material
+	float Density;
+	JPC_Vec3 HalfExtent;
+	float ConvexRadius;
+} JPC_BoxShapeSettings2;
+
+JPC_API void JPC_BoxShapeSettings2_default(JPC_BoxShapeSettings2* object);
+JPC_API bool JPC_BoxShapeSettings2_Create(const JPC_BoxShapeSettings2* self, JPC_Shape** outShape, JPC_String** outError);
+
 typedef struct JPC_BoxShapeSettings JPC_BoxShapeSettings;
 
 JPC_API JPC_BoxShapeSettings* JPC_BoxShapeSettings_new(JPC_Vec3 inHalfExtent);
