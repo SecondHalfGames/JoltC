@@ -10,6 +10,7 @@
 #include <Jolt/Physics/Collision/Shape/CylinderShape.h>
 #include <Jolt/Physics/Collision/Shape/SphereShape.h>
 #include <Jolt/Physics/Collision/Shape/TriangleShape.h>
+#include <Jolt/Physics/Collision/Shape/ConvexHullShape.h>
 #include <Jolt/Physics/PhysicsSettings.h>
 #include <Jolt/Physics/PhysicsSystem.h>
 #include <Jolt/RegisterTypes.h>
@@ -62,7 +63,7 @@
 	static_assert(!std::is_polymorphic_v<cpp_type>, #cpp_type " is polymorphic and cannot be made layout compatible");
 
 template<typename E>
-constexpr auto to_integral(E e) -> typename std::underlying_type<E>::type 
+constexpr auto to_integral(E e) -> typename std::underlying_type<E>::type
 {
 	return static_cast<typename std::underlying_type<E>::type>(e);
 }
@@ -109,6 +110,17 @@ static JPC_Vec3 to_jpc(JPH::Vec3 in) {
 }
 static JPH::Vec3 to_jph(JPC_Vec3 in) {
 	return JPH::Vec3(in.x, in.y, in.z);
+}
+
+static JPH::Array<JPH::Vec3> to_jph(const JPC_Vec3* src, size_t n) {
+	JPH::Array<JPH::Vec3> vec;
+	vec.resize(n);
+
+	if (src != nullptr) {
+		memcpy(vec.data(), src, n * sizeof(*src));
+	}
+
+	return vec;
 }
 
 static JPC_DVec3 to_jpc(JPH::DVec3 in) {
@@ -532,6 +544,41 @@ JPC_API void JPC_CylinderShapeSettings_default(JPC_CylinderShapeSettings* object
 
 JPC_API bool JPC_CylinderShapeSettings_Create(const JPC_CylinderShapeSettings* self, JPC_Shape** outShape, JPC_String** outError) {
 	JPH::CylinderShapeSettings settings;
+	to_jph(self, &settings);
+
+	return HandleShapeResult(settings.Create(), outShape, outError);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// ConvexHullShapeSettings
+
+static void to_jph(const JPC_ConvexHullShapeSettings* input, JPH::ConvexHullShapeSettings* output) {
+	output->mUserData = input->UserData;
+
+	// TODO: Material
+	output->mDensity = input->Density;
+
+	output->mPoints = to_jph(input->Points, input->PointsLen);
+	output->mMaxConvexRadius = input->MaxConvexRadius;
+	output->mMaxErrorConvexRadius = input->MaxErrorConvexRadius;
+	output->mHullTolerance = input->HullTolerance;
+}
+
+JPC_API void JPC_ConvexHullShapeSettings_default(JPC_ConvexHullShapeSettings* object) {
+	object->UserData = 0;
+
+	// TODO: Material
+	object->Density = 1000.0;
+
+	object->Points = nullptr;
+	object->PointsLen = 0;
+	object->MaxConvexRadius = 0.0;
+	object->MaxErrorConvexRadius = 0.05f;
+	object->HullTolerance = 1.0e-3f;
+}
+
+JPC_API bool JPC_ConvexHullShapeSettings_Create(const JPC_ConvexHullShapeSettings* self, JPC_Shape** outShape, JPC_String** outError) {
+	JPH::ConvexHullShapeSettings settings;
 	to_jph(self, &settings);
 
 	return HandleShapeResult(settings.Create(), outShape, outError);
@@ -1044,7 +1091,7 @@ JPC_API void JPC_BodyInterface_SetLinearAndAngularVelocity(JPC_BodyInterface *se
 JPC_API void JPC_BodyInterface_GetLinearAndAngularVelocity(const JPC_BodyInterface *self, JPC_BodyID inBodyID, JPC_Vec3 *outLinearVelocity, JPC_Vec3 *outAngularVelocity) {
 	JPH::Vec3 outLinVel;
 	JPH::Vec3 outAngVel;
-	
+
 	to_jph(self)->GetLinearAndAngularVelocity(to_jph(inBodyID), outLinVel, outAngVel);
 
 	*outLinearVelocity = to_jpc(outLinVel);
@@ -1078,7 +1125,7 @@ JPC_API JPC_Vec3 JPC_BodyInterface_GetAngularVelocity(const JPC_BodyInterface *s
 JPC_API JPC_Vec3 JPC_BodyInterface_GetPointVelocity(const JPC_BodyInterface *self, JPC_BodyID inBodyID, JPC_RVec3 inPoint) {
 	return to_jpc(to_jph(self)->GetPointVelocity(to_jph(inBodyID), to_jph(inPoint)));
 }
- 
+
 JPC_API void JPC_BodyInterface_SetPositionRotationAndVelocity(JPC_BodyInterface *self, JPC_BodyID inBodyID, JPC_RVec3 inPosition, JPC_Quat inRotation, JPC_Vec3 inLinearVelocity, JPC_Vec3 inAngularVelocity) {
 	return to_jph(self)->SetPositionRotationAndVelocity(to_jph(inBodyID), to_jph(inPosition), to_jph(inRotation), to_jph(inLinearVelocity), to_jph(inAngularVelocity));
 }
@@ -1096,7 +1143,7 @@ JPC_API void JPC_BodyInterface_AddTorque(JPC_BodyInterface *self, JPC_BodyID inB
 JPC_API void JPC_BodyInterface_AddForceAndTorque(JPC_BodyInterface *self, JPC_BodyID inBodyID, JPC_Vec3 inForce, JPC_Vec3 inTorque) {
 	return to_jph(self)->AddForceAndTorque(to_jph(inBodyID), to_jph(inForce), to_jph(inTorque));
 }
- 
+
 JPC_API void JPC_BodyInterface_AddImpulse(JPC_BodyInterface *self, JPC_BodyID inBodyID, JPC_Vec3 inImpulse) {
 	return to_jph(self)->AddImpulse(to_jph(inBodyID), to_jph(inImpulse));
 }

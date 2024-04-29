@@ -80,8 +80,8 @@ static JPC_ObjectLayerPairFilterFns Hello_OVO = {
 };
 
 void Hello_Debug_DrawLine(const void *self, JPC_RVec3 inFrom, JPC_RVec3 inTo, JPC_Color inColor) {
-	printf("Draw line from (%f, %f, %f) to (%f, %f, %f) with color (%d, %d, %d)\n",
-		inFrom.x, inFrom.y, inFrom.z, inTo.x, inTo.y, inTo.z, inColor.r, inColor.g, inColor.b);
+	// printf("Draw line from (%f, %f, %f) to (%f, %f, %f) with color (%d, %d, %d)\n",
+	// 	inFrom.x, inFrom.y, inFrom.z, inTo.x, inTo.y, inTo.z, inColor.r, inColor.g, inColor.b);
 }
 
 static JPC_DebugRendererSimpleFns Hello_DebugRenderer = {
