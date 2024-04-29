@@ -288,24 +288,6 @@ JPC_API void JPC_Shape_AddRef(JPC_Shape* self);
 JPC_API void JPC_Shape_Release(JPC_Shape* self);
 
 ////////////////////////////////////////////////////////////////////////////////
-// ShapeSettings -> RefTarget
-
-typedef struct JPC_ShapeSettings JPC_ShapeSettings;
-
-JPC_API bool JPC_ShapeSettings_Create(
-	const JPC_ShapeSettings* self,
-	JPC_Shape** outShape,
-	JPC_String** outError);
-
-////////////////////////////////////////////////////////////////////////////////
-// ConvexShapeSettings
-
-typedef struct JPC_ConvexShapeSettings JPC_ConvexShapeSettings;
-
-JPC_API float JPC_ConvexShapeSettings_GetDensity(JPC_ConvexShapeSettings* self);
-JPC_API void JPC_ConvexShapeSettings_SetDensity(JPC_ConvexShapeSettings* self, float inDensity);
-
-////////////////////////////////////////////////////////////////////////////////
 // TriangleShapeSettings
 
 typedef struct JPC_TriangleShapeSettings {

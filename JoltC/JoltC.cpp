@@ -85,8 +85,6 @@ DESTRUCTOR(JPC_TempAllocatorImpl)
 OPAQUE_WRAPPER(JPC_JobSystemThreadPool, JPH::JobSystemThreadPool)
 DESTRUCTOR(JPC_JobSystemThreadPool)
 
-OPAQUE_WRAPPER(JPC_ConvexShapeSettings, JPH::ConvexShapeSettings)
-OPAQUE_WRAPPER(JPC_ShapeSettings, JPH::ShapeSettings)
 OPAQUE_WRAPPER(JPC_Shape, JPH::Shape)
 OPAQUE_WRAPPER(JPC_Body, JPH::Body)
 
@@ -383,25 +381,6 @@ static bool HandleShapeResult(JPH::ShapeSettings::ShapeResult res, JPC_Shape** o
 
 		return true;
 	}
-}
-
-JPC_API bool JPC_ShapeSettings_Create(
-	const JPC_ShapeSettings* self,
-	JPC_Shape** outShape,
-	JPC_String** outError)
-{
-	return HandleShapeResult(to_jph(self)->Create(), outShape, outError);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-// ConvexShapeSettings
-
-JPC_API float JPC_ConvexShapeSettings_GetDensity(JPC_ConvexShapeSettings* self) {
-	return to_jph(self)->mDensity;
-}
-
-JPC_API void JPC_ConvexShapeSettings_SetDensity(JPC_ConvexShapeSettings* self, float inDensity) {
-	to_jph(self)->SetDensity(inDensity);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
