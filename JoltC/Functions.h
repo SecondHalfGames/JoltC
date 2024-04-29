@@ -287,6 +287,8 @@ JPC_API uint32_t JPC_Shape_GetRefCount(JPC_Shape* self);
 JPC_API void JPC_Shape_AddRef(JPC_Shape* self);
 JPC_API void JPC_Shape_Release(JPC_Shape* self);
 
+JPC_API JPC_Vec3 JPC_Shape_GetCenterOfMass(JPC_Shape* self);
+
 ////////////////////////////////////////////////////////////////////////////////
 // TriangleShapeSettings
 

@@ -374,6 +374,10 @@ JPC_API void JPC_Shape_Release(JPC_Shape* self) {
 	return to_jph(self)->Release();
 }
 
+JPC_API JPC_Vec3 JPC_Shape_GetCenterOfMass(JPC_Shape* self) {
+	return to_jpc(to_jph(self)->GetCenterOfMass());
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 // ShapeSettings
 
