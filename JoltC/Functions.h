@@ -308,53 +308,99 @@ JPC_API void JPC_ConvexShapeSettings_SetDensity(JPC_ConvexShapeSettings* self, f
 ////////////////////////////////////////////////////////////////////////////////
 // TriangleShapeSettings
 
-typedef struct JPC_TriangleShapeSettings JPC_TriangleShapeSettings;
-
-JPC_API JPC_TriangleShapeSettings* JPC_TriangleShapeSettings_new(JPC_Vec3 inV1, JPC_Vec3 inV2, JPC_Vec3 inV3);
-JPC_API void JPC_TriangleShapeSettings_delete(JPC_TriangleShapeSettings* object);
-
-////////////////////////////////////////////////////////////////////////////////
-// BoxShapeSettings
-
-typedef struct JPC_BoxShapeSettings2 {
+typedef struct JPC_TriangleShapeSettings {
+	// ShapeSettings
 	uint64_t UserData;
+
+	// ConvexShapeSettings
 	// TODO: Material
 	float Density;
+
+	// TriangleShapeSettings
+	JPC_Vec3 V1;
+	JPC_Vec3 V2;
+	JPC_Vec3 V3;
+	float ConvexRadius;
+} JPC_TriangleShapeSettings;
+
+JPC_API void JPC_TriangleShapeSettings_default(JPC_TriangleShapeSettings* object);
+JPC_API bool JPC_TriangleShapeSettings_Create(const JPC_TriangleShapeSettings* self, JPC_Shape** outShape, JPC_String** outError);
+
+////////////////////////////////////////////////////////////////////////////////
+// BoxShapeSettings -> ConvexShapeSettings -> ShapeSettings
+
+typedef struct JPC_BoxShapeSettings {
+	// ShapeSettings
+	uint64_t UserData;
+
+	// ConvexShapeSettings
+	// TODO: Material
+	float Density;
+
+	// BoxShapeSettings
 	JPC_Vec3 HalfExtent;
 	float ConvexRadius;
-} JPC_BoxShapeSettings2;
+} JPC_BoxShapeSettings;
 
-JPC_API void JPC_BoxShapeSettings2_default(JPC_BoxShapeSettings2* object);
-JPC_API bool JPC_BoxShapeSettings2_Create(const JPC_BoxShapeSettings2* self, JPC_Shape** outShape, JPC_String** outError);
-
-typedef struct JPC_BoxShapeSettings JPC_BoxShapeSettings;
-
-JPC_API JPC_BoxShapeSettings* JPC_BoxShapeSettings_new(JPC_Vec3 inHalfExtent);
-JPC_API void JPC_BoxShapeSettings_delete(JPC_BoxShapeSettings* object);
+JPC_API void JPC_BoxShapeSettings_default(JPC_BoxShapeSettings* object);
+JPC_API bool JPC_BoxShapeSettings_Create(const JPC_BoxShapeSettings* self, JPC_Shape** outShape, JPC_String** outError);
 
 ////////////////////////////////////////////////////////////////////////////////
-// SphereShapeSettings
+// SphereShapeSettings -> ConvexShapeSettings -> ShapeSettings
 
-typedef struct JPC_SphereShapeSettings JPC_SphereShapeSettings;
+typedef struct JPC_SphereShapeSettings {
+	// ShapeSettings
+	uint64_t UserData;
 
-JPC_API JPC_SphereShapeSettings* JPC_SphereShapeSettings_new(float inRadius);
-JPC_API void JPC_SphereShapeSettings_delete(JPC_SphereShapeSettings* object);
+	// ConvexShapeSettings
+	// TODO: Material
+	float Density;
+
+	// SphereShapeSettings
+	float Radius;
+} JPC_SphereShapeSettings;
+
+JPC_API void JPC_SphereShapeSettings_default(JPC_SphereShapeSettings* object);
+JPC_API bool JPC_SphereShapeSettings_Create(const JPC_SphereShapeSettings* self, JPC_Shape** outShape, JPC_String** outError);
 
 ////////////////////////////////////////////////////////////////////////////////
-// CapsuleShapeSettings
+// CapsuleShapeSettings -> ConvexShapeSettings -> ShapeSettings
 
-typedef struct JPC_CapsuleShapeSettings JPC_CapsuleShapeSettings;
+typedef struct JPC_CapsuleShapeSettings {
+	// ShapeSettings
+	uint64_t UserData;
 
-JPC_API JPC_CapsuleShapeSettings* JPC_CapsuleShapeSettings_new(float inHalfHeightOfCylinder, float inRadius);
-JPC_API void JPC_CapsuleShapeSettings_delete(JPC_CapsuleShapeSettings* object);
+	// ConvexShapeSettings
+	// TODO: Material
+	float Density;
+
+	// CapsuleShapeSettings
+	float Radius;
+	float HalfHeightOfCylinder;
+} JPC_CapsuleShapeSettings;
+
+JPC_API void JPC_CapsuleShapeSettings_default(JPC_CapsuleShapeSettings* object);
+JPC_API bool JPC_CapsuleShapeSettings_Create(const JPC_CapsuleShapeSettings* self, JPC_Shape** outShape, JPC_String** outError);
 
 ////////////////////////////////////////////////////////////////////////////////
-// CylinderShapeSettings
+// CylinderShapeSettings -> ConvexShapeSettings -> ShapeSettings
 
-typedef struct JPC_CylinderShapeSettings JPC_CylinderShapeSettings;
+typedef struct JPC_CylinderShapeSettings {
+	// ShapeSettings
+	uint64_t UserData;
 
-JPC_API JPC_CylinderShapeSettings* JPC_CylinderShapeSettings_new(float inHalfHeight, float inRadius);
-JPC_API void JPC_CylinderShapeSettings_delete(JPC_CapsuleShapeSettings* object);
+	// ConvexShapeSettings
+	// TODO: Material
+	float Density;
+
+	// CylinderShapeSettings
+	float HalfHeight;
+	float Radius;
+	float ConvexRadius;
+} JPC_CylinderShapeSettings;
+
+JPC_API void JPC_CylinderShapeSettings_default(JPC_CylinderShapeSettings* object);
+JPC_API bool JPC_CylinderShapeSettings_Create(const JPC_CylinderShapeSettings* self, JPC_Shape** outShape, JPC_String** outError);
 
 ////////////////////////////////////////////////////////////////////////////////
 // BodyCreationSettings

@@ -122,12 +122,14 @@ int main() {
 
 	JPC_BodyInterface* body_interface = JPC_PhysicsSystem_GetBodyInterface(physics_system);
 
-	JPC_BoxShapeSettings* floor_shape_settings = JPC_BoxShapeSettings_new(JPC_Vec3{100.0f, 1.0f, 100.0f});
-	JPC_ConvexShapeSettings_SetDensity((JPC_ConvexShapeSettings*)floor_shape_settings, 1000.0f);
+	JPC_BoxShapeSettings floor_shape_settings;
+	JPC_BoxShapeSettings_default(&floor_shape_settings);
+	floor_shape_settings.HalfExtent = JPC_Vec3{100.0f, 1.0f, 100.0f};
+	floor_shape_settings.Density = 500.0;
 
 	JPC_Shape* floor_shape;
 	JPC_String* err;
-	if (!JPC_ShapeSettings_Create((JPC_ShapeSettings*)floor_shape_settings, &floor_shape, &err)) {
+	if (!JPC_BoxShapeSettings_Create(&floor_shape_settings, &floor_shape, &err)) {
 		printf("fatal error: %s\n", JPC_String_c_str(err));
 
 		// the world is ending, but I guess we can still free memory
@@ -146,10 +148,12 @@ int main() {
 	JPC_Body* floor = JPC_BodyInterface_CreateBody(body_interface, &floor_settings);
 	JPC_BodyInterface_AddBody(body_interface, JPC_Body_GetID(floor), JPC_ACTIVATION_DONT_ACTIVATE);
 
-	JPC_SphereShapeSettings* sphere_shape_settings = JPC_SphereShapeSettings_new(0.5);
+	JPC_SphereShapeSettings sphere_shape_settings;
+	JPC_SphereShapeSettings_default(&sphere_shape_settings);
+	sphere_shape_settings.Radius = 0.5;
 
 	JPC_Shape* sphere_shape;
-	if (!JPC_ShapeSettings_Create((JPC_ShapeSettings*)sphere_shape_settings, &sphere_shape, &err)) {
+	if (!JPC_SphereShapeSettings_Create(&sphere_shape_settings, &sphere_shape, &err)) {
 		printf("fatal error: %s\n", JPC_String_c_str(err));
 
 		// the world is ending, but I guess we can still free memory

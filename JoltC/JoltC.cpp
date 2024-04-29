@@ -99,21 +99,6 @@ DESTRUCTOR(JPC_IndexedTriangleList)
 OPAQUE_WRAPPER(JPC_String, JPH::String)
 DESTRUCTOR(JPC_String)
 
-OPAQUE_WRAPPER(JPC_TriangleShapeSettings, JPH::TriangleShapeSettings)
-DESTRUCTOR(JPC_TriangleShapeSettings)
-
-OPAQUE_WRAPPER(JPC_BoxShapeSettings, JPH::BoxShapeSettings)
-DESTRUCTOR(JPC_BoxShapeSettings)
-
-OPAQUE_WRAPPER(JPC_SphereShapeSettings, JPH::SphereShapeSettings)
-DESTRUCTOR(JPC_SphereShapeSettings)
-
-OPAQUE_WRAPPER(JPC_CapsuleShapeSettings, JPH::CapsuleShapeSettings)
-DESTRUCTOR(JPC_CapsuleShapeSettings)
-
-OPAQUE_WRAPPER(JPC_CylinderShapeSettings, JPH::CylinderShapeSettings)
-DESTRUCTOR(JPC_CylinderShapeSettings)
-
 LAYOUT_COMPATIBLE(JPC_BodyManager_DrawSettings, JPH::BodyManager::DrawSettings)
 
 LAYOUT_COMPATIBLE(JPC_BodyID, JPH::BodyID)
@@ -422,77 +407,155 @@ JPC_API void JPC_ConvexShapeSettings_SetDensity(JPC_ConvexShapeSettings* self, f
 ////////////////////////////////////////////////////////////////////////////////
 // TriangleShapeSettings
 
-JPC_API JPC_TriangleShapeSettings* JPC_TriangleShapeSettings_new(JPC_Vec3 inV1, JPC_Vec3 inV2, JPC_Vec3 inV3) {
-	auto settings = new JPH::TriangleShapeSettings{
-		to_jph(inV1),
-		to_jph(inV2),
-		to_jph(inV3),
-	};
+static void to_jph(const JPC_TriangleShapeSettings* input, JPH::TriangleShapeSettings* output) {
+	output->mUserData = input->UserData;
 
-	return to_jpc(settings);
+	// TODO: Material
+	output->mDensity = input->Density;
+
+	output->mV1 = to_jph(input->V1);
+	output->mV2 = to_jph(input->V2);
+	output->mV3 = to_jph(input->V3);
+	output->mConvexRadius = input->ConvexRadius;
+}
+
+JPC_API void JPC_TriangleShapeSettings_default(JPC_TriangleShapeSettings* object) {
+	object->UserData = 0;
+
+	// TODO: Material
+	object->Density = 1000.0;
+
+	object->V1 = {0};
+	object->V2 = {0};
+	object->V3 = {0};
+	object->ConvexRadius = 0.0;
+}
+
+JPC_API bool JPC_TriangleShapeSettings_Create(const JPC_TriangleShapeSettings* self, JPC_Shape** outShape, JPC_String** outError) {
+	JPH::TriangleShapeSettings settings;
+	to_jph(self, &settings);
+
+	return HandleShapeResult(settings.Create(), outShape, outError);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // BoxShapeSettings
 
-static void to_jph(const JPC_BoxShapeSettings2* input, JPH::BoxShapeSettings* output) {
+static void to_jph(const JPC_BoxShapeSettings* input, JPH::BoxShapeSettings* output) {
 	output->mUserData = input->UserData;
+
 	// TODO: Material
 	output->mDensity = input->Density;
+
 	output->mHalfExtent = to_jph(input->HalfExtent);
 	output->mConvexRadius = input->ConvexRadius;
 }
 
-JPC_API void JPC_BoxShapeSettings2_default(JPC_BoxShapeSettings2* object) {
+JPC_API void JPC_BoxShapeSettings_default(JPC_BoxShapeSettings* object) {
 	object->UserData = 0;
+
 	// TODO: Material
 	object->Density = 1000.0;
+
 	object->HalfExtent = JPC_Vec3{0};
 	object->ConvexRadius = 0.0;
 }
 
-JPC_API bool JPC_BoxShapeSettings2_Create(const JPC_BoxShapeSettings2* self, JPC_Shape** outShape, JPC_String** outError) {
+JPC_API bool JPC_BoxShapeSettings_Create(const JPC_BoxShapeSettings* self, JPC_Shape** outShape, JPC_String** outError) {
 	JPH::BoxShapeSettings settings;
 	to_jph(self, &settings);
 
 	return HandleShapeResult(settings.Create(), outShape, outError);
 }
 
-JPC_API JPC_BoxShapeSettings* JPC_BoxShapeSettings_new(JPC_Vec3 inHalfExtent) {
-	return to_jpc(new JPH::BoxShapeSettings(to_jph(inHalfExtent)));
-}
-
 ////////////////////////////////////////////////////////////////////////////////
 // SphereShapeSettings
 
-JPC_API JPC_SphereShapeSettings* JPC_SphereShapeSettings_new(float inRadius) {
-	auto settings = new JPH::SphereShapeSettings{};
-	settings->mRadius = inRadius;
+static void to_jph(const JPC_SphereShapeSettings* input, JPH::SphereShapeSettings* output) {
+	output->mUserData = input->UserData;
 
-	return to_jpc(settings);
+	// TODO: Material
+	output->mDensity = input->Density;
+
+	output->mRadius = input->Radius;
+}
+
+JPC_API void JPC_SphereShapeSettings_default(JPC_SphereShapeSettings* object) {
+	object->UserData = 0;
+
+	// TODO: Material
+	object->Density = 1000.0;
+
+	object->Radius = 0.0;
+}
+
+JPC_API bool JPC_SphereShapeSettings_Create(const JPC_SphereShapeSettings* self, JPC_Shape** outShape, JPC_String** outError) {
+	JPH::SphereShapeSettings settings;
+	to_jph(self, &settings);
+
+	return HandleShapeResult(settings.Create(), outShape, outError);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // CapsuleShapeSettings
 
-JPC_API JPC_CapsuleShapeSettings* JPC_CapsuleShapeSettings_new(float inHalfHeightOfCylinder, float inRadius) {
-	auto settings = new JPH::CapsuleShapeSettings{};
-	settings->mHalfHeightOfCylinder = inHalfHeightOfCylinder;
-	settings->mRadius = inRadius;
+static void to_jph(const JPC_CapsuleShapeSettings* input, JPH::CapsuleShapeSettings* output) {
+	output->mUserData = input->UserData;
 
-	return to_jpc(settings);
+	// TODO: Material
+	output->mDensity = input->Density;
+
+	output->mRadius = input->Radius;
+	output->mHalfHeightOfCylinder = input->HalfHeightOfCylinder;
+}
+
+JPC_API void JPC_CapsuleShapeSettings_default(JPC_CapsuleShapeSettings* object) {
+	object->UserData = 0;
+
+	// TODO: Material
+	object->Density = 1000.0;
+
+	object->Radius = 0.0;
+	object->HalfHeightOfCylinder = 0.0;
+}
+
+JPC_API bool JPC_CapsuleShapeSettings_Create(const JPC_CapsuleShapeSettings* self, JPC_Shape** outShape, JPC_String** outError) {
+	JPH::CapsuleShapeSettings settings;
+	to_jph(self, &settings);
+
+	return HandleShapeResult(settings.Create(), outShape, outError);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // CylinderShapeSettings
 
-JPC_API JPC_CylinderShapeSettings* JPC_CylinderShapeSettings_new(float inHalfHeight, float inRadius) {
-	auto settings = new JPH::CylinderShapeSettings{};
-	settings->mHalfHeight = inHalfHeight;
-	settings->mRadius = inRadius;
-	settings->mConvexRadius = JPH::cDefaultConvexRadius;
+static void to_jph(const JPC_CylinderShapeSettings* input, JPH::CylinderShapeSettings* output) {
+	output->mUserData = input->UserData;
 
-	return to_jpc(settings);
+	// TODO: Material
+	output->mDensity = input->Density;
+
+	output->mHalfHeight = input->HalfHeight;
+	output->mRadius = input->Radius;
+	output->mConvexRadius = input->ConvexRadius;
+}
+
+JPC_API void JPC_CylinderShapeSettings_default(JPC_CylinderShapeSettings* object) {
+	object->UserData = 0;
+
+	// TODO: Material
+	object->Density = 1000.0;
+
+	object->HalfHeight = 0.0;
+	object->Radius = 0.0;
+	object->ConvexRadius = 0.0;
+}
+
+JPC_API bool JPC_CylinderShapeSettings_Create(const JPC_CylinderShapeSettings* self, JPC_Shape** outShape, JPC_String** outError) {
+	JPH::CylinderShapeSettings settings;
+	to_jph(self, &settings);
+
+	return HandleShapeResult(settings.Create(), outShape, outError);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
