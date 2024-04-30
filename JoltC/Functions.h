@@ -110,6 +110,9 @@ ENSURE_SIZE_ALIGN(JPC_RVec3, JPH::RVec3)
 typedef uint32_t JPC_BodyID;
 ENSURE_SIZE_ALIGN(JPC_BodyID, JPH::BodyID)
 
+typedef uint32_t JPC_SubShapeID;
+ENSURE_SIZE_ALIGN(JPC_SubShapeID, JPH::SubShapeID)
+
 typedef uint8_t JPC_BroadPhaseLayer;
 ENSURE_SIZE_ALIGN(JPC_BroadPhaseLayer, JPH::BroadPhaseLayer)
 
@@ -149,6 +152,12 @@ typedef struct JPC_RRayCast {
 	JPC_RVec3 Origin;
 	JPC_Vec3 Direction;
 } JPC_RRayCast;
+
+typedef struct JPC_RayCastResult {
+	JPC_BodyID BodyID;
+	float Fraction;
+	JPC_SubShapeID SubShapeID2;
+} JPC_RayCastResult;
 
 ////////////////////////////////////////////////////////////////////////////////
 // VertexList == Array<Float3> == std::vector<Float3>
@@ -716,6 +725,16 @@ JPC_API void JPC_BodyInterface_InvalidateContactCache(JPC_BodyInterface *self, J
 // NarrowPhaseQuery
 
 typedef struct JPC_NarrowPhaseQuery JPC_NarrowPhaseQuery;
+
+typedef struct JPC_NarrowPhaseQuery_CastRayArgs {
+	JPC_RRayCast Ray;
+	JPC_RayCastResult Result;
+	// BroadPhaseLayerFilter
+	// ObjectLayerFilter
+	// BodyFilter
+} JPC_NarrowPhaseQuery_CastRayArgs;
+
+JPC_API bool JPC_NarrowPhaseQuery_CastRay(JPC_NarrowPhaseQuery* self, JPC_NarrowPhaseQuery_CastRayArgs* args);
 
 ////////////////////////////////////////////////////////////////////////////////
 // PhysicsSystem

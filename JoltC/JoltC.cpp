@@ -5,6 +5,7 @@
 #include <Jolt/Core/TempAllocator.h>
 #include <Jolt/Physics/Body/BodyActivationListener.h>
 #include <Jolt/Physics/Body/BodyCreationSettings.h>
+#include <Jolt/Physics/Collision/CastResult.h>
 #include <Jolt/Physics/Collision/RayCast.h>
 #include <Jolt/Physics/Collision/Shape/BoxShape.h>
 #include <Jolt/Physics/Collision/Shape/CapsuleShape.h>
@@ -166,12 +167,18 @@ static JPH::RRayCast to_jph(JPC_RRayCast in) {
 	return JPH::RRayCast(to_jph(in.Origin), to_jph(in.Direction));
 }
 
-// static JPC_BodyID to_jpc(JPH::BodyID in) {
-// 	return in.GetIndexAndSequenceNumber();
-// }
-// static JPH::BodyID to_jph(JPC_BodyID in) {
-// 	return JPH::BodyID(in);
-// }
+static JPC_SubShapeID to_jpc(JPH::SubShapeID in) {
+	return in.GetValue();
+}
+
+static JPC_RayCastResult to_jpc(JPH::RayCastResult in) {
+	JPC_RayCastResult out{0};
+	out.BodyID = to_jpc(in.mBodyID);
+	out.Fraction = in.mFraction;
+	out.SubShapeID2 = to_jpc(in.mSubShapeID2);
+
+	return out;
+}
 
 JPC_API void JPC_RegisterDefaultAllocator() {
 	JPH::RegisterDefaultAllocator();
@@ -1322,6 +1329,26 @@ JPC_API void JPC_BodyInterface_InvalidateContactCache(JPC_BodyInterface *self, J
 	return to_jph(self)->InvalidateContactCache(to_jph(inBodyID));
 }
 
+////////////////////////////////////////////////////////////////////////////////
+// NarrowPhaseQuery
+
+JPC_API bool JPC_NarrowPhaseQuery_CastRay(JPC_NarrowPhaseQuery* self, JPC_NarrowPhaseQuery_CastRayArgs* args) {
+	JPH::RayCastResult result;
+
+	bool hit = to_jph(self)->CastRay(
+		to_jph(args->Ray),
+		result
+		// BroadPhaseLayerFilter
+		// ObjectLayerFilter
+		// BodyFilter
+	);
+
+	if (hit) {
+		args->Result = to_jpc(result);
+	}
+
+	return hit;
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 // PhysicsSystem
