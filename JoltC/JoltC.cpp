@@ -1332,7 +1332,7 @@ JPC_API void JPC_BodyInterface_InvalidateContactCache(JPC_BodyInterface *self, J
 ////////////////////////////////////////////////////////////////////////////////
 // NarrowPhaseQuery
 
-JPC_API bool JPC_NarrowPhaseQuery_CastRay(JPC_NarrowPhaseQuery* self, JPC_NarrowPhaseQuery_CastRayArgs* args) {
+JPC_API bool JPC_NarrowPhaseQuery_CastRay(const JPC_NarrowPhaseQuery* self, JPC_NarrowPhaseQuery_CastRayArgs* args) {
 	JPH::RayCastResult result;
 
 	bool hit = to_jph(self)->CastRay(
@@ -1389,7 +1389,7 @@ JPC_API JPC_BodyInterface* JPC_PhysicsSystem_GetBodyInterface(JPC_PhysicsSystem*
 	return to_jpc(&to_jph(self)->GetBodyInterface());
 }
 
-JPC_API const JPC_NarrowPhaseQuery* JPC_PhysicsSystem_GetNarrowPhaseQuery(JPC_PhysicsSystem* self) {
+JPC_API const JPC_NarrowPhaseQuery* JPC_PhysicsSystem_GetNarrowPhaseQuery(const JPC_PhysicsSystem* self) {
 	return to_jpc(&to_jph(self)->GetNarrowPhaseQuery());
 }
 

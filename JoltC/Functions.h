@@ -734,7 +734,7 @@ typedef struct JPC_NarrowPhaseQuery_CastRayArgs {
 	// BodyFilter
 } JPC_NarrowPhaseQuery_CastRayArgs;
 
-JPC_API bool JPC_NarrowPhaseQuery_CastRay(JPC_NarrowPhaseQuery* self, JPC_NarrowPhaseQuery_CastRayArgs* args);
+JPC_API bool JPC_NarrowPhaseQuery_CastRay(const JPC_NarrowPhaseQuery* self, JPC_NarrowPhaseQuery_CastRayArgs* args);
 
 ////////////////////////////////////////////////////////////////////////////////
 // PhysicsSystem
@@ -764,7 +764,7 @@ JPC_API JPC_PhysicsUpdateError JPC_PhysicsSystem_Update(
 
 JPC_API JPC_BodyInterface* JPC_PhysicsSystem_GetBodyInterface(JPC_PhysicsSystem* self);
 
-JPC_API const JPC_NarrowPhaseQuery* JPC_PhysicsSystem_GetNarrowPhaseQuery(JPC_PhysicsSystem* self);
+JPC_API const JPC_NarrowPhaseQuery* JPC_PhysicsSystem_GetNarrowPhaseQuery(const JPC_PhysicsSystem* self);
 
 JPC_API void JPC_PhysicsSystem_DrawBodies(
 	JPC_PhysicsSystem* self,
