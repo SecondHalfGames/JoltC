@@ -398,7 +398,7 @@ typedef struct JPC_ConvexHullShapeSettings {
 	float Density;
 
 	// ConvexHullShapeSettings
-	JPC_Vec3* Points;
+	const JPC_Vec3* Points;
 	size_t PointsLen;
 	float MaxConvexRadius;
 	float MaxErrorConvexRadius;
@@ -407,6 +407,54 @@ typedef struct JPC_ConvexHullShapeSettings {
 
 JPC_API void JPC_ConvexHullShapeSettings_default(JPC_ConvexHullShapeSettings* object);
 JPC_API bool JPC_ConvexHullShapeSettings_Create(const JPC_ConvexHullShapeSettings* self, JPC_Shape** outShape, JPC_String** outError);
+
+////////////////////////////////////////////////////////////////////////////////
+// CompoundShape::SubShapeSettings
+
+typedef struct JPC_SubShapeSettings {
+	const JPC_Shape* Shape;
+	JPC_Vec3 Position;
+	JPC_Quat Rotation;
+	uint32_t UserData;
+} JPC_SubShapeSettings;
+
+JPC_API void JPC_SubShapeSettings_default(JPC_SubShapeSettings* object);
+
+////////////////////////////////////////////////////////////////////////////////
+// StaticCompoundShapeSettings -> CompoundShapeSettings -> ShapeSettings
+
+typedef struct JPC_StaticCompoundShapeSettings {
+	// ShapeSettings
+	uint64_t UserData;
+
+	// CompoundShapeSettings
+	const JPC_SubShapeSettings* SubShapes;
+	size_t SubShapesLen;
+
+	// StaticCompoundShapeSettings
+	// (no fields)
+} JPC_StaticCompoundShapeSettings;
+
+JPC_API void JPC_StaticCompoundShapeSettings_default(JPC_StaticCompoundShapeSettings* object);
+JPC_API bool JPC_StaticCompoundShapeSettings_Create(const JPC_StaticCompoundShapeSettings* self, JPC_Shape** outShape, JPC_String** outError);
+
+////////////////////////////////////////////////////////////////////////////////
+// MutableCompoundShape -> CompoundShapeSettings -> ShapeSettings
+
+typedef struct JPC_MutableCompoundShapeSettings {
+	// ShapeSettings
+	uint64_t UserData;
+
+	// CompoundShapeSettings
+	const JPC_SubShapeSettings* SubShapes;
+	size_t SubShapesLen;
+
+	// MutableCompoundShape
+	// (no fields)
+} JPC_MutableCompoundShapeSettings;
+
+JPC_API void JPC_MutableCompoundShapeSettings_default(JPC_MutableCompoundShapeSettings* object);
+JPC_API bool JPC_MutableCompoundShapeSettings_Create(const JPC_MutableCompoundShapeSettings* self, JPC_Shape** outShape, JPC_String** outError);
 
 ////////////////////////////////////////////////////////////////////////////////
 // BodyCreationSettings

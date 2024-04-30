@@ -7,10 +7,13 @@
 #include <Jolt/Physics/Body/BodyCreationSettings.h>
 #include <Jolt/Physics/Collision/Shape/BoxShape.h>
 #include <Jolt/Physics/Collision/Shape/CapsuleShape.h>
-#include <Jolt/Physics/Collision/Shape/CylinderShape.h>
-#include <Jolt/Physics/Collision/Shape/SphereShape.h>
-#include <Jolt/Physics/Collision/Shape/TriangleShape.h>
+#include <Jolt/Physics/Collision/Shape/CompoundShape.h>
 #include <Jolt/Physics/Collision/Shape/ConvexHullShape.h>
+#include <Jolt/Physics/Collision/Shape/CylinderShape.h>
+#include <Jolt/Physics/Collision/Shape/MutableCompoundShape.h>
+#include <Jolt/Physics/Collision/Shape/SphereShape.h>
+#include <Jolt/Physics/Collision/Shape/StaticCompoundShape.h>
+#include <Jolt/Physics/Collision/Shape/TriangleShape.h>
 #include <Jolt/Physics/PhysicsSettings.h>
 #include <Jolt/Physics/PhysicsSystem.h>
 #include <Jolt/RegisterTypes.h>
@@ -583,6 +586,85 @@ JPC_API void JPC_ConvexHullShapeSettings_default(JPC_ConvexHullShapeSettings* ob
 
 JPC_API bool JPC_ConvexHullShapeSettings_Create(const JPC_ConvexHullShapeSettings* self, JPC_Shape** outShape, JPC_String** outError) {
 	JPH::ConvexHullShapeSettings settings;
+	to_jph(self, &settings);
+
+	return HandleShapeResult(settings.Create(), outShape, outError);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// CompoundShape::SubShapeSettings
+
+static JPH::CompoundShapeSettings::SubShapeSettings to_jph(const JPC_SubShapeSettings* input) {
+	const JPH::Shape* shape = to_jph(input->Shape);
+
+	JPH::CompoundShapeSettings::SubShapeSettings output;
+	output.mShape = nullptr;
+	output.mShapePtr = shape;
+	output.mPosition = to_jph(input->Position);
+	output.mRotation = to_jph(input->Rotation);
+	output.mUserData = input->UserData;
+	return output;
+}
+
+static JPH::Array<JPH::CompoundShapeSettings::SubShapeSettings> to_jph(const JPC_SubShapeSettings* src, size_t n) {
+	JPH::Array<JPH::CompoundShapeSettings::SubShapeSettings> vec;
+	vec.reserve(n);
+
+	for (size_t i = 0; i < n; i++) {
+		vec.push_back(to_jph(&src[i]));
+	}
+
+	return vec;
+}
+
+JPC_API void JPC_SubShapeSettings_default(JPC_SubShapeSettings* object) {
+	object->Shape = nullptr;
+	object->Position = JPC_Vec3{0};
+	object->Rotation = JPC_Quat{0, 0, 0, 1};
+	object->UserData = 0;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// StaticCompoundShapeSettings -> CompoundShapeSettings -> ShapeSettings
+
+static void to_jph(const JPC_StaticCompoundShapeSettings* input, JPH::StaticCompoundShapeSettings* output) {
+	output->mUserData = input->UserData;
+
+	output->mSubShapes = to_jph(input->SubShapes, input->SubShapesLen);
+}
+
+JPC_API void JPC_StaticCompoundShapeSettings_default(JPC_StaticCompoundShapeSettings* object) {
+	object->UserData = 0;
+
+	object->SubShapes = nullptr;
+	object->SubShapesLen = 0;
+}
+
+JPC_API bool JPC_StaticCompoundShapeSettings_Create(const JPC_StaticCompoundShapeSettings* self, JPC_Shape** outShape, JPC_String** outError) {
+	JPH::StaticCompoundShapeSettings settings;
+	to_jph(self, &settings);
+
+	return HandleShapeResult(settings.Create(), outShape, outError);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// MutableCompoundShapeSettings -> CompoundShapeSettings -> ShapeSettings
+
+static void to_jph(const JPC_MutableCompoundShapeSettings* input, JPH::MutableCompoundShapeSettings* output) {
+	output->mUserData = input->UserData;
+
+	output->mSubShapes = to_jph(input->SubShapes, input->SubShapesLen);
+}
+
+JPC_API void JPC_MutableCompoundShapeSettings_default(JPC_MutableCompoundShapeSettings* object) {
+	object->UserData = 0;
+
+	object->SubShapes = nullptr;
+	object->SubShapesLen = 0;
+}
+
+JPC_API bool JPC_MutableCompoundShapeSettings_Create(const JPC_MutableCompoundShapeSettings* self, JPC_Shape** outShape, JPC_String** outError) {
+	JPH::MutableCompoundShapeSettings settings;
 	to_jph(self, &settings);
 
 	return HandleShapeResult(settings.Create(), outShape, outError);
