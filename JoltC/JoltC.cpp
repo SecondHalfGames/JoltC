@@ -5,6 +5,7 @@
 #include <Jolt/Core/TempAllocator.h>
 #include <Jolt/Physics/Body/BodyActivationListener.h>
 #include <Jolt/Physics/Body/BodyCreationSettings.h>
+#include <Jolt/Physics/Collision/RayCast.h>
 #include <Jolt/Physics/Collision/Shape/BoxShape.h>
 #include <Jolt/Physics/Collision/Shape/CapsuleShape.h>
 #include <Jolt/Physics/Collision/Shape/CompoundShape.h>
@@ -82,6 +83,7 @@ OPAQUE_WRAPPER(JPC_PhysicsSystem, JPH::PhysicsSystem)
 DESTRUCTOR(JPC_PhysicsSystem)
 
 OPAQUE_WRAPPER(JPC_BodyInterface, JPH::BodyInterface)
+OPAQUE_WRAPPER(JPC_NarrowPhaseQuery, JPH::NarrowPhaseQuery)
 
 OPAQUE_WRAPPER(JPC_TempAllocatorImpl, JPH::TempAllocatorImpl)
 DESTRUCTOR(JPC_TempAllocatorImpl)
@@ -154,6 +156,14 @@ static JPC_Color to_jpc(JPH::Color in) {
 }
 static JPH::Color to_jph(JPC_Color in) {
 	return JPH::Color(in.r, in.g, in.b, in.a);
+}
+
+static JPH::RayCast to_jph(JPC_RayCast in) {
+	return JPH::RayCast(to_jph(in.Origin), to_jph(in.Direction));
+}
+
+static JPH::RRayCast to_jph(JPC_RRayCast in) {
+	return JPH::RRayCast(to_jph(in.Origin), to_jph(in.Direction));
 }
 
 // static JPC_BodyID to_jpc(JPH::BodyID in) {
@@ -1350,6 +1360,10 @@ JPC_API void JPC_PhysicsSystem_OptimizeBroadPhase(JPC_PhysicsSystem* self) {
 
 JPC_API JPC_BodyInterface* JPC_PhysicsSystem_GetBodyInterface(JPC_PhysicsSystem* self) {
 	return to_jpc(&to_jph(self)->GetBodyInterface());
+}
+
+JPC_API const JPC_NarrowPhaseQuery* JPC_PhysicsSystem_GetNarrowPhaseQuery(JPC_PhysicsSystem* self) {
+	return to_jpc(&to_jph(self)->GetNarrowPhaseQuery());
 }
 
 JPC_API JPC_PhysicsUpdateError JPC_PhysicsSystem_Update(

@@ -140,6 +140,16 @@ typedef struct JPC_IndexedTriangle {
 
 ENSURE_SIZE_ALIGN(JPC_IndexedTriangle, JPH::IndexedTriangle)
 
+typedef struct JPC_RayCast {
+	JPC_Vec3 Origin;
+	JPC_Vec3 Direction;
+} JPC_RayCast;
+
+typedef struct JPC_RRayCast {
+	JPC_RVec3 Origin;
+	JPC_Vec3 Direction;
+} JPC_RRayCast;
+
 ////////////////////////////////////////////////////////////////////////////////
 // VertexList == Array<Float3> == std::vector<Float3>
 
@@ -703,6 +713,11 @@ JPC_API void JPC_BodyInterface_SetUserData(const JPC_BodyInterface *self, JPC_Bo
 JPC_API void JPC_BodyInterface_InvalidateContactCache(JPC_BodyInterface *self, JPC_BodyID inBodyID);
 
 ////////////////////////////////////////////////////////////////////////////////
+// NarrowPhaseQuery
+
+typedef struct JPC_NarrowPhaseQuery JPC_NarrowPhaseQuery;
+
+////////////////////////////////////////////////////////////////////////////////
 // PhysicsSystem
 
 typedef struct JPC_PhysicsSystem JPC_PhysicsSystem;
@@ -729,6 +744,8 @@ JPC_API JPC_PhysicsUpdateError JPC_PhysicsSystem_Update(
 	JPC_JobSystemThreadPool *inJobSystem); // FIXME: un-specialize
 
 JPC_API JPC_BodyInterface* JPC_PhysicsSystem_GetBodyInterface(JPC_PhysicsSystem* self);
+
+JPC_API const JPC_NarrowPhaseQuery* JPC_PhysicsSystem_GetNarrowPhaseQuery(JPC_PhysicsSystem* self);
 
 JPC_API void JPC_PhysicsSystem_DrawBodies(
 	JPC_PhysicsSystem* self,
