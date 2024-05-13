@@ -1256,7 +1256,9 @@ JPC_API void JPC_BodyInterface_AddImpulse(JPC_BodyInterface *self, JPC_BodyID in
 	return to_jph(self)->AddImpulse(to_jph(inBodyID), to_jph(inImpulse));
 }
 
-// JPC_API void JPC_BodyInterface_AddImpulse(JPC_BodyInterface *self, JPC_BodyID inBodyID, JPC_Vec3 inImpulse, JPC_RVec3 inPoint);
+JPC_API void JPC_BodyInterface_AddImpulse3(JPC_BodyInterface *self, JPC_BodyID inBodyID, JPC_Vec3 inImpulse, JPC_RVec3 inPoint) {
+	to_jph(self)->AddImpulse(to_jph(inBodyID), to_jph(inImpulse), to_jph(inPoint));
+}
 
 JPC_API void JPC_BodyInterface_AddAngularImpulse(JPC_BodyInterface *self, JPC_BodyID inBodyID, JPC_Vec3 inAngularImpulse) {
 	return to_jph(self)->AddAngularImpulse(to_jph(inBodyID), to_jph(inAngularImpulse));
