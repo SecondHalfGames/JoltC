@@ -957,8 +957,13 @@ JPC_API void JPC_Body_GetInverseInertia(const JPC_Body* self, JPC_Mat44* outMatr
 	to_jph(self)->GetInverseInertia().StoreFloat4x4(reinterpret_cast<JPH::Float4*>(outMatrix));
 }
 
-// JPC_API void JPC_Body_AddImpulse(JPC_Body* self, JPC_Vec3 inImpulse);
-// JPC_API void JPC_Body_AddImpulse(JPC_Body* self, JPC_Vec3 inImpulse, JPC_RVec3 inPosition);
+JPC_API void JPC_Body_AddImpulse(JPC_Body* self, JPC_Vec3 inImpulse) {
+	to_jph(self)->AddImpulse(to_jph(inImpulse));
+}
+
+JPC_API void JPC_Body_AddImpulse2(JPC_Body* self, JPC_Vec3 inImpulse, JPC_RVec3 inPosition) {
+	to_jph(self)->AddImpulse(to_jph(inImpulse), to_jph(inPosition));
+}
 
 JPC_API void JPC_Body_AddAngularImpulse(JPC_Body* self, JPC_Vec3 inAngularImpulse) {
 	return to_jph(self)->AddAngularImpulse(to_jph(inAngularImpulse));
