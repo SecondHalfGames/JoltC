@@ -305,6 +305,88 @@ JPC_API JPC_ObjectVsBroadPhaseLayerFilter* JPC_ObjectVsBroadPhaseLayerFilter_new
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// BroadPhaseLayerFilter
+
+class JPC_BroadPhaseLayerFilterBridge final : public JPH::BroadPhaseLayerFilter {
+public:
+	explicit JPC_BroadPhaseLayerFilterBridge(const void *self, JPC_BroadPhaseLayerFilterFns fns) : self(self), fns(fns) {}
+
+	virtual bool ShouldCollide(JPH::BroadPhaseLayer inLayer) const override {
+		return fns.ShouldCollide(self, to_jpc(inLayer));
+	}
+
+private:
+	const void* self;
+	JPC_BroadPhaseLayerFilterFns fns;
+};
+
+OPAQUE_WRAPPER(JPC_BroadPhaseLayerFilter, JPC_BroadPhaseLayerFilterBridge)
+DESTRUCTOR(JPC_BroadPhaseLayerFilter)
+
+JPC_API JPC_BroadPhaseLayerFilter* JPC_BroadPhaseLayerFilter_new(
+	const void *self,
+	JPC_BroadPhaseLayerFilterFns fns)
+{
+	return to_jpc(new JPC_BroadPhaseLayerFilterBridge(self, fns));
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// ObjectLayerFilter
+
+class JPC_ObjectLayerFilterBridge final : public JPH::ObjectLayerFilter {
+public:
+	explicit JPC_ObjectLayerFilterBridge(const void *self, JPC_ObjectLayerFilterFns fns) : self(self), fns(fns) {}
+
+	virtual bool ShouldCollide(JPH::ObjectLayer inLayer) const override {
+		return fns.ShouldCollide(self, inLayer);
+	}
+
+private:
+	const void* self;
+	JPC_ObjectLayerFilterFns fns;
+};
+
+OPAQUE_WRAPPER(JPC_ObjectLayerFilter, JPC_ObjectLayerFilterBridge)
+DESTRUCTOR(JPC_ObjectLayerFilter)
+
+JPC_API JPC_ObjectLayerFilter* JPC_ObjectLayerFilter_new(
+	const void *self,
+	JPC_ObjectLayerFilterFns fns)
+{
+	return to_jpc(new JPC_ObjectLayerFilterBridge(self, fns));
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// BodyFilter
+
+class JPC_BodyFilterBridge final : public JPH::BodyFilter {
+public:
+	explicit JPC_BodyFilterBridge(const void *self, JPC_BodyFilterFns fns) : self(self), fns(fns) {}
+
+	virtual bool ShouldCollide(const JPH::BodyID &inBodyID) const override {
+		return fns.ShouldCollide(self, to_jpc(inBodyID));
+	}
+
+	virtual bool ShouldCollideLocked(const JPH::Body &inBody) const override {
+		return fns.ShouldCollideLocked(self, to_jpc(&inBody));
+	}
+
+private:
+	const void* self;
+	JPC_BodyFilterFns fns;
+};
+
+OPAQUE_WRAPPER(JPC_BodyFilter, JPC_BodyFilterBridge)
+DESTRUCTOR(JPC_BodyFilter)
+
+JPC_API JPC_BodyFilter* JPC_BodyFilter_new(
+	const void *self,
+	JPC_BodyFilterFns fns)
+{
+	return to_jpc(new JPC_BodyFilterBridge(self, fns));
+}
+
+////////////////////////////////////////////////////////////////////////////////
 // JPC_ObjectLayerPairFilter
 
 class JPC_ObjectLayerPairFilterBridge final : public JPH::ObjectLayerPairFilter {
@@ -1342,12 +1424,16 @@ JPC_API void JPC_BodyInterface_InvalidateContactCache(JPC_BodyInterface *self, J
 JPC_API bool JPC_NarrowPhaseQuery_CastRay(const JPC_NarrowPhaseQuery* self, JPC_NarrowPhaseQuery_CastRayArgs* args) {
 	JPH::RayCastResult result;
 
+	JPC_BroadPhaseLayerFilterBridge* bplFilter = to_jph(args->BroadPhaseLayerFilter);
+	JPC_ObjectLayerFilterBridge* olFilter = to_jph(args->ObjectLayerFilter);
+	JPC_BodyFilterBridge* bodyFilter = to_jph(args->BodyFilter);
+
 	bool hit = to_jph(self)->CastRay(
 		to_jph(args->Ray),
-		result
-		// BroadPhaseLayerFilter
-		// ObjectLayerFilter
-		// BodyFilter
+		result,
+		*bplFilter,
+		*olFilter,
+		*bodyFilter
 	);
 
 	if (hit) {

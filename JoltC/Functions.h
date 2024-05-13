@@ -159,6 +159,8 @@ typedef struct JPC_RayCastResult {
 	JPC_SubShapeID SubShapeID2;
 } JPC_RayCastResult;
 
+typedef struct JPC_Body JPC_Body;
+
 ////////////////////////////////////////////////////////////////////////////////
 // VertexList == Array<Float3> == std::vector<Float3>
 
@@ -213,6 +215,52 @@ JPC_API JPC_BroadPhaseLayerInterface* JPC_BroadPhaseLayerInterface_new(
 	JPC_BroadPhaseLayerInterfaceFns fns);
 
 JPC_API void JPC_BroadPhaseLayerInterface_delete(JPC_BroadPhaseLayerInterface* object);
+
+////////////////////////////////////////////////////////////////////////////////
+// BroadPhaseLayerFilter
+
+typedef struct JPC_BroadPhaseLayerFilterFns {
+	bool (*ShouldCollide)(const void *self, JPC_BroadPhaseLayer inLayer);
+} JPC_BroadPhaseLayerFilterFns;
+
+typedef struct JPC_BroadPhaseLayerFilter JPC_BroadPhaseLayerFilter;
+
+JPC_API JPC_BroadPhaseLayerFilter* JPC_BroadPhaseLayerFilter_new(
+	const void *self,
+	JPC_BroadPhaseLayerFilterFns fns);
+
+JPC_API void JPC_BroadPhaseLayerFilter_delete(JPC_BroadPhaseLayerFilter* object);
+
+////////////////////////////////////////////////////////////////////////////////
+// ObjectLayerFilter
+
+typedef struct JPC_ObjectLayerFilterFns {
+	bool (*ShouldCollide)(const void *self, JPC_ObjectLayer inLayer);
+} JPC_ObjectLayerFilterFns;
+
+typedef struct JPC_ObjectLayerFilter JPC_ObjectLayerFilter;
+
+JPC_API JPC_ObjectLayerFilter* JPC_ObjectLayerFilter_new(
+	const void *self,
+	JPC_ObjectLayerFilterFns fns);
+
+JPC_API void JPC_ObjectLayerFilter_delete(JPC_ObjectLayerFilter* object);
+
+////////////////////////////////////////////////////////////////////////////////
+// BodyFilter
+
+typedef struct JPC_BodyFilterFns {
+	bool (*ShouldCollide)(const void *self, JPC_BodyID inBodyID);
+	bool (*ShouldCollideLocked)(const void *self, const JPC_Body *inBodyID);
+} JPC_BodyFilterFns;
+
+typedef struct JPC_BodyFilter JPC_BodyFilter;
+
+JPC_API JPC_BodyFilter* JPC_BodyFilter_new(
+	const void *self,
+	JPC_BodyFilterFns fns);
+
+JPC_API void JPC_BodyFilter_delete(JPC_BodyFilter* object);
 
 ////////////////////////////////////////////////////////////////////////////////
 // ObjectVsBroadPhaseLayerFilter
@@ -522,8 +570,6 @@ JPC_API JPC_BodyCreationSettings* JPC_BodyCreationSettings_new();
 ////////////////////////////////////////////////////////////////////////////////
 // Body
 
-typedef struct JPC_Body JPC_Body;
-
 JPC_API JPC_BodyID JPC_Body_GetID(const JPC_Body* self);
 JPC_API JPC_BodyType JPC_Body_GetBodyType(const JPC_Body* self);
 JPC_API bool JPC_Body_IsRigidBody(const JPC_Body* self);
@@ -725,9 +771,9 @@ typedef struct JPC_NarrowPhaseQuery JPC_NarrowPhaseQuery;
 typedef struct JPC_NarrowPhaseQuery_CastRayArgs {
 	JPC_RRayCast Ray;
 	JPC_RayCastResult Result;
-	// BroadPhaseLayerFilter
-	// ObjectLayerFilter
-	// BodyFilter
+	JPC_BroadPhaseLayerFilter *BroadPhaseLayerFilter;
+	JPC_ObjectLayerFilter *ObjectLayerFilter;
+	JPC_BodyFilter *BodyFilter;
 } JPC_NarrowPhaseQuery_CastRayArgs;
 
 JPC_API bool JPC_NarrowPhaseQuery_CastRay(const JPC_NarrowPhaseQuery* self, JPC_NarrowPhaseQuery_CastRayArgs* args);
