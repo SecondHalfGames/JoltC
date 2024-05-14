@@ -1424,9 +1424,9 @@ JPC_API void JPC_BodyInterface_InvalidateContactCache(JPC_BodyInterface *self, J
 JPC_API bool JPC_NarrowPhaseQuery_CastRay(const JPC_NarrowPhaseQuery* self, JPC_NarrowPhaseQuery_CastRayArgs* args) {
 	JPH::RayCastResult result;
 
-	JPC_BroadPhaseLayerFilterBridge* bplFilter = to_jph(args->BroadPhaseLayerFilter);
-	JPC_ObjectLayerFilterBridge* olFilter = to_jph(args->ObjectLayerFilter);
-	JPC_BodyFilterBridge* bodyFilter = to_jph(args->BodyFilter);
+	const JPC_BroadPhaseLayerFilterBridge* bplFilter = to_jph(args->BroadPhaseLayerFilter);
+	const JPC_ObjectLayerFilterBridge* olFilter = to_jph(args->ObjectLayerFilter);
+	const JPC_BodyFilterBridge* bodyFilter = to_jph(args->BodyFilter);
 
 	bool hit = to_jph(self)->CastRay(
 		to_jph(args->Ray),

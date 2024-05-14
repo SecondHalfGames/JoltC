@@ -771,9 +771,9 @@ typedef struct JPC_NarrowPhaseQuery JPC_NarrowPhaseQuery;
 typedef struct JPC_NarrowPhaseQuery_CastRayArgs {
 	JPC_RRayCast Ray;
 	JPC_RayCastResult Result;
-	JPC_BroadPhaseLayerFilter *BroadPhaseLayerFilter;
-	JPC_ObjectLayerFilter *ObjectLayerFilter;
-	JPC_BodyFilter *BodyFilter;
+	const JPC_BroadPhaseLayerFilter *BroadPhaseLayerFilter;
+	const JPC_ObjectLayerFilter *ObjectLayerFilter;
+	const JPC_BodyFilter *BodyFilter;
 } JPC_NarrowPhaseQuery_CastRayArgs;
 
 JPC_API bool JPC_NarrowPhaseQuery_CastRay(const JPC_NarrowPhaseQuery* self, JPC_NarrowPhaseQuery_CastRayArgs* args);
