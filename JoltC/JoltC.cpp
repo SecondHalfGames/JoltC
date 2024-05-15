@@ -1424,9 +1424,23 @@ JPC_API void JPC_BodyInterface_InvalidateContactCache(JPC_BodyInterface *self, J
 JPC_API bool JPC_NarrowPhaseQuery_CastRay(const JPC_NarrowPhaseQuery* self, JPC_NarrowPhaseQuery_CastRayArgs* args) {
 	JPH::RayCastResult result;
 
-	const JPC_BroadPhaseLayerFilterBridge* bplFilter = to_jph(args->BroadPhaseLayerFilter);
-	const JPC_ObjectLayerFilterBridge* olFilter = to_jph(args->ObjectLayerFilter);
-	const JPC_BodyFilterBridge* bodyFilter = to_jph(args->BodyFilter);
+	JPH::BroadPhaseLayerFilter defaultBplFilter{};
+	const JPH::BroadPhaseLayerFilter* bplFilter = &defaultBplFilter;
+	if (args->BroadPhaseLayerFilter != nullptr) {
+		bplFilter = to_jph(args->BroadPhaseLayerFilter);
+	}
+
+	JPH::ObjectLayerFilter defaultOlFilter{};
+	const JPH::ObjectLayerFilter* olFilter = &defaultOlFilter;
+	if (args->ObjectLayerFilter != nullptr) {
+		olFilter = to_jph(args->ObjectLayerFilter);
+	}
+
+	JPH::BodyFilter defaultBodyFilter{};
+	const JPH::BodyFilter* bodyFilter = &defaultBodyFilter;
+	if (args->BodyFilter != nullptr) {
+		bodyFilter = to_jph(args->BodyFilter);
+	}
 
 	bool hit = to_jph(self)->CastRay(
 		to_jph(args->Ray),
