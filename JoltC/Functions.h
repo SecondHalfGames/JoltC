@@ -816,6 +816,7 @@ typedef struct JPC_NarrowPhaseQuery_CastShapeArgs {
 } JPC_NarrowPhaseQuery_CastShapeArgs;
 
 JPC_API void JPC_NarrowPhaseQuery_CastShape(const JPC_NarrowPhaseQuery* self, JPC_NarrowPhaseQuery_CastShapeArgs* args);
+JPC_API bool JPC_NarrowPhaseQuery_CastShapeEasiest(const JPC_NarrowPhaseQuery* self, JPC_NarrowPhaseQuery_CastShapeArgs* args);
 
 ////////////////////////////////////////////////////////////////////////////////
 // PhysicsSystem

@@ -1522,6 +1522,48 @@ JPC_API void JPC_NarrowPhaseQuery_CastShape(const JPC_NarrowPhaseQuery* self, JP
 		*shapeFilter);
 }
 
+JPC_API bool JPC_NarrowPhaseQuery_CastShapeEasiest(const JPC_NarrowPhaseQuery* self, JPC_NarrowPhaseQuery_CastShapeArgs* args) {
+	JPH::ShapeCastSettings settings{};
+
+	JPH::ClosestHitCollisionCollector<JPH::CastShapeCollector> collector{};
+
+	JPH::BroadPhaseLayerFilter defaultBplFilter{};
+	const JPH::BroadPhaseLayerFilter* bplFilter = &defaultBplFilter;
+	if (args->BroadPhaseLayerFilter != nullptr) {
+		bplFilter = to_jph(args->BroadPhaseLayerFilter);
+	}
+
+	JPH::ObjectLayerFilter defaultOlFilter{};
+	const JPH::ObjectLayerFilter* olFilter = &defaultOlFilter;
+	if (args->ObjectLayerFilter != nullptr) {
+		olFilter = to_jph(args->ObjectLayerFilter);
+	}
+
+	JPH::BodyFilter defaultBodyFilter{};
+	const JPH::BodyFilter* bodyFilter = &defaultBodyFilter;
+	if (args->BodyFilter != nullptr) {
+		bodyFilter = to_jph(args->BodyFilter);
+	}
+
+	JPH::ShapeFilter defaultShapeFilter{};
+	const JPH::ShapeFilter* shapeFilter = &defaultShapeFilter;
+	// if (args->ShapeFilter != nullptr) {
+	// 	shapeFilter = to_jph(args->ShapeFilter);
+	// }
+
+	to_jph(self)->CastShape(
+		to_jph(args->ShapeCast),
+		settings,
+		to_jph(args->BaseOffset),
+		collector,
+		*bplFilter,
+		*olFilter,
+		*bodyFilter,
+		*shapeFilter);
+
+	return collector.HadHit();
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 // PhysicsSystem
 
