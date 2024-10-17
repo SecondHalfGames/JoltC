@@ -6,6 +6,7 @@
 #include <Jolt/Physics/Body/BodyActivationListener.h>
 #include <Jolt/Physics/Body/BodyCreationSettings.h>
 #include <Jolt/Physics/Collision/CastResult.h>
+#include <Jolt/Physics/Collision/CollisionCollectorImpl.h>
 #include <Jolt/Physics/Collision/RayCast.h>
 #include <Jolt/Physics/Collision/Shape/BoxShape.h>
 #include <Jolt/Physics/Collision/Shape/CapsuleShape.h>
@@ -16,6 +17,7 @@
 #include <Jolt/Physics/Collision/Shape/SphereShape.h>
 #include <Jolt/Physics/Collision/Shape/StaticCompoundShape.h>
 #include <Jolt/Physics/Collision/Shape/TriangleShape.h>
+#include <Jolt/Physics/Collision/ShapeCast.h>
 #include <Jolt/Physics/PhysicsSettings.h>
 #include <Jolt/Physics/PhysicsSystem.h>
 #include <Jolt/RegisterTypes.h>
@@ -165,6 +167,14 @@ static JPH::RayCast to_jph(JPC_RayCast in) {
 
 static JPH::RRayCast to_jph(JPC_RRayCast in) {
 	return JPH::RRayCast(to_jph(in.Origin), to_jph(in.Direction));
+}
+
+static JPH::RShapeCast to_jph(JPC_RShapeCast in) {
+	return JPH::RShapeCast(
+		to_jph(in.Shape),
+		to_jph(in.Scale),
+		to_jph(in.CenterOfMassStart),
+		to_jph(in.Direction));
 }
 
 static JPC_SubShapeID to_jpc(JPH::SubShapeID in) {
@@ -1455,6 +1465,46 @@ JPC_API bool JPC_NarrowPhaseQuery_CastRay(const JPC_NarrowPhaseQuery* self, JPC_
 	}
 
 	return hit;
+}
+
+JPC_API void JPC_NarrowPhaseQuery_CastShape(const JPC_NarrowPhaseQuery* self, JPC_NarrowPhaseQuery_CastShapeArgs* args) {
+	JPH::ShapeCastSettings settings{};
+
+	JPH::ClosestHitCollisionCollector<JPH::CastShapeCollector> collector{};
+
+	JPH::BroadPhaseLayerFilter defaultBplFilter{};
+	const JPH::BroadPhaseLayerFilter* bplFilter = &defaultBplFilter;
+	if (args->BroadPhaseLayerFilter != nullptr) {
+		bplFilter = to_jph(args->BroadPhaseLayerFilter);
+	}
+
+	JPH::ObjectLayerFilter defaultOlFilter{};
+	const JPH::ObjectLayerFilter* olFilter = &defaultOlFilter;
+	if (args->ObjectLayerFilter != nullptr) {
+		olFilter = to_jph(args->ObjectLayerFilter);
+	}
+
+	JPH::BodyFilter defaultBodyFilter{};
+	const JPH::BodyFilter* bodyFilter = &defaultBodyFilter;
+	if (args->BodyFilter != nullptr) {
+		bodyFilter = to_jph(args->BodyFilter);
+	}
+
+	JPH::ShapeFilter defaultShapeFilter{};
+	const JPH::ShapeFilter* shapeFilter = &defaultShapeFilter;
+	// if (args->ShapeFilter != nullptr) {
+	// 	shapeFilter = to_jph(args->ShapeFilter);
+	// }
+
+	to_jph(self)->CastShape(
+		to_jph(args->ShapeCast),
+		settings,
+		to_jph(args->BaseOffset),
+		collector,
+		*bplFilter,
+		*olFilter,
+		*bodyFilter,
+		*shapeFilter);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

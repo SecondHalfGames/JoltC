@@ -779,6 +779,42 @@ typedef struct JPC_NarrowPhaseQuery_CastRayArgs {
 
 JPC_API bool JPC_NarrowPhaseQuery_CastRay(const JPC_NarrowPhaseQuery* self, JPC_NarrowPhaseQuery_CastRayArgs* args);
 
+typedef struct JPC_RShapeCast {
+	const JPC_Shape *Shape;
+	JPC_Vec3 Scale;
+	JPC_RMat44 CenterOfMassStart;
+	JPC_Vec3 Direction;
+	// const JPC_AABox ShapeWorldBounds;
+} JPC_RShapeCast;
+
+typedef struct JPC_ShapeCastSettings {
+	// JPH::CollideSettingsBase
+	// EActiveEdgeMode ActiveEdgeMode;
+	// ECollectFacesMode CollectFacesMode;
+	float CollisionTolerance;
+	float PenetrationTolerance;
+	JPC_Vec3 ActiveEdgeMovementDirection;
+
+	// JPH::ShapeCastSettings
+	// EBackFaceMode BackFaceModeTriangles;
+	// EBackFaceMode BackFaceModeConvex;
+	bool UseShrunkenShapeAndConvexRadius;
+	bool ReturnDeepestPoint;
+} JPC_ShapeCastSettings;
+
+typedef struct JPC_NarrowPhaseQuery_CastShapeArgs {
+	JPC_RShapeCast ShapeCast;
+	JPC_ShapeCastSettings Settings;
+	JPC_RVec3 BaseOffset;
+	// JPC_CastShapeCollector *Collector;
+	const JPC_BroadPhaseLayerFilter *BroadPhaseLayerFilter;
+	const JPC_ObjectLayerFilter *ObjectLayerFilter;
+	const JPC_BodyFilter *BodyFilter;
+	// const JPC_ShapeFilter *ShapeFilter;
+} JPC_NarrowPhaseQuery_CastShapeArgs;
+
+JPC_API void JPC_NarrowPhaseQuery_CastShape(const JPC_NarrowPhaseQuery* self, JPC_NarrowPhaseQuery_CastShapeArgs* args);
+
 ////////////////////////////////////////////////////////////////////////////////
 // PhysicsSystem
 
