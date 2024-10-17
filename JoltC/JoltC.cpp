@@ -190,6 +190,26 @@ static JPC_RayCastResult to_jpc(JPH::RayCastResult in) {
 	return out;
 }
 
+static JPC_ShapeCastResult to_jpc(JPH::ShapeCastResult in) {
+	JPC_ShapeCastResult out{0};
+	// CollideShapeResult
+	out.ContactPointOn1 = to_jpc(in.mContactPointOn1);
+	out.ContactPointOn2 = to_jpc(in.mContactPointOn2);
+	out.PenetrationAxis = to_jpc(in.mPenetrationAxis);
+	out.PenetrationDepth = in.mPenetrationDepth;
+	// SubShapeID SubShapeID1;
+	// SubShapeID SubShapeID2;
+	out.BodyID2 = to_jpc(in.mBodyID2);
+	// Face Shape1Face;
+	// Face Shape2Face;
+
+	// ShapeCastResult
+	out.Fraction = in.mFraction;
+	out.IsBackFaceHit = in.mIsBackFaceHit;
+
+	return out;
+}
+
 JPC_API void JPC_RegisterDefaultAllocator() {
 	JPH::RegisterDefaultAllocator();
 }
@@ -420,6 +440,35 @@ JPC_API JPC_ObjectLayerPairFilter* JPC_ObjectLayerPairFilter_new(
 	JPC_ObjectLayerPairFilterFns fns)
 {
 	return to_jpc(new JPC_ObjectLayerPairFilterBridge(self, fns));
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// JPC_CastShapeCollector
+
+class JPC_CastShapeCollectorBridge final : public JPH::CastShapeCollector {
+	using ResultType = JPH::ShapeCastResult;
+
+public:
+	explicit JPC_CastShapeCollectorBridge(const void *self, JPC_CastShapeCollectorFns fns) : self(self), fns(fns) {}
+
+	virtual void AddHit(const ResultType &inResult) {
+		JPC_ShapeCastResult result = to_jpc(inResult);
+		fns.AddHit(self, &result);
+	}
+
+private:
+	const void* self;
+	JPC_CastShapeCollectorFns fns;
+};
+
+OPAQUE_WRAPPER(JPC_CastShapeCollector, JPC_CastShapeCollectorBridge)
+DESTRUCTOR(JPC_CastShapeCollector)
+
+JPC_API JPC_CastShapeCollector* JPC_CastShapeCollector_new(
+	const void *self,
+	JPC_CastShapeCollectorFns fns)
+{
+	return to_jpc(new JPC_CastShapeCollectorBridge(self, fns));
 }
 
 ////////////////////////////////////////////////////////////////////////////////

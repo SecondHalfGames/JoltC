@@ -160,6 +160,23 @@ typedef struct JPC_RayCastResult {
 	JPC_SubShapeID SubShapeID2;
 } JPC_RayCastResult;
 
+typedef struct JPC_ShapeCastResult {
+	// From CollideShapeResult
+	JPC_Vec3 ContactPointOn1;
+	JPC_Vec3 ContactPointOn2;
+	JPC_Vec3 PenetrationAxis;
+	float PenetrationDepth;
+	// SubShapeID SubShapeID1;
+	// SubShapeID SubShapeID2;
+	JPC_BodyID BodyID2;
+	// Face Shape1Face;
+	// Face Shape2Face;
+
+	// From ShapeCastResult
+	float Fraction;
+	bool IsBackFaceHit;
+} JPC_ShapeCastResult;
+
 typedef struct JPC_Body JPC_Body;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -292,6 +309,21 @@ JPC_API JPC_ObjectLayerPairFilter* JPC_ObjectLayerPairFilter_new(
 	JPC_ObjectLayerPairFilterFns fns);
 
 JPC_API void JPC_ObjectLayerPairFilter_delete(JPC_ObjectLayerPairFilter* object);
+
+////////////////////////////////////////////////////////////////////////////////
+// CastShapeCollector
+
+typedef struct JPC_CastShapeCollectorFns {
+	void (*AddHit)(const void *self, const JPC_ShapeCastResult *Result);
+} JPC_CastShapeCollectorFns;
+
+typedef struct JPC_CastShapeCollector JPC_CastShapeCollector;
+
+JPC_API JPC_CastShapeCollector* JPC_CastShapeCollector_new(
+	const void *self,
+	JPC_CastShapeCollectorFns fns);
+
+JPC_API void JPC_CastShapeCollector_delete(JPC_CastShapeCollector* object);
 
 ////////////////////////////////////////////////////////////////////////////////
 // DrawSettings
