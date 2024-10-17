@@ -1467,6 +1467,21 @@ JPC_API bool JPC_NarrowPhaseQuery_CastRay(const JPC_NarrowPhaseQuery* self, JPC_
 	return hit;
 }
 
+JPC_API void JPC_ShapeCastSettings_default(JPC_ShapeCastSettings* object) {
+	// JPH::CollideSettingsBase
+	// EActiveEdgeMode ActiveEdgeMode;
+	// ECollectFacesMode CollectFacesMode;
+	object->CollisionTolerance = JPC_DEFAULT_COLLISION_TOLERANCE;
+	object->PenetrationTolerance = JPC_DEFAULT_PENETRATION_TOLERANCE;
+	object->ActiveEdgeMovementDirection = JPC_Vec3{0};
+
+	// JPH::ShapeCastSettings
+	// EBackFaceMode BackFaceModeTriangles;
+	// EBackFaceMode BackFaceModeConvex;
+	object->UseShrunkenShapeAndConvexRadius;
+	object->ReturnDeepestPoint;
+}
+
 JPC_API void JPC_NarrowPhaseQuery_CastShape(const JPC_NarrowPhaseQuery* self, JPC_NarrowPhaseQuery_CastShapeArgs* args) {
 	JPH::ShapeCastSettings settings{};
 

@@ -802,6 +802,8 @@ typedef struct JPC_ShapeCastSettings {
 	bool ReturnDeepestPoint;
 } JPC_ShapeCastSettings;
 
+JPC_API void JPC_ShapeCastSettings_default(JPC_ShapeCastSettings* object);
+
 typedef struct JPC_NarrowPhaseQuery_CastShapeArgs {
 	JPC_RShapeCast ShapeCast;
 	JPC_ShapeCastSettings Settings;
