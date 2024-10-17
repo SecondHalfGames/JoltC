@@ -74,7 +74,8 @@ typedef struct JPC_Quat {
 ENSURE_SIZE_ALIGN(JPC_Quat, JPH::Quat)
 
 typedef struct JPC_Mat44 {
-	alignas(16) JPC_Vec4 matrix[4];
+	alignas(16) JPC_Vec4 col[3];
+	JPC_Vec3 col3;
 } JPC_Mat44;
 
 ENSURE_SIZE_ALIGN(JPC_Mat44, JPH::Mat44)
