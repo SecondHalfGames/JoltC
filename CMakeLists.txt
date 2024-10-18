@@ -45,7 +45,7 @@ if(MSVC)
   # Ignore 'unreferenced function with internal linkage'
   target_compile_options(joltc PRIVATE /wd4505)
 else()
-  target_compile_options(joltc PRIVATE -Wall -Wextra -Wpedantic)
+  target_compile_options(joltc PRIVATE -Wall -Wextra -Wpedantic -fno-rtti)
 endif()
 
 if (DOUBLE_PRECISION)
