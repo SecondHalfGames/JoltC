@@ -120,6 +120,13 @@ static JPH::Vec3 to_jph(JPC_Vec3 in) {
 	return JPH::Vec3(in.x, in.y, in.z);
 }
 
+static JPC_Vec4 to_jpc(JPH::Vec4 in) {
+	return JPC_Vec4{in.GetX(), in.GetY(), in.GetZ(), in.GetW()};
+}
+static JPH::Vec4 to_jph(JPC_Vec4 in) {
+	return JPH::Vec4(in.x, in.y, in.z, in.w);
+}
+
 static JPH::Array<JPH::Vec3> to_jph(const JPC_Vec3* src, size_t n) {
 	JPH::Array<JPH::Vec3> vec;
 	vec.resize(n);
@@ -152,6 +159,25 @@ static JPC_Mat44 to_jpc(JPH::Mat44 in) {
 }
 static JPH::Mat44 to_jph(JPC_Mat44 in) {
 	return JPH::Mat44::sLoadFloat4x4Aligned(reinterpret_cast<const JPH::Float4*>(&in));
+}
+
+static JPC_DMat44 to_jpc(JPH::DMat44 in) {
+	JPC_DMat44 out;
+	out.col[0] = to_jpc(in.GetColumn4(0));
+	out.col[1] = to_jpc(in.GetColumn4(1));
+	out.col[2] = to_jpc(in.GetColumn4(2));
+	out.col3 = to_jpc(in.GetTranslation());
+	return out;
+}
+static JPH::DMat44 to_jph(JPC_DMat44 in) {
+	JPH::DVec3 col3 = to_jph(in.col3);
+
+	JPH::DMat44 out(
+		to_jph(in.col[0]),
+		to_jph(in.col[1]),
+		to_jph(in.col[2]),
+		col3);
+	return out;
 }
 
 static JPC_Color to_jpc(JPH::Color in) {
