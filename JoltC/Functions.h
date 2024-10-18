@@ -349,6 +349,7 @@ typedef struct JPC_BodyManager_DrawSettings {
 	bool mDrawSoftBodySkinConstraints;
 	bool mDrawSoftBodyLRAConstraints;
 	bool mDrawSoftBodyPredictedBounds;
+	JPC_SoftBodyConstraintColor DrawSoftBodyConstraintColor;
 } JPC_BodyManager_DrawSettings;
 
 ENSURE_SIZE_ALIGN(JPC_BodyManager_DrawSettings, JPH::BodyManager::DrawSettings)

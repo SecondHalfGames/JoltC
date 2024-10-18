@@ -1,5 +1,5 @@
 # JoltC
-C wrapper for [Jolt Physics](https://github.com/jrouwe/JoltPhysics) 5.0.0.
+C wrapper for [Jolt Physics](https://github.com/jrouwe/JoltPhysics) 5.1.0.
 
 Currently a work in progress. Bindings contain functions that we've needed as part of our game or the Rust bindings we're working on in [jolt-rust](https://github.com/SecondHalfGames/jolt-rust).
 
@@ -11,7 +11,14 @@ Currently a work in progress. Bindings contain functions that we've needed as pa
 Use CMake:
 
 ```bash
+# Configure the build
 cmake -B build
+
+# Optionally, you can enable double precision, or make ObjectLayer use 32 bits
+# We aim to support most of the configuration of Jolt's C++ API.
+cmake -B build -DDOUBLE_PRECISION=ON -DOBJECT_LAYER_BITS=32
+
+# Build
 cmake --build build
 ```
 
