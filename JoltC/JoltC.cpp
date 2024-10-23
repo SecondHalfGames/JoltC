@@ -489,13 +489,16 @@ JPC_API JPC_ObjectLayerPairFilter* JPC_ObjectLayerPairFilter_new(
 ////////////////////////////////////////////////////////////////////////////////
 // JPC_CastShapeCollector
 
+class JPC_CastShapeCollectorBridge;
+OPAQUE_WRAPPER(JPC_CastShapeCollector, JPC_CastShapeCollectorBridge)
+
 class JPC_CastShapeCollectorBridge final : public JPH::CastShapeCollector {
 	using ResultType = JPH::ShapeCastResult;
 
 public:
 	explicit JPC_CastShapeCollectorBridge(void *self, JPC_CastShapeCollectorFns fns) : self(self), fns(fns) {}
 
-	virtual void Reset() override {
+	void Reset() override {
 		JPH::CastShapeCollector::Reset();
 
 		if (fns.Reset != nullptr) {
@@ -503,9 +506,11 @@ public:
 		}
 	}
 
-	virtual void AddHit(const ResultType &inResult) override {
+	void AddHit(const ResultType &inResult) override {
 		JPC_ShapeCastResult result = to_jpc(inResult);
-		fns.AddHit(self, &result);
+		JPC_CastShapeCollector *base = to_jpc(this);
+
+		fns.AddHit(self, base, &result);
 	}
 
 private:
@@ -513,7 +518,6 @@ private:
 	JPC_CastShapeCollectorFns fns;
 };
 
-OPAQUE_WRAPPER(JPC_CastShapeCollector, JPC_CastShapeCollectorBridge)
 DESTRUCTOR(JPC_CastShapeCollector)
 
 JPC_API JPC_CastShapeCollector* JPC_CastShapeCollector_new(

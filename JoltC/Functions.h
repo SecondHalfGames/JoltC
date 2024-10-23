@@ -313,12 +313,12 @@ JPC_API void JPC_ObjectLayerPairFilter_delete(JPC_ObjectLayerPairFilter* object)
 ////////////////////////////////////////////////////////////////////////////////
 // CastShapeCollector
 
+typedef struct JPC_CastShapeCollector JPC_CastShapeCollector;
+
 typedef struct JPC_CastShapeCollectorFns {
 	void (*Reset)(void *self);
-	void (*AddHit)(void *self, const JPC_ShapeCastResult *Result);
+	void (*AddHit)(void *self, JPC_CastShapeCollector *base, const JPC_ShapeCastResult *Result);
 } JPC_CastShapeCollectorFns;
-
-typedef struct JPC_CastShapeCollector JPC_CastShapeCollector;
 
 JPC_API JPC_CastShapeCollector* JPC_CastShapeCollector_new(
 	void *self,
