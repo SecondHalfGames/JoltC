@@ -493,15 +493,23 @@ class JPC_CastShapeCollectorBridge final : public JPH::CastShapeCollector {
 	using ResultType = JPH::ShapeCastResult;
 
 public:
-	explicit JPC_CastShapeCollectorBridge(const void *self, JPC_CastShapeCollectorFns fns) : self(self), fns(fns) {}
+	explicit JPC_CastShapeCollectorBridge(void *self, JPC_CastShapeCollectorFns fns) : self(self), fns(fns) {}
 
-	virtual void AddHit(const ResultType &inResult) {
+	virtual void Reset() override {
+		JPH::CastShapeCollector::Reset();
+
+		if (fns.Reset != nullptr) {
+			fns.Reset(self);
+		}
+	}
+
+	virtual void AddHit(const ResultType &inResult) override {
 		JPC_ShapeCastResult result = to_jpc(inResult);
 		fns.AddHit(self, &result);
 	}
 
 private:
-	const void* self;
+	void* self;
 	JPC_CastShapeCollectorFns fns;
 };
 
@@ -509,10 +517,14 @@ OPAQUE_WRAPPER(JPC_CastShapeCollector, JPC_CastShapeCollectorBridge)
 DESTRUCTOR(JPC_CastShapeCollector)
 
 JPC_API JPC_CastShapeCollector* JPC_CastShapeCollector_new(
-	const void *self,
+	void *self,
 	JPC_CastShapeCollectorFns fns)
 {
 	return to_jpc(new JPC_CastShapeCollectorBridge(self, fns));
+}
+
+JPC_API void JPC_CastShapeCollector_UpdateEarlyOutFraction(JPC_CastShapeCollector* self, float inFraction) {
+	to_jph(self)->UpdateEarlyOutFraction(inFraction);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1597,10 +1609,14 @@ JPC_API void JPC_ShapeCastSettings_default(JPC_ShapeCastSettings* object) {
 	object->ReturnDeepestPoint = false;
 }
 
-JPC_API bool JPC_NarrowPhaseQuery_CastShape(const JPC_NarrowPhaseQuery* self, JPC_NarrowPhaseQuery_CastShapeArgs* args) {
+JPC_API void JPC_NarrowPhaseQuery_CastShape(const JPC_NarrowPhaseQuery* self, JPC_NarrowPhaseQuery_CastShapeArgs* args) {
 	JPH::ShapeCastSettings settings = to_jph(args->Settings);
 
-	JPH::ClosestHitCollisionCollector<JPH::CastShapeCollector> collector{};
+	JPH::ClosestHitCollisionCollector<JPH::CastShapeCollector> defaultCollector{};
+	JPH::CastShapeCollector* collector = &defaultCollector;
+	if (args->Collector != nullptr) {
+		collector = to_jph(args->Collector);
+	}
 
 	JPH::BroadPhaseLayerFilter defaultBplFilter{};
 	const JPH::BroadPhaseLayerFilter* bplFilter = &defaultBplFilter;
@@ -1630,13 +1646,11 @@ JPC_API bool JPC_NarrowPhaseQuery_CastShape(const JPC_NarrowPhaseQuery* self, JP
 		to_jph(args->ShapeCast),
 		settings,
 		to_jph(args->BaseOffset),
-		collector,
+		*collector,
 		*bplFilter,
 		*olFilter,
 		*bodyFilter,
 		*shapeFilter);
-
-	return collector.HadHit();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

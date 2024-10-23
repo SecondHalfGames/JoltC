@@ -314,16 +314,19 @@ JPC_API void JPC_ObjectLayerPairFilter_delete(JPC_ObjectLayerPairFilter* object)
 // CastShapeCollector
 
 typedef struct JPC_CastShapeCollectorFns {
-	void (*AddHit)(const void *self, const JPC_ShapeCastResult *Result);
+	void (*Reset)(void *self);
+	void (*AddHit)(void *self, const JPC_ShapeCastResult *Result);
 } JPC_CastShapeCollectorFns;
 
 typedef struct JPC_CastShapeCollector JPC_CastShapeCollector;
 
 JPC_API JPC_CastShapeCollector* JPC_CastShapeCollector_new(
-	const void *self,
+	void *self,
 	JPC_CastShapeCollectorFns fns);
 
 JPC_API void JPC_CastShapeCollector_delete(JPC_CastShapeCollector* object);
+
+JPC_API void JPC_CastShapeCollector_UpdateEarlyOutFraction(JPC_CastShapeCollector *self, float inFraction);
 
 ////////////////////////////////////////////////////////////////////////////////
 // DrawSettings
@@ -836,14 +839,14 @@ typedef struct JPC_NarrowPhaseQuery_CastShapeArgs {
 	JPC_RShapeCast ShapeCast;
 	JPC_ShapeCastSettings Settings;
 	JPC_RVec3 BaseOffset;
-	// JPC_CastShapeCollector *Collector;
+	JPC_CastShapeCollector *Collector;
 	const JPC_BroadPhaseLayerFilter *BroadPhaseLayerFilter;
 	const JPC_ObjectLayerFilter *ObjectLayerFilter;
 	const JPC_BodyFilter *BodyFilter;
 	// const JPC_ShapeFilter *ShapeFilter;
 } JPC_NarrowPhaseQuery_CastShapeArgs;
 
-JPC_API bool JPC_NarrowPhaseQuery_CastShape(const JPC_NarrowPhaseQuery* self, JPC_NarrowPhaseQuery_CastShapeArgs* args);
+JPC_API void JPC_NarrowPhaseQuery_CastShape(const JPC_NarrowPhaseQuery* self, JPC_NarrowPhaseQuery_CastShapeArgs* args);
 
 ////////////////////////////////////////////////////////////////////////////////
 // PhysicsSystem
