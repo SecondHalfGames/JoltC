@@ -824,8 +824,8 @@ typedef struct JPC_ShapeCastSettings {
 	JPC_Vec3 ActiveEdgeMovementDirection;
 
 	// JPH::ShapeCastSettings
-	// EBackFaceMode BackFaceModeTriangles;
-	// EBackFaceMode BackFaceModeConvex;
+	JPC_BackFaceMode BackFaceModeTriangles;
+	JPC_BackFaceMode BackFaceModeConvex;
 	bool UseShrunkenShapeAndConvexRadius;
 	bool ReturnDeepestPoint;
 } JPC_ShapeCastSettings;
@@ -843,8 +843,7 @@ typedef struct JPC_NarrowPhaseQuery_CastShapeArgs {
 	// const JPC_ShapeFilter *ShapeFilter;
 } JPC_NarrowPhaseQuery_CastShapeArgs;
 
-JPC_API void JPC_NarrowPhaseQuery_CastShape(const JPC_NarrowPhaseQuery* self, JPC_NarrowPhaseQuery_CastShapeArgs* args);
-JPC_API bool JPC_NarrowPhaseQuery_CastShapeEasiest(const JPC_NarrowPhaseQuery* self, JPC_NarrowPhaseQuery_CastShapeArgs* args);
+JPC_API bool JPC_NarrowPhaseQuery_CastShape(const JPC_NarrowPhaseQuery* self, JPC_NarrowPhaseQuery_CastShapeArgs* args);
 
 ////////////////////////////////////////////////////////////////////////////////
 // PhysicsSystem

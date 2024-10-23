@@ -236,6 +236,24 @@ static JPC_ShapeCastResult to_jpc(JPH::ShapeCastResult in) {
 	return out;
 }
 
+static JPH::ShapeCastSettings to_jph(JPC_ShapeCastSettings in) {
+	JPH::ShapeCastSettings out{};
+	// JPH::CollideSettingsBase
+	// EActiveEdgeMode ActiveEdgeMode;
+	// ECollectFacesMode CollectFacesMode;
+	out.mCollisionTolerance = in.CollisionTolerance;
+	out.mPenetrationTolerance = in.PenetrationTolerance;
+	out.mActiveEdgeMovementDirection = to_jph(in.ActiveEdgeMovementDirection);
+
+	// JPH::ShapeCastSettings
+	out.mBackFaceModeTriangles = static_cast<JPH::EBackFaceMode>(in.BackFaceModeTriangles);
+	out.mBackFaceModeConvex = static_cast<JPH::EBackFaceMode>(in.BackFaceModeConvex);
+	out.mUseShrunkenShapeAndConvexRadius = in.UseShrunkenShapeAndConvexRadius;
+	out.mReturnDeepestPoint = in.ReturnDeepestPoint;
+
+	return out;
+}
+
 JPC_API void JPC_RegisterDefaultAllocator() {
 	JPH::RegisterDefaultAllocator();
 }
@@ -1573,54 +1591,14 @@ JPC_API void JPC_ShapeCastSettings_default(JPC_ShapeCastSettings* object) {
 	object->ActiveEdgeMovementDirection = JPC_Vec3{0};
 
 	// JPH::ShapeCastSettings
-	// EBackFaceMode BackFaceModeTriangles;
-	// EBackFaceMode BackFaceModeConvex;
-	object->UseShrunkenShapeAndConvexRadius;
-	object->ReturnDeepestPoint;
+	object->BackFaceModeTriangles = JPC_BACK_FACE_MODE_IGNORE;
+	object->BackFaceModeConvex = JPC_BACK_FACE_MODE_IGNORE;
+	object->UseShrunkenShapeAndConvexRadius = false;
+	object->ReturnDeepestPoint = false;
 }
 
-JPC_API void JPC_NarrowPhaseQuery_CastShape(const JPC_NarrowPhaseQuery* self, JPC_NarrowPhaseQuery_CastShapeArgs* args) {
-	JPH::ShapeCastSettings settings{};
-
-	JPH::ClosestHitCollisionCollector<JPH::CastShapeCollector> collector{};
-
-	JPH::BroadPhaseLayerFilter defaultBplFilter{};
-	const JPH::BroadPhaseLayerFilter* bplFilter = &defaultBplFilter;
-	if (args->BroadPhaseLayerFilter != nullptr) {
-		bplFilter = to_jph(args->BroadPhaseLayerFilter);
-	}
-
-	JPH::ObjectLayerFilter defaultOlFilter{};
-	const JPH::ObjectLayerFilter* olFilter = &defaultOlFilter;
-	if (args->ObjectLayerFilter != nullptr) {
-		olFilter = to_jph(args->ObjectLayerFilter);
-	}
-
-	JPH::BodyFilter defaultBodyFilter{};
-	const JPH::BodyFilter* bodyFilter = &defaultBodyFilter;
-	if (args->BodyFilter != nullptr) {
-		bodyFilter = to_jph(args->BodyFilter);
-	}
-
-	JPH::ShapeFilter defaultShapeFilter{};
-	const JPH::ShapeFilter* shapeFilter = &defaultShapeFilter;
-	// if (args->ShapeFilter != nullptr) {
-	// 	shapeFilter = to_jph(args->ShapeFilter);
-	// }
-
-	to_jph(self)->CastShape(
-		to_jph(args->ShapeCast),
-		settings,
-		to_jph(args->BaseOffset),
-		collector,
-		*bplFilter,
-		*olFilter,
-		*bodyFilter,
-		*shapeFilter);
-}
-
-JPC_API bool JPC_NarrowPhaseQuery_CastShapeEasiest(const JPC_NarrowPhaseQuery* self, JPC_NarrowPhaseQuery_CastShapeArgs* args) {
-	JPH::ShapeCastSettings settings{};
+JPC_API bool JPC_NarrowPhaseQuery_CastShape(const JPC_NarrowPhaseQuery* self, JPC_NarrowPhaseQuery_CastShapeArgs* args) {
+	JPH::ShapeCastSettings settings = to_jph(args->Settings);
 
 	JPH::ClosestHitCollisionCollector<JPH::CastShapeCollector> collector{};
 

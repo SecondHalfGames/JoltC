@@ -232,12 +232,12 @@ ENSURE_ENUM_EQ(JPC_VALIDATE_RESULT_REJECT_ALL_CONTACTS,
                JPH::ValidateResult::RejectAllContactsForThisBodyPair);
 
 typedef enum JPC_BackFaceMode: uint8_t {
-    JPC_BACK_FACE_IGNORE,
-    JPC_BACK_FACE_COLLIDE,
+    JPC_BACK_FACE_MODE_IGNORE,
+    JPC_BACK_FACE_MODE_COLLIDE,
 } JPC_BackFaceMode;
 
-ENSURE_ENUM_EQ(JPC_BACK_FACE_IGNORE, JPH::EBackFaceMode::IgnoreBackFaces)
-ENSURE_ENUM_EQ(JPC_BACK_FACE_COLLIDE, JPH::EBackFaceMode::CollideWithBackFaces)
+ENSURE_ENUM_EQ(JPC_BACK_FACE_MODE_IGNORE, JPH::EBackFaceMode::IgnoreBackFaces)
+ENSURE_ENUM_EQ(JPC_BACK_FACE_MODE_COLLIDE, JPH::EBackFaceMode::CollideWithBackFaces)
 
 typedef enum JPC_BodyType: uint8_t {
     JPC_BODY_TYPE_RIGID_BODY = 0,
