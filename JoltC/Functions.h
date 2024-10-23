@@ -650,9 +650,8 @@ JPC_API void JPC_Body_SetAngularVelocityClamped(JPC_Body* self, JPC_Vec3 inAngul
 JPC_API JPC_Vec3 JPC_Body_GetPointVelocityCOM(const JPC_Body* self, JPC_Vec3 inPointRelativeToCOM);
 JPC_API JPC_Vec3 JPC_Body_GetPointVelocity(const JPC_Body* self, JPC_RVec3 inPoint);
 JPC_API void JPC_Body_AddForce(JPC_Body* self, JPC_Vec3 inForce);
-
-// JPC_API void JPC_Body_AddForce(JPC_Body* self, JPC_Vec3 inForce, JPC_RVec3 inPosition);
-
+// overload of Body::AddForce
+JPC_API void JPC_Body_AddForceAtPoint(JPC_Body* self, JPC_Vec3 inForce, JPC_RVec3 inPosition);
 JPC_API void JPC_Body_AddTorque(JPC_Body* self, JPC_Vec3 inTorque);
 JPC_API JPC_Vec3 JPC_Body_GetAccumulatedForce(const JPC_Body* self);
 JPC_API JPC_Vec3 JPC_Body_GetAccumulatedTorque(const JPC_Body* self);
@@ -670,13 +669,12 @@ JPC_API bool JPC_Body_IsCollisionCacheInvalid(const JPC_Body* self);
 JPC_API const JPC_Shape* JPC_Body_GetShape(const JPC_Body* self);
 JPC_API JPC_RVec3 JPC_Body_GetPosition(const JPC_Body* self);
 JPC_API JPC_Quat JPC_Body_GetRotation(const JPC_Body* self);
-
-// JPC_API RMat44 JPC_Body_GetWorldTransform(const JPC_Body* self);
-
+JPC_API JPC_RMat44 JPC_Body_GetWorldTransform(const JPC_Body* self);
 JPC_API JPC_RVec3 JPC_Body_GetCenterOfMassPosition(const JPC_Body* self);
 
-// JPC_API RMat44 JPC_Body_GetCenterOfMassTransform(const JPC_Body* self);
-// JPC_API RMat44 JPC_Body_GetInverseCenterOfMassTransform(const JPC_Body* self);
+JPC_API JPC_RMat44 JPC_Body_GetCenterOfMassTransform(const JPC_Body* self);
+JPC_API JPC_RMat44 JPC_Body_GetInverseCenterOfMassTransform(const JPC_Body* self);
+
 // JPC_API const AABox & JPC_Body_GetWorldSpaceBounds(const JPC_Body* self);
 // JPC_API const MotionProperties *JPC_Body_GetMotionProperties(const JPC_Body* self)
 // JPC_API MotionProperties * JPC_Body_GetMotionProperties(JPC_Body* self);
@@ -749,10 +747,8 @@ JPC_API JPC_RVec3 JPC_BodyInterface_GetPosition(const JPC_BodyInterface *self, J
 JPC_API JPC_RVec3 JPC_BodyInterface_GetCenterOfMassPosition(const JPC_BodyInterface *self, JPC_BodyID inBodyID);
 JPC_API void JPC_BodyInterface_SetRotation(JPC_BodyInterface *self, JPC_BodyID inBodyID, JPC_Quat inRotation, JPC_Activation inActivationMode);
 JPC_API JPC_Quat JPC_BodyInterface_GetRotation(const JPC_BodyInterface *self, JPC_BodyID inBodyID);
-
-// RMat44 JPC_BodyInterface_GetWorldTransform(const JPC_BodyInterface *self, JPC_BodyID inBodyID);
-// RMat44 JPC_BodyInterface_GetCenterOfMassTransform(const JPC_BodyInterface *self, JPC_BodyID inBodyID);
-
+JPC_API JPC_RMat44 JPC_BodyInterface_GetWorldTransform(const JPC_BodyInterface *self, JPC_BodyID inBodyID);
+JPC_API JPC_RMat44 JPC_BodyInterface_GetCenterOfMassTransform(const JPC_BodyInterface *self, JPC_BodyID inBodyID);
 JPC_API void JPC_BodyInterface_MoveKinematic(JPC_BodyInterface *self, JPC_BodyID inBodyID, JPC_RVec3 inTargetPosition, JPC_Quat inTargetRotation, float inDeltaTime);
 JPC_API void JPC_BodyInterface_SetLinearAndAngularVelocity(JPC_BodyInterface *self, JPC_BodyID inBodyID, JPC_Vec3 inLinearVelocity, JPC_Vec3 inAngularVelocity);
 JPC_API void JPC_BodyInterface_GetLinearAndAngularVelocity(const JPC_BodyInterface *self, JPC_BodyID inBodyID, JPC_Vec3 *outLinearVelocity, JPC_Vec3 *outAngularVelocity);
@@ -765,9 +761,8 @@ JPC_API JPC_Vec3 JPC_BodyInterface_GetAngularVelocity(const JPC_BodyInterface *s
 JPC_API JPC_Vec3 JPC_BodyInterface_GetPointVelocity(const JPC_BodyInterface *self, JPC_BodyID inBodyID, JPC_RVec3 inPoint);
 JPC_API void JPC_BodyInterface_SetPositionRotationAndVelocity(JPC_BodyInterface *self, JPC_BodyID inBodyID, JPC_RVec3 inPosition, JPC_Quat inRotation, JPC_Vec3 inLinearVelocity, JPC_Vec3 inAngularVelocity);
 JPC_API void JPC_BodyInterface_AddForce(JPC_BodyInterface *self, JPC_BodyID inBodyID, JPC_Vec3 inForce);
-
-// JPC_API void JPC_BodyInterface_AddForce(JPC_BodyInterface *self, JPC_BodyID inBodyID, JPC_Vec3 inForce, JPC_RVec3 inPoint);
-
+// overload of BodyInterface::AddForce
+JPC_API void JPC_BodyInterface_AddForceAtPoint(JPC_BodyInterface *self, JPC_BodyID inBodyID, JPC_Vec3 inForce, JPC_RVec3 inPoint);
 JPC_API void JPC_BodyInterface_AddTorque(JPC_BodyInterface *self, JPC_BodyID inBodyID, JPC_Vec3 inTorque);
 JPC_API void JPC_BodyInterface_AddForceAndTorque(JPC_BodyInterface *self, JPC_BodyID inBodyID, JPC_Vec3 inForce, JPC_Vec3 inTorque);
 JPC_API void JPC_BodyInterface_AddImpulse(JPC_BodyInterface *self, JPC_BodyID inBodyID, JPC_Vec3 inImpulse);

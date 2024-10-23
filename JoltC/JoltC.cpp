@@ -1093,8 +1093,14 @@ JPC_API JPC_Vec3 JPC_Body_GetPointVelocity(const JPC_Body* self, JPC_RVec3 inPoi
 	return to_jpc(to_jph(self)->GetPointVelocity(to_jph(inPoint)));
 }
 
-// JPC_API void JPC_Body_AddForce(JPC_Body* self, JPC_Vec3 inForce);
-// JPC_API void JPC_Body_AddForce(JPC_Body* self, JPC_Vec3 inForce, JPC_RVec3 inPosition);
+JPC_API void JPC_Body_AddForce(JPC_Body* self, JPC_Vec3 inForce) {
+	to_jph(self)->AddForce(to_jph(inForce));
+}
+
+// overload of Body::AddForce
+JPC_API void JPC_Body_AddForceAtPoint(JPC_Body* self, JPC_Vec3 inForce, JPC_RVec3 inPosition) {
+	to_jph(self)->AddForce(to_jph(inForce), to_jph(inPosition));
+}
 
 JPC_API void JPC_Body_AddTorque(JPC_Body* self, JPC_Vec3 inTorque) {
 	to_jph(self)->AddTorque(to_jph(inTorque));
@@ -1164,14 +1170,22 @@ JPC_API JPC_Quat JPC_Body_GetRotation(const JPC_Body* self) {
 	return to_jpc(to_jph(self)->GetRotation());
 }
 
-// JPC_API RMat44 JPC_Body_GetWorldTransform(const JPC_Body* self);
+JPC_API JPC_RMat44 JPC_Body_GetWorldTransform(const JPC_Body* self) {
+	return to_jpc(to_jph(self)->GetWorldTransform());
+}
 
 JPC_API JPC_RVec3 JPC_Body_GetCenterOfMassPosition(const JPC_Body* self) {
 	return to_jpc(to_jph(self)->GetCenterOfMassPosition());
 }
 
-// JPC_API RMat44 JPC_Body_GetCenterOfMassTransform(const JPC_Body* self);
-// JPC_API RMat44 JPC_Body_GetInverseCenterOfMassTransform(const JPC_Body* self);
+JPC_API JPC_RMat44 JPC_Body_GetCenterOfMassTransform(const JPC_Body* self) {
+	return to_jpc(to_jph(self)->GetCenterOfMassTransform());
+}
+
+JPC_API JPC_RMat44 JPC_Body_GetInverseCenterOfMassTransform(const JPC_Body* self) {
+	return to_jpc(to_jph(self)->GetInverseCenterOfMassTransform());
+}
+
 // JPC_API const AABox & JPC_Body_GetWorldSpaceBounds(const JPC_Body* self);
 // JPC_API const MotionProperties *JPC_Body_GetMotionProperties(const JPC_Body* self)
 // JPC_API MotionProperties * JPC_Body_GetMotionProperties(JPC_Body* self);
@@ -1352,8 +1366,13 @@ JPC_API JPC_Quat JPC_BodyInterface_GetRotation(const JPC_BodyInterface *self, JP
 	return to_jpc(to_jph(self)->GetRotation(to_jph(inBodyID)));
 }
 
-// RMat44 JPC_BodyInterface_GetWorldTransform(const JPC_BodyInterface *self, JPC_BodyID inBodyID);
-// RMat44 JPC_BodyInterface_GetCenterOfMassTransform(const JPC_BodyInterface *self, JPC_BodyID inBodyID);
+JPC_API JPC_RMat44 JPC_BodyInterface_GetWorldTransform(const JPC_BodyInterface *self, JPC_BodyID inBodyID) {
+	return to_jpc(to_jph(self)->GetWorldTransform(to_jph(inBodyID)));
+}
+
+JPC_API JPC_RMat44 JPC_BodyInterface_GetCenterOfMassTransform(const JPC_BodyInterface *self, JPC_BodyID inBodyID) {
+	return to_jpc(to_jph(self)->GetCenterOfMassTransform(to_jph(inBodyID)));
+}
 
 JPC_API void JPC_BodyInterface_MoveKinematic(JPC_BodyInterface *self, JPC_BodyID inBodyID, JPC_RVec3 inTargetPosition, JPC_Quat inTargetRotation, float inDeltaTime) {
 	to_jph(self)->MoveKinematic(to_jph(inBodyID), to_jph(inTargetPosition), to_jph(inTargetRotation), inDeltaTime);
@@ -1409,7 +1428,10 @@ JPC_API void JPC_BodyInterface_AddForce(JPC_BodyInterface *self, JPC_BodyID inBo
 	to_jph(self)->AddForce(to_jph(inBodyID), to_jph(inForce));
 }
 
-// JPC_API void JPC_BodyInterface_AddForce(JPC_BodyInterface *self, JPC_BodyID inBodyID, JPC_Vec3 inForce, JPC_RVec3 inPoint);
+// overload of BodyInterface::AddForce
+JPC_API void JPC_BodyInterface_AddForceAtPoint(JPC_BodyInterface *self, JPC_BodyID inBodyID, JPC_Vec3 inForce, JPC_RVec3 inPoint) {
+	to_jph(self)->AddForce(to_jph(inBodyID), to_jph(inForce), to_jph(inPoint));
+}
 
 JPC_API void JPC_BodyInterface_AddTorque(JPC_BodyInterface *self, JPC_BodyID inBodyID, JPC_Vec3 inTorque) {
 	to_jph(self)->AddTorque(to_jph(inBodyID), to_jph(inTorque));
