@@ -311,6 +311,117 @@ JPC_API JPC_ObjectLayerPairFilter* JPC_ObjectLayerPairFilter_new(
 JPC_API void JPC_ObjectLayerPairFilter_delete(JPC_ObjectLayerPairFilter* object);
 
 ////////////////////////////////////////////////////////////////////////////////
+// ContactListener
+
+typedef struct JPC_ContactPoints {
+	uint length;
+	JPC_Vec3 points[64];
+} JPC_ContactPoints;
+
+ENSURE_SIZE_ALIGN(JPC_ContactPoints, JPH::ContactPoints)
+
+typedef struct JPC_ContactManifold {
+	JPC_RVec3 BaseOffset;
+	JPC_Vec3 WorldSpaceNormal;
+	float PenetrationDepth;
+	JPC_SubShapeID SubShapeID1;
+	JPC_SubShapeID SubShapeID2;
+	JPC_ContactPoints RelativeContactPointsOn1;
+	JPC_ContactPoints RelativeContactPointsOn2;
+} JPC_ContactManifold;
+
+ENSURE_SIZE_ALIGN(JPC_ContactManifold, JPH::ContactManifold)
+ENSURE_NORMAL_FIELD(  ContactManifold, BaseOffset)
+ENSURE_NORMAL_FIELD(  ContactManifold, WorldSpaceNormal)
+ENSURE_NORMAL_FIELD(  ContactManifold, PenetrationDepth)
+ENSURE_NORMAL_FIELD(  ContactManifold, SubShapeID1)
+ENSURE_NORMAL_FIELD(  ContactManifold, SubShapeID2)
+ENSURE_NORMAL_FIELD(  ContactManifold, RelativeContactPointsOn1)
+ENSURE_NORMAL_FIELD(  ContactManifold, RelativeContactPointsOn2)
+
+typedef struct JPC_ContactSettings {
+	float CombinedFriction;
+	float CombinedRestitution;
+	float InvMassScale1;
+	float InvInertiaScale1;
+	float InvMassScale2;
+	float InvInertiaScale2;
+	bool IsSensor;
+	JPC_Vec3 RelativeLinearSurfaceVelocity;
+	JPC_Vec3 RelativeAngularSurfaceVelocity;
+} JPC_ContactSettings;
+
+ENSURE_SIZE_ALIGN(JPC_ContactSettings, JPH::ContactSettings)
+ENSURE_NORMAL_FIELD(  ContactSettings, CombinedFriction)
+ENSURE_NORMAL_FIELD(  ContactSettings, CombinedRestitution)
+ENSURE_NORMAL_FIELD(  ContactSettings, InvMassScale1)
+ENSURE_NORMAL_FIELD(  ContactSettings, InvInertiaScale1)
+ENSURE_NORMAL_FIELD(  ContactSettings, InvMassScale2)
+ENSURE_NORMAL_FIELD(  ContactSettings, InvInertiaScale2)
+ENSURE_NORMAL_FIELD(  ContactSettings, IsSensor)
+ENSURE_NORMAL_FIELD(  ContactSettings, RelativeLinearSurfaceVelocity)
+ENSURE_NORMAL_FIELD(  ContactSettings, RelativeAngularSurfaceVelocity)
+
+typedef struct JPC_SubShapeIDPair {
+	JPC_BodyID Body1ID;
+	JPC_SubShapeID SubShapeID1;
+	JPC_BodyID Body2ID;
+	JPC_SubShapeID SubShapeID2;
+} JPC_SubShapeIDPair;
+
+ENSURE_SIZE_ALIGN(JPC_SubShapeIDPair, JPH::SubShapeIDPair)
+
+typedef struct JPC_CollideShapeSettings {
+	// CollideSettingsBase
+	JPC_ActiveEdgeMode ActiveEdgeMode;
+	JPC_CollectFacesMode CollectFacesMode;
+	float CollisionTolerance;
+	float PenetrationTolerance;
+	JPC_Vec3 ActiveEdgeMovementDirection;
+
+	// CollideShapeSettings
+	float MaxSeparationDistance;
+	JPC_BackFaceMode BackFaceMode;
+} JPC_CollideShapeSettings;
+
+ENSURE_SIZE_ALIGN(JPC_CollideShapeSettings, JPH::CollideShapeSettings)
+
+typedef struct JPC_ContactListenerFns {
+	// ValidateResult (*OnContactValidate)(
+	// 	void *self,
+	// 	const Body &inBody1,
+	// 	const Body &inBody2,
+	// 	RVec3Arg inBaseOffset,
+	// 	const CollideShapeResult &inCollisionResult);
+
+	void (*OnContactAdded)(
+		void *self,
+		const JPC_Body *inBody1,
+		const JPC_Body *inBody2,
+		const JPC_ContactManifold *inManifold,
+		JPC_ContactSettings *ioSettings);
+
+	void (*OnContactPersisted)(
+		void *self,
+		const JPC_Body *inBody1,
+		const JPC_Body *inBody2,
+		const JPC_ContactManifold *inManifold,
+		JPC_ContactSettings *ioSettings);
+
+	void (*OnContactRemoved)(
+		void *self,
+		const JPC_SubShapeIDPair *inSubShapePair);
+} JPC_ContactListenerFns;
+
+typedef struct JPC_ContactListener JPC_ContactListener;
+
+JPC_API JPC_ContactListener* JPC_ContactListener_new(
+	void *self,
+	JPC_ContactListenerFns fns);
+
+JPC_API void JPC_ContactListener_delete(JPC_ContactListener* object);
+
+////////////////////////////////////////////////////////////////////////////////
 // CastShapeCollector
 
 typedef struct JPC_CastShapeCollector JPC_CastShapeCollector;

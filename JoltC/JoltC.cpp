@@ -7,6 +7,8 @@
 #include <Jolt/Physics/Body/BodyCreationSettings.h>
 #include <Jolt/Physics/Collision/CastResult.h>
 #include <Jolt/Physics/Collision/CollisionCollectorImpl.h>
+#include <Jolt/Physics/Collision/ContactListener.h>
+#include <Jolt/Physics/Collision/CollideShape.h>
 #include <Jolt/Physics/Collision/RayCast.h>
 #include <Jolt/Physics/Collision/Shape/BoxShape.h>
 #include <Jolt/Physics/Collision/Shape/CapsuleShape.h>
@@ -484,6 +486,77 @@ JPC_API JPC_ObjectLayerPairFilter* JPC_ObjectLayerPairFilter_new(
 	JPC_ObjectLayerPairFilterFns fns)
 {
 	return to_jpc(new JPC_ObjectLayerPairFilterBridge(self, fns));
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// JPC_ContactListener
+
+class JPC_ContactListenerBridge final : public JPH::ContactListener {
+public:
+	explicit JPC_ContactListenerBridge(void *self, JPC_ContactListenerFns fns) : self(self), fns(fns) {}
+
+	JPH::ValidateResult OnContactValidate(
+		const JPH::Body &inBody1,
+		const JPH::Body &inBody2,
+		JPH::RVec3Arg inBaseOffset,
+		const JPH::CollideShapeResult &inCollisionResult) override
+	{
+		// if (fns.OnContactValidate != nullptr) {
+		// 	return fns.OnContactValidate(self, to_jpc(inBody1), to_jpc(inBody2), to_jpc(inBaseOffset), to_jpc(inCollisionResult));
+		// }
+
+		return ContactListener::OnContactValidate(inBody1, inBody2, inBaseOffset, inCollisionResult);
+	}
+
+	void OnContactAdded(
+		const JPH::Body &inBody1,
+		const JPH::Body &inBody2,
+		const JPH::ContactManifold &inManifold,
+		JPH::ContactSettings &ioSettings) override
+	{
+		if (fns.OnContactAdded != nullptr) {
+			const auto* cManifold = reinterpret_cast<const JPC_ContactManifold*>(&inManifold);
+			auto* cSettings = reinterpret_cast<JPC_ContactSettings*>(&ioSettings);
+
+			fns.OnContactAdded(self, to_jpc(&inBody1), to_jpc(&inBody2), cManifold, cSettings);
+		}
+	}
+
+	void OnContactPersisted(
+		const JPH::Body &inBody1,
+		const JPH::Body &inBody2,
+		const JPH::ContactManifold &inManifold,
+		JPH::ContactSettings &ioSettings) override
+	{
+		if (fns.OnContactPersisted != nullptr) {
+			const auto* cManifold = reinterpret_cast<const JPC_ContactManifold*>(&inManifold);
+			auto* cSettings = reinterpret_cast<JPC_ContactSettings*>(&ioSettings);
+
+			fns.OnContactPersisted(self, to_jpc(&inBody1), to_jpc(&inBody2), cManifold, cSettings);
+		}
+	}
+
+	void OnContactRemoved(const JPH::SubShapeIDPair &inSubShapePair) override {
+		if (fns.OnContactRemoved != nullptr) {
+			const auto* cSubShapePair = reinterpret_cast<const JPC_SubShapeIDPair*>(&inSubShapePair);
+
+			fns.OnContactRemoved(self, cSubShapePair);
+		}
+	}
+
+private:
+	void* self;
+	JPC_ContactListenerFns fns;
+};
+
+OPAQUE_WRAPPER(JPC_ContactListener, JPC_ContactListenerBridge)
+DESTRUCTOR(JPC_ContactListener)
+
+JPC_API JPC_ContactListener* JPC_ContactListener_new(
+	void *self,
+	JPC_ContactListenerFns fns)
+{
+	return to_jpc(new JPC_ContactListenerBridge(self, fns));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
