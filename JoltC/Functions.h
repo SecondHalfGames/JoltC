@@ -196,6 +196,33 @@ JPC_API JPC_IndexedTriangleList* JPC_IndexedTriangleList_new(const JPC_IndexedTr
 JPC_API void JPC_IndexedTriangleList_delete(JPC_IndexedTriangleList* object);
 
 ////////////////////////////////////////////////////////////////////////////////
+// Shape -> RefTarget
+
+typedef struct JPC_Shape JPC_Shape;
+
+JPC_API uint32_t JPC_Shape_GetRefCount(const JPC_Shape* self);
+JPC_API void JPC_Shape_AddRef(const JPC_Shape* self);
+JPC_API void JPC_Shape_Release(const JPC_Shape* self);
+
+JPC_API uint64_t JPC_Shape_GetUserData(const JPC_Shape* self);
+JPC_API void JPC_Shape_SetUserData(JPC_Shape* self, uint64_t userData);
+
+JPC_API JPC_ShapeType JPC_Shape_GetType(const JPC_Shape* self);
+JPC_API JPC_ShapeSubType JPC_Shape_GetSubType(const JPC_Shape* self);
+
+JPC_API JPC_Vec3 JPC_Shape_GetCenterOfMass(const JPC_Shape* self);
+
+////////////////////////////////////////////////////////////////////////////////
+// CompoundShape -> Shape -> RefTarget
+
+typedef struct JPC_CompoundShape JPC_CompoundShape;
+
+JPC_API uint32_t JPC_CompoundShape_GetSubShapeIndexFromID(
+	const JPC_CompoundShape* self,
+	JPC_SubShapeID inSubShapeID,
+	JPC_SubShapeID* outRemainder);
+
+////////////////////////////////////////////////////////////////////////////////
 // TempAllocatorImpl
 
 typedef struct JPC_TempAllocatorImpl JPC_TempAllocatorImpl;
@@ -279,6 +306,23 @@ JPC_API JPC_BodyFilter* JPC_BodyFilter_new(
 	JPC_BodyFilterFns fns);
 
 JPC_API void JPC_BodyFilter_delete(JPC_BodyFilter* object);
+
+////////////////////////////////////////////////////////////////////////////////
+// ShapeFilter
+
+typedef struct JPC_ShapeFilterFns {
+	bool (*ShouldCollide)(const void *self, const JPC_Shape *inShape2, JPC_SubShapeID inSubShapeIDOfShape2);
+
+	// virtual bool			ShouldCollide([[maybe_unused]] const Shape *inShape1, [[maybe_unused]] const SubShapeID &inSubShapeIDOfShape1, [[maybe_unused]] const Shape *inShape2, [[maybe_unused]] const SubShapeID &inSubShapeIDOfShape2) const
+} JPC_ShapeFilterFns;
+
+typedef struct JPC_ShapeFilter JPC_ShapeFilter;
+
+JPC_API JPC_ShapeFilter* JPC_ShapeFilter_new(
+	const void *self,
+	JPC_ShapeFilterFns fns);
+
+JPC_API void JPC_ShapeFilter_delete(JPC_ShapeFilter* object);
 
 ////////////////////////////////////////////////////////////////////////////////
 // ObjectVsBroadPhaseLayerFilter
@@ -492,30 +536,6 @@ typedef struct JPC_String JPC_String;
 
 JPC_API void JPC_String_delete(JPC_String* self);
 JPC_API const char* JPC_String_c_str(JPC_String* self);
-
-////////////////////////////////////////////////////////////////////////////////
-// Shape -> RefTarget
-
-typedef struct JPC_Shape JPC_Shape;
-
-JPC_API uint32_t JPC_Shape_GetRefCount(const JPC_Shape* self);
-JPC_API void JPC_Shape_AddRef(const JPC_Shape* self);
-JPC_API void JPC_Shape_Release(const JPC_Shape* self);
-
-JPC_API JPC_ShapeType JPC_Shape_GetType(const JPC_Shape* self);
-JPC_API JPC_ShapeSubType JPC_Shape_GetSubType(const JPC_Shape* self);
-
-JPC_API JPC_Vec3 JPC_Shape_GetCenterOfMass(const JPC_Shape* self);
-
-////////////////////////////////////////////////////////////////////////////////
-// CompoundShape -> Shape -> RefTarget
-
-typedef struct JPC_CompoundShape JPC_CompoundShape;
-
-JPC_API uint32_t JPC_CompoundShape_GetSubShapeIndexFromID(
-	const JPC_CompoundShape* self,
-	JPC_SubShapeID inSubShapeID,
-	JPC_SubShapeID* outRemainder);
 
 ////////////////////////////////////////////////////////////////////////////////
 // TriangleShapeSettings
@@ -930,6 +950,7 @@ typedef struct JPC_NarrowPhaseQuery_CastRayArgs {
 	const JPC_BroadPhaseLayerFilter *BroadPhaseLayerFilter;
 	const JPC_ObjectLayerFilter *ObjectLayerFilter;
 	const JPC_BodyFilter *BodyFilter;
+	const JPC_ShapeFilter *ShapeFilter;
 } JPC_NarrowPhaseQuery_CastRayArgs;
 
 JPC_API bool JPC_NarrowPhaseQuery_CastRay(const JPC_NarrowPhaseQuery* self, JPC_NarrowPhaseQuery_CastRayArgs* args);

@@ -472,6 +472,36 @@ JPC_API JPC_BodyFilter* JPC_BodyFilter_new(
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// ShapeFilter
+
+class JPC_ShapeFilterBridge final : public JPH::ShapeFilter {
+public:
+	explicit JPC_ShapeFilterBridge(const void *self, JPC_ShapeFilterFns fns) : self(self), fns(fns) {}
+
+	virtual bool ShouldCollide(const JPH::Shape *inShape2, const JPH::SubShapeID &inSubShapeIDOfShape2) const override {
+		if (fns.ShouldCollide == nullptr) {
+			return true;
+		}
+
+		return fns.ShouldCollide(self, to_jpc(inShape2), to_jpc(inSubShapeIDOfShape2));
+	}
+
+private:
+	const void* self;
+	JPC_ShapeFilterFns fns;
+};
+
+OPAQUE_WRAPPER(JPC_ShapeFilter, JPC_ShapeFilterBridge)
+DESTRUCTOR(JPC_ShapeFilter)
+
+JPC_API JPC_ShapeFilter* JPC_ShapeFilter_new(
+	const void *self,
+	JPC_ShapeFilterFns fns)
+{
+	return to_jpc(new JPC_ShapeFilterBridge(self, fns));
+}
+
+////////////////////////////////////////////////////////////////////////////////
 // JPC_ObjectLayerPairFilter
 
 class JPC_ObjectLayerPairFilterBridge final : public JPH::ObjectLayerPairFilter {
@@ -675,6 +705,14 @@ JPC_API void JPC_Shape_AddRef(const JPC_Shape* self) {
 
 JPC_API void JPC_Shape_Release(const JPC_Shape* self) {
 	to_jph(self)->Release();
+}
+
+JPC_API uint64_t JPC_Shape_GetUserData(const JPC_Shape* self) {
+	return to_jph(self)->GetUserData();
+}
+
+JPC_API void JPC_Shape_SetUserData(JPC_Shape* self, uint64_t userData) {
+	to_jph(self)->SetUserData(userData);
 }
 
 JPC_API JPC_ShapeType JPC_Shape_GetType(const JPC_Shape* self) {
@@ -1673,6 +1711,8 @@ JPC_API void JPC_BodyInterface_InvalidateContactCache(JPC_BodyInterface *self, J
 JPC_API bool JPC_NarrowPhaseQuery_CastRay(const JPC_NarrowPhaseQuery* self, JPC_NarrowPhaseQuery_CastRayArgs* args) {
 	JPH::RayCastResult result;
 
+	JPH::RayCastSettings settings;
+
 	JPH::BroadPhaseLayerFilter defaultBplFilter{};
 	const JPH::BroadPhaseLayerFilter* bplFilter = &defaultBplFilter;
 	if (args->BroadPhaseLayerFilter != nullptr) {
@@ -1691,16 +1731,26 @@ JPC_API bool JPC_NarrowPhaseQuery_CastRay(const JPC_NarrowPhaseQuery* self, JPC_
 		bodyFilter = to_jph(args->BodyFilter);
 	}
 
-	bool hit = to_jph(self)->CastRay(
+	JPH::ShapeFilter defaultShapeFilter{};
+	const JPH::ShapeFilter* shapeFilter = &defaultShapeFilter;
+	if (args->ShapeFilter != nullptr) {
+		shapeFilter = to_jph(args->ShapeFilter);
+	}
+
+	JPH::ClosestHitCollisionCollector<JPH::CastRayCollector> collector;
+
+	to_jph(self)->CastRay(
 		to_jph(args->Ray),
-		result,
+		settings,
+		collector,
 		*bplFilter,
 		*olFilter,
-		*bodyFilter
-	);
+		*bodyFilter,
+		*shapeFilter);
 
+	bool hit = collector.HadHit();
 	if (hit) {
-		args->Result = to_jpc(result);
+		args->Result = to_jpc(collector.mHit);
 	}
 
 	return hit;
