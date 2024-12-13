@@ -502,7 +502,20 @@ JPC_API uint32_t JPC_Shape_GetRefCount(const JPC_Shape* self);
 JPC_API void JPC_Shape_AddRef(const JPC_Shape* self);
 JPC_API void JPC_Shape_Release(const JPC_Shape* self);
 
+JPC_API JPC_ShapeType JPC_Shape_GetType(const JPC_Shape* self);
+JPC_API JPC_ShapeSubType JPC_Shape_GetSubType(const JPC_Shape* self);
+
 JPC_API JPC_Vec3 JPC_Shape_GetCenterOfMass(const JPC_Shape* self);
+
+////////////////////////////////////////////////////////////////////////////////
+// CompoundShape -> Shape -> RefTarget
+
+typedef struct JPC_CompoundShape JPC_CompoundShape;
+
+JPC_API uint32_t JPC_CompoundShape_GetSubShapeIndexFromID(
+	const JPC_CompoundShape* self,
+	JPC_SubShapeID inSubShapeID,
+	JPC_SubShapeID* outRemainder);
 
 ////////////////////////////////////////////////////////////////////////////////
 // TriangleShapeSettings
@@ -847,7 +860,7 @@ JPC_API bool JPC_BodyInterface_IsActive(const JPC_BodyInterface *self, JPC_BodyI
 
 // TwoBodyConstraint * JPC_BodyInterface_CreateConstraint(JPC_BodyInterface *self, const TwoBodyConstraintSettings *inSettings, JPC_BodyID inBodyID1, JPC_BodyID inBodyID2);
 // JPC_API void JPC_BodyInterface_ActivateConstraint(JPC_BodyInterface *self, const TwoBodyConstraint *inConstraint);
-// RefConst<Shape> JPC_BodyInterface_GetShape(const JPC_BodyInterface *self, JPC_BodyID inBodyID);
+JPC_API const JPC_Shape* JPC_BodyInterface_GetShape(const JPC_BodyInterface *self, JPC_BodyID inBodyID);
 
 JPC_API void JPC_BodyInterface_SetShape(const JPC_BodyInterface *self, JPC_BodyID inBodyID, const JPC_Shape *inShape, bool inUpdateMassProperties, JPC_Activation inActivationMode);
 JPC_API void JPC_BodyInterface_NotifyShapeChanged(const JPC_BodyInterface *self, JPC_BodyID inBodyID, JPC_Vec3 inPreviousCenterOfMass, bool inUpdateMassProperties, JPC_Activation inActivationMode);

@@ -83,6 +83,8 @@ ENUM_CONVERSION(JPC_Activation, JPH::EActivation)
 ENUM_CONVERSION(JPC_BodyType, JPH::EBodyType)
 ENUM_CONVERSION(JPC_MotionQuality, JPH::EMotionQuality)
 ENUM_CONVERSION(JPC_OverrideMassProperties, JPH::EOverrideMassProperties)
+ENUM_CONVERSION(JPC_ShapeType, JPH::EShapeType)
+ENUM_CONVERSION(JPC_ShapeSubType, JPH::EShapeSubType)
 
 OPAQUE_WRAPPER(JPC_PhysicsSystem, JPH::PhysicsSystem)
 DESTRUCTOR(JPC_PhysicsSystem)
@@ -97,6 +99,7 @@ OPAQUE_WRAPPER(JPC_JobSystemThreadPool, JPH::JobSystemThreadPool)
 DESTRUCTOR(JPC_JobSystemThreadPool)
 
 OPAQUE_WRAPPER(JPC_Shape, JPH::Shape)
+OPAQUE_WRAPPER(JPC_CompoundShape, JPH::CompoundShape)
 OPAQUE_WRAPPER(JPC_Body, JPH::Body)
 
 OPAQUE_WRAPPER(JPC_VertexList, JPH::VertexList)
@@ -203,6 +206,12 @@ static JPH::RShapeCast to_jph(JPC_RShapeCast in) {
 		to_jph(in.Scale),
 		to_jph(in.CenterOfMassStart),
 		to_jph(in.Direction));
+}
+
+static JPH::SubShapeID to_jph_subshapeid(JPC_SubShapeID in) {
+	JPH::SubShapeID out;
+	out.SetValue(in);
+	return out;
 }
 
 static JPC_SubShapeID to_jpc(JPH::SubShapeID in) {
@@ -668,8 +677,30 @@ JPC_API void JPC_Shape_Release(const JPC_Shape* self) {
 	to_jph(self)->Release();
 }
 
+JPC_API JPC_ShapeType JPC_Shape_GetType(const JPC_Shape* self) {
+	return to_jpc(to_jph(self)->GetType());
+}
+
+JPC_API JPC_ShapeSubType JPC_Shape_GetSubType(const JPC_Shape* self) {
+	return to_jpc(to_jph(self)->GetSubType());
+}
+
 JPC_API JPC_Vec3 JPC_Shape_GetCenterOfMass(const JPC_Shape* self) {
 	return to_jpc(to_jph(self)->GetCenterOfMass());
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// CompoundShape
+
+JPC_API uint32_t JPC_CompoundShape_GetSubShapeIndexFromID(
+	const JPC_CompoundShape* self,
+	JPC_SubShapeID inSubShapeID,
+	JPC_SubShapeID* outRemainder)
+{
+	JPH::SubShapeID jphRemainder;
+	uint32_t res = to_jph(self)->GetSubShapeIndexFromID(to_jph_subshapeid(inSubShapeID), jphRemainder);
+	*outRemainder = to_jpc(jphRemainder);
+	return res;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1417,7 +1448,11 @@ JPC_API bool JPC_BodyInterface_IsActive(const JPC_BodyInterface *self, JPC_BodyI
 
 // TwoBodyConstraint * JPC_BodyInterface_CreateConstraint(JPC_BodyInterface *self, const TwoBodyConstraintSettings *inSettings, JPC_BodyID inBodyID1, JPC_BodyID inBodyID2);
 // JPC_API void JPC_BodyInterface_ActivateConstraint(JPC_BodyInterface *self, const TwoBodyConstraint *inConstraint);
-// RefConst<Shape> JPC_BodyInterface_GetShape(const JPC_BodyInterface *self, JPC_BodyID inBodyID);
+
+JPC_API const JPC_Shape* JPC_BodyInterface_GetShape(const JPC_BodyInterface *self, JPC_BodyID inBodyID) {
+	// NOTE: This pointer will only be alive as long as BodyInterface holds onto it!
+	return to_jpc(to_jph(self)->GetShape(to_jph(inBodyID)).GetPtr());
+}
 
 JPC_API void JPC_BodyInterface_SetShape(const JPC_BodyInterface *self, JPC_BodyID inBodyID, const JPC_Shape *inShape, bool inUpdateMassProperties, JPC_Activation inActivationMode) {
 	to_jph(self)->SetShape(to_jph(inBodyID), to_jph(inShape), inUpdateMassProperties, to_jph(inActivationMode));
