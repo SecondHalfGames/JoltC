@@ -234,8 +234,8 @@ static JPC_ShapeCastResult to_jpc(JPH::ShapeCastResult in) {
 	out.ContactPointOn2 = to_jpc(in.mContactPointOn2);
 	out.PenetrationAxis = to_jpc(in.mPenetrationAxis);
 	out.PenetrationDepth = in.mPenetrationDepth;
-	// SubShapeID SubShapeID1;
-	// SubShapeID SubShapeID2;
+	out.SubShapeID1 = to_jpc(in.mSubShapeID1);
+	out.SubShapeID2 = to_jpc(in.mSubShapeID2);
 	out.BodyID2 = to_jpc(in.mBodyID2);
 	// Face Shape1Face;
 	// Face Shape2Face;

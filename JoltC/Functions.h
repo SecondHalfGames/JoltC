@@ -166,8 +166,8 @@ typedef struct JPC_ShapeCastResult {
 	JPC_Vec3 ContactPointOn2;
 	JPC_Vec3 PenetrationAxis;
 	float PenetrationDepth;
-	// SubShapeID SubShapeID1;
-	// SubShapeID SubShapeID2;
+	JPC_SubShapeID SubShapeID1;
+	JPC_SubShapeID SubShapeID2;
 	JPC_BodyID BodyID2;
 	// Face Shape1Face;
 	// Face Shape2Face;
