@@ -339,7 +339,7 @@ JPC_API JPC_SimShapeFilter* JPC_SimShapeFilter_new(
 	const void *self,
 	JPC_SimShapeFilterFns fns);
 
-JPC_API void JPC_SimShapeFilter_delete(JPC_ShapeFilter* object);
+JPC_API void JPC_SimShapeFilter_delete(JPC_SimShapeFilter* object);
 
 ////////////////////////////////////////////////////////////////////////////////
 // ObjectVsBroadPhaseLayerFilter
