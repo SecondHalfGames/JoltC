@@ -20,6 +20,7 @@
 #include <Jolt/Physics/Collision/Shape/StaticCompoundShape.h>
 #include <Jolt/Physics/Collision/Shape/TriangleShape.h>
 #include <Jolt/Physics/Collision/ShapeCast.h>
+#include <Jolt/Physics/Collision/SimShapeFilter.h>
 #include <Jolt/Physics/PhysicsSettings.h>
 #include <Jolt/Physics/PhysicsSystem.h>
 #include <Jolt/RegisterTypes.h>
@@ -499,6 +500,41 @@ JPC_API JPC_ShapeFilter* JPC_ShapeFilter_new(
 	JPC_ShapeFilterFns fns)
 {
 	return to_jpc(new JPC_ShapeFilterBridge(self, fns));
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// SimShapeFilter
+
+class JPC_SimShapeFilterBridge final : public JPH::SimShapeFilter {
+public:
+	explicit JPC_SimShapeFilterBridge(const void *self, JPC_SimShapeFilterFns fns) : self(self), fns(fns) {}
+
+	virtual bool ShouldCollide(
+		const JPH::Body &inBody1, const JPH::Shape *inShape1, const JPH::SubShapeID &inSubShapeIDOfShape1,
+		const JPH::Body &inBody2, const JPH::Shape *inShape2, const JPH::SubShapeID &inSubShapeIDOfShape2) const override
+	{
+		if (fns.ShouldCollide == nullptr) {
+			return true;
+		}
+
+		return fns.ShouldCollide(self,
+			to_jpc(&inBody1), to_jpc(inShape1), to_jpc(inSubShapeIDOfShape1),
+			to_jpc(&inBody2), to_jpc(inShape2), to_jpc(inSubShapeIDOfShape2));
+	}
+
+private:
+	const void* self;
+	JPC_SimShapeFilterFns fns;
+};
+
+OPAQUE_WRAPPER(JPC_SimShapeFilter, JPC_SimShapeFilterBridge)
+DESTRUCTOR(JPC_SimShapeFilter)
+
+JPC_API JPC_SimShapeFilter* JPC_SimShapeFilter_new(
+	const void *self,
+	JPC_SimShapeFilterFns fns)
+{
+	return to_jpc(new JPC_SimShapeFilterBridge(self, fns));
 }
 
 ////////////////////////////////////////////////////////////////////////////////

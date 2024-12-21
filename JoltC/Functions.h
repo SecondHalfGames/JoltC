@@ -140,6 +140,7 @@ ENSURE_SIZE_ALIGN(JPC_IndexedTriangleNoMaterial, JPH::IndexedTriangleNoMaterial)
 typedef struct JPC_IndexedTriangle {
 	uint32_t idx[3];
 	uint32_t materialIndex;
+	uint32_t userData;
 } JPC_IndexedTriangle;
 
 ENSURE_SIZE_ALIGN(JPC_IndexedTriangle, JPH::IndexedTriangle)
@@ -312,8 +313,6 @@ JPC_API void JPC_BodyFilter_delete(JPC_BodyFilter* object);
 
 typedef struct JPC_ShapeFilterFns {
 	bool (*ShouldCollide)(const void *self, const JPC_Shape *inShape2, JPC_SubShapeID inSubShapeIDOfShape2);
-
-	// virtual bool			ShouldCollide([[maybe_unused]] const Shape *inShape1, [[maybe_unused]] const SubShapeID &inSubShapeIDOfShape1, [[maybe_unused]] const Shape *inShape2, [[maybe_unused]] const SubShapeID &inSubShapeIDOfShape2) const
 } JPC_ShapeFilterFns;
 
 typedef struct JPC_ShapeFilter JPC_ShapeFilter;
@@ -323,6 +322,24 @@ JPC_API JPC_ShapeFilter* JPC_ShapeFilter_new(
 	JPC_ShapeFilterFns fns);
 
 JPC_API void JPC_ShapeFilter_delete(JPC_ShapeFilter* object);
+
+////////////////////////////////////////////////////////////////////////////////
+// SimShapeFilter
+
+typedef struct JPC_SimShapeFilterFns {
+	bool (*ShouldCollide)(
+		const void *self,
+		const JPC_Body *inBody1, const JPC_Shape *inShape1, JPC_SubShapeID inSubShapeIDOfShape1,
+		const JPC_Body *inBody2, const JPC_Shape *inShape2, JPC_SubShapeID inSubShapeIDOfShape2);
+} JPC_SimShapeFilterFns;
+
+typedef struct JPC_SimShapeFilter JPC_SimShapeFilter;
+
+JPC_API JPC_SimShapeFilter* JPC_SimShapeFilter_new(
+	const void *self,
+	JPC_SimShapeFilterFns fns);
+
+JPC_API void JPC_SimShapeFilter_delete(JPC_ShapeFilter* object);
 
 ////////////////////////////////////////////////////////////////////////////////
 // ObjectVsBroadPhaseLayerFilter
