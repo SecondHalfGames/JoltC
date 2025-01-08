@@ -1918,3 +1918,10 @@ JPC_API void JPC_PhysicsSystem_DrawBodies(
 {
 	to_jph(self)->DrawBodies(to_jph(*inSettings), to_jph(inRenderer), nullptr);
 }
+
+JPC_API void JPC_PhysicsSystem_SetSimShapeFilter(
+	JPC_PhysicsSystem* self,
+	const JPC_SimShapeFilter* inShapeFilter)
+{
+	to_jph(self)->SetSimShapeFilter(to_jph(inShapeFilter));
+}

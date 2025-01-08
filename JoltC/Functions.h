@@ -1046,6 +1046,8 @@ JPC_API void JPC_PhysicsSystem_DrawBodies(
 	JPC_DebugRendererSimple* inRenderer, // FIXME: un-specialize
 	const void* inBodyFilter); // FIXME: BodyDrawFilter
 
+JPC_API void JPC_PhysicsSystem_SetSimShapeFilter(JPC_PhysicsSystem* self, const JPC_SimShapeFilter* inShapeFilter);
+
 #ifdef __cplusplus
 }
 #endif
