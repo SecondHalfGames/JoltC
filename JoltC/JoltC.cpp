@@ -6,9 +6,9 @@
 #include <Jolt/Physics/Body/BodyActivationListener.h>
 #include <Jolt/Physics/Body/BodyCreationSettings.h>
 #include <Jolt/Physics/Collision/CastResult.h>
+#include <Jolt/Physics/Collision/CollideShape.h>
 #include <Jolt/Physics/Collision/CollisionCollectorImpl.h>
 #include <Jolt/Physics/Collision/ContactListener.h>
-#include <Jolt/Physics/Collision/CollideShape.h>
 #include <Jolt/Physics/Collision/RayCast.h>
 #include <Jolt/Physics/Collision/Shape/BoxShape.h>
 #include <Jolt/Physics/Collision/Shape/CapsuleShape.h>
@@ -21,6 +21,7 @@
 #include <Jolt/Physics/Collision/Shape/TriangleShape.h>
 #include <Jolt/Physics/Collision/ShapeCast.h>
 #include <Jolt/Physics/Collision/SimShapeFilter.h>
+#include <Jolt/Physics/Constraints/FixedConstraint.h>
 #include <Jolt/Physics/PhysicsSettings.h>
 #include <Jolt/Physics/PhysicsSystem.h>
 #include <Jolt/RegisterTypes.h>
@@ -726,6 +727,32 @@ JPC_API JPC_DebugRendererSimple* JPC_DebugRendererSimple_new(
 
 JPC_API const char* JPC_String_c_str(JPC_String* self) {
 	return to_jph(self)->c_str();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Constraint
+
+OPAQUE_WRAPPER(JPC_Constraint, JPH::Constraint);
+
+////////////////////////////////////////////////////////////////////////////////
+// TwoBodyConstraint
+
+////////////////////////////////////////////////////////////////////////////////
+// FixedConstraint
+
+JPC_API void JPC_FixedConstraintSettings_default(JPC_FixedConstraintSettings* object) {
+	object->autoDetectPoint = false;
+}
+
+JPC_API JPC_Constraint* JPC_FixedConstraintSettings_Create(
+	const JPC_FixedConstraintSettings* self,
+	JPC_Body* inBody1,
+	JPC_Body* inBody2)
+{
+	JPH::FixedConstraintSettings jphSettings;
+	jphSettings.mAutoDetectPoint = self->autoDetectPoint;
+
+	return to_jpc(jphSettings.Create(*to_jph(inBody1), *to_jph(inBody2)));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1884,6 +1911,10 @@ JPC_API void JPC_PhysicsSystem_Init(
 
 JPC_API void JPC_PhysicsSystem_OptimizeBroadPhase(JPC_PhysicsSystem* self) {
 	to_jph(self)->OptimizeBroadPhase();
+}
+
+JPC_API void JPC_PhysicsSystem_AddConstraint(JPC_PhysicsSystem* self, JPC_Constraint* constraint) {
+	to_jph(self)->AddConstraint(to_jph(constraint));
 }
 
 JPC_API JPC_BodyInterface* JPC_PhysicsSystem_GetBodyInterface(JPC_PhysicsSystem* self) {

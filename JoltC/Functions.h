@@ -555,6 +555,27 @@ JPC_API void JPC_String_delete(JPC_String* self);
 JPC_API const char* JPC_String_c_str(JPC_String* self);
 
 ////////////////////////////////////////////////////////////////////////////////
+// FixedConstraintSettings
+
+typedef struct JPC_Constraint JPC_Constraint;
+
+typedef struct JPC_FixedConstraintSettings {
+	// Constraint
+
+	// TwoBodyConstraint
+	// (no extra members)
+
+	// FixedConstraint
+	bool autoDetectPoint;
+} JPC_FixedConstraintSettings;
+
+JPC_API void JPC_FixedConstraintSettings_default(JPC_FixedConstraintSettings* object);
+JPC_API JPC_Constraint* JPC_FixedConstraintSettings_Create(
+	const JPC_FixedConstraintSettings* self,
+	JPC_Body* inBody1,
+	JPC_Body* inBody2);
+
+////////////////////////////////////////////////////////////////////////////////
 // TriangleShapeSettings
 
 typedef struct JPC_TriangleShapeSettings {
@@ -1035,6 +1056,8 @@ JPC_API JPC_PhysicsUpdateError JPC_PhysicsSystem_Update(
 	int inCollisionSteps,
 	JPC_TempAllocatorImpl *inTempAllocator, // FIXME: un-specialize
 	JPC_JobSystemThreadPool *inJobSystem); // FIXME: un-specialize
+
+JPC_API void JPC_PhysicsSystem_AddConstraint(JPC_PhysicsSystem* self, JPC_Constraint* constraint);
 
 JPC_API JPC_BodyInterface* JPC_PhysicsSystem_GetBodyInterface(JPC_PhysicsSystem* self);
 
