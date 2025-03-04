@@ -891,6 +891,17 @@ JPC_API bool JPC_BodyLockRead_Succeeded(JPC_BodyLockRead* self);
 JPC_API const JPC_Body* JPC_BodyLockRead_GetBody(JPC_BodyLockRead* self);
 
 ////////////////////////////////////////////////////////////////////////////////
+// BodyLockWrite
+
+typedef struct JPC_BodyLockWrite JPC_BodyLockWrite;
+
+JPC_API JPC_BodyLockWrite* JPC_BodyLockWrite_new(const JPC_BodyLockInterface* interface, JPC_BodyID bodyID);
+JPC_API void JPC_BodyLockWrite_delete(JPC_BodyLockWrite* self);
+
+JPC_API bool JPC_BodyLockWrite_Succeeded(JPC_BodyLockWrite* self);
+JPC_API const JPC_Body* JPC_BodyLockWrite_GetBody(JPC_BodyLockWrite* self);
+
+////////////////////////////////////////////////////////////////////////////////
 // BodyInterface
 
 typedef struct JPC_BodyInterface JPC_BodyInterface;
