@@ -1483,7 +1483,7 @@ JPC_API bool JPC_BodyLockWrite_Succeeded(JPC_BodyLockWrite* self) {
 	return to_jph(self)->Succeeded();
 }
 
-JPC_API const JPC_Body* JPC_BodyLockWrite_GetBody(JPC_BodyLockWrite* self) {
+JPC_API JPC_Body* JPC_BodyLockWrite_GetBody(JPC_BodyLockWrite* self) {
 	return to_jpc(&to_jph(self)->GetBody());
 }
 

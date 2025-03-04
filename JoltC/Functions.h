@@ -899,7 +899,7 @@ JPC_API JPC_BodyLockWrite* JPC_BodyLockWrite_new(const JPC_BodyLockInterface* in
 JPC_API void JPC_BodyLockWrite_delete(JPC_BodyLockWrite* self);
 
 JPC_API bool JPC_BodyLockWrite_Succeeded(JPC_BodyLockWrite* self);
-JPC_API const JPC_Body* JPC_BodyLockWrite_GetBody(JPC_BodyLockWrite* self);
+JPC_API JPC_Body* JPC_BodyLockWrite_GetBody(JPC_BodyLockWrite* self);
 
 ////////////////////////////////////////////////////////////////////////////////
 // BodyInterface
