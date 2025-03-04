@@ -92,6 +92,8 @@ OPAQUE_WRAPPER(JPC_PhysicsSystem, JPH::PhysicsSystem)
 DESTRUCTOR(JPC_PhysicsSystem)
 
 OPAQUE_WRAPPER(JPC_BodyInterface, JPH::BodyInterface)
+OPAQUE_WRAPPER(JPC_BodyLockInterface, JPH::BodyLockInterface)
+OPAQUE_WRAPPER(JPC_BodyLockRead, JPH::BodyLockRead)
 OPAQUE_WRAPPER(JPC_NarrowPhaseQuery, JPH::NarrowPhaseQuery)
 
 OPAQUE_WRAPPER(JPC_TempAllocatorImpl, JPH::TempAllocatorImpl)
@@ -1445,6 +1447,26 @@ JPC_API void JPC_Body_SetUserData(JPC_Body* self, uint64_t inUserData) {
 // JPC_API SoftBodyCreationSettings JPC_Body_GetSoftBodyCreationSettings(const JPC_Body* self);
 
 ////////////////////////////////////////////////////////////////////////////////
+// BodyLockRead
+
+JPC_API JPC_BodyLockRead* JPC_BodyLockRead_new(const JPC_BodyLockInterface* interface, JPC_BodyID bodyID) {
+	JPH::BodyLockRead* lockRead = new JPH::BodyLockRead(*to_jph(interface), to_jph(bodyID));
+	return to_jpc(lockRead);
+}
+
+JPC_API void JPC_BodyLockRead_delete(JPC_BodyLockRead* self) {
+	delete to_jph(self);
+}
+
+JPC_API bool JPC_BodyLockRead_Succeeded(JPC_BodyLockRead* self) {
+	return to_jph(self)->Succeeded();
+}
+
+JPC_API const JPC_Body* JPC_BodyLockRead_GetBody(JPC_BodyLockRead* self) {
+	return to_jpc(&to_jph(self)->GetBody());
+}
+
+////////////////////////////////////////////////////////////////////////////////
 // BodyInterface
 
 JPC_API JPC_Body* JPC_BodyInterface_CreateBody(JPC_BodyInterface* self, const JPC_BodyCreationSettings* inSettings) {
@@ -1919,6 +1941,10 @@ JPC_API void JPC_PhysicsSystem_AddConstraint(JPC_PhysicsSystem* self, JPC_Constr
 
 JPC_API JPC_BodyInterface* JPC_PhysicsSystem_GetBodyInterface(JPC_PhysicsSystem* self) {
 	return to_jpc(&to_jph(self)->GetBodyInterface());
+}
+
+JPC_API const JPC_BodyLockInterface* JPC_PhysicsSystem_GetBodyLockInterface(JPC_PhysicsSystem* self) {
+	return to_jpc(&to_jph(self)->GetBodyLockInterface());
 }
 
 JPC_API const JPC_NarrowPhaseQuery* JPC_PhysicsSystem_GetNarrowPhaseQuery(const JPC_PhysicsSystem* self) {

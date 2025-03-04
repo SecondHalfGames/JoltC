@@ -875,6 +875,22 @@ JPC_API void JPC_Body_SetUserData(JPC_Body* self, uint64_t inUserData);
 // JPC_API SoftBodyCreationSettings JPC_Body_GetSoftBodyCreationSettings(const JPC_Body* self);
 
 ////////////////////////////////////////////////////////////////////////////////
+// BodyLockInterface
+
+typedef struct JPC_BodyLockInterface JPC_BodyLockInterface;
+
+////////////////////////////////////////////////////////////////////////////////
+// BodyLockRead
+
+typedef struct JPC_BodyLockRead JPC_BodyLockRead;
+
+JPC_API JPC_BodyLockRead* JPC_BodyLockRead_new(const JPC_BodyLockInterface* interface, JPC_BodyID bodyID);
+JPC_API void JPC_BodyLockRead_delete(JPC_BodyLockRead* self);
+
+JPC_API bool JPC_BodyLockRead_Succeeded(JPC_BodyLockRead* self);
+JPC_API const JPC_Body* JPC_BodyLockRead_GetBody(JPC_BodyLockRead* self);
+
+////////////////////////////////////////////////////////////////////////////////
 // BodyInterface
 
 typedef struct JPC_BodyInterface JPC_BodyInterface;
@@ -1060,6 +1076,7 @@ JPC_API JPC_PhysicsUpdateError JPC_PhysicsSystem_Update(
 JPC_API void JPC_PhysicsSystem_AddConstraint(JPC_PhysicsSystem* self, JPC_Constraint* constraint);
 
 JPC_API JPC_BodyInterface* JPC_PhysicsSystem_GetBodyInterface(JPC_PhysicsSystem* self);
+JPC_API const JPC_BodyLockInterface* JPC_PhysicsSystem_GetBodyLockInterface(JPC_PhysicsSystem* self);
 
 JPC_API const JPC_NarrowPhaseQuery* JPC_PhysicsSystem_GetNarrowPhaseQuery(const JPC_PhysicsSystem* self);
 
