@@ -5,6 +5,7 @@
 #include <Jolt/Core/TempAllocator.h>
 #include <Jolt/Physics/Body/BodyActivationListener.h>
 #include <Jolt/Physics/Body/BodyCreationSettings.h>
+#include <Jolt/Physics/Body/BodyLockMulti.h>
 #include <Jolt/Physics/Collision/CastResult.h>
 #include <Jolt/Physics/Collision/CollideShape.h>
 #include <Jolt/Physics/Collision/CollisionCollectorImpl.h>
@@ -95,6 +96,8 @@ OPAQUE_WRAPPER(JPC_BodyInterface, JPH::BodyInterface)
 OPAQUE_WRAPPER(JPC_BodyLockInterface, JPH::BodyLockInterface)
 OPAQUE_WRAPPER(JPC_BodyLockRead, JPH::BodyLockRead)
 OPAQUE_WRAPPER(JPC_BodyLockWrite, JPH::BodyLockWrite)
+OPAQUE_WRAPPER(JPC_BodyLockMultiRead, JPH::BodyLockMultiRead)
+OPAQUE_WRAPPER(JPC_BodyLockMultiWrite, JPH::BodyLockMultiWrite)
 OPAQUE_WRAPPER(JPC_NarrowPhaseQuery, JPH::NarrowPhaseQuery)
 
 OPAQUE_WRAPPER(JPC_TempAllocatorImpl, JPH::TempAllocatorImpl)
@@ -1485,6 +1488,50 @@ JPC_API bool JPC_BodyLockWrite_Succeeded(JPC_BodyLockWrite* self) {
 
 JPC_API JPC_Body* JPC_BodyLockWrite_GetBody(JPC_BodyLockWrite* self) {
 	return to_jpc(&to_jph(self)->GetBody());
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// BodyLockMultiRead
+
+typedef struct JPC_BodyLockMultiRead JPC_BodyLockMultiRead;
+
+JPC_API JPC_BodyLockMultiRead* JPC_BodyLockMultiRead_new(
+	const JPC_BodyLockInterface* interface,
+	const JPC_BodyID *inBodyIDs,
+	int inNumber)
+{
+	JPH::BodyLockMultiRead* lockRead = new JPH::BodyLockMultiRead(*to_jph(interface), to_jph(inBodyIDs), inNumber);
+	return to_jpc(lockRead);
+}
+
+JPC_API void JPC_BodyLockMultiRead_delete(JPC_BodyLockMultiRead* self) {
+	delete to_jph(self);
+}
+
+JPC_API const JPC_Body* JPC_BodyLockMultiRead_GetBody(JPC_BodyLockMultiRead* self, int inBodyIndex) {
+	return to_jpc(to_jph(self)->GetBody(inBodyIndex));
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// BodyLockMultiWrite
+
+typedef struct JPC_BodyLockMultiWrite JPC_BodyLockMultiWrite;
+
+JPC_API JPC_BodyLockMultiWrite* JPC_BodyLockMultiWrite_new(
+	const JPC_BodyLockInterface* interface,
+	const JPC_BodyID *inBodyIDs,
+	int inNumber)
+{
+	JPH::BodyLockMultiWrite* lockWrite = new JPH::BodyLockMultiWrite(*to_jph(interface), to_jph(inBodyIDs), inNumber);
+	return to_jpc(lockWrite);
+}
+
+JPC_API void JPC_BodyLockMultiWrite_delete(JPC_BodyLockMultiWrite* self) {
+	delete to_jph(self);
+}
+
+JPC_API JPC_Body* JPC_BodyLockMultiWrite_GetBody(JPC_BodyLockMultiWrite* self, int inBodyIndex) {
+	return to_jpc(to_jph(self)->GetBody(inBodyIndex));
 }
 
 ////////////////////////////////////////////////////////////////////////////////

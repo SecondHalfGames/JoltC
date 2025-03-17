@@ -902,6 +902,32 @@ JPC_API bool JPC_BodyLockWrite_Succeeded(JPC_BodyLockWrite* self);
 JPC_API JPC_Body* JPC_BodyLockWrite_GetBody(JPC_BodyLockWrite* self);
 
 ////////////////////////////////////////////////////////////////////////////////
+// BodyLockMultiRead
+
+typedef struct JPC_BodyLockMultiRead JPC_BodyLockMultiRead;
+
+JPC_API JPC_BodyLockMultiRead* JPC_BodyLockMultiRead_new(
+	const JPC_BodyLockInterface* interface,
+	const JPC_BodyID *inBodyIDs,
+	int inNumber);
+JPC_API void JPC_BodyLockMultiRead_delete(JPC_BodyLockMultiRead* self);
+
+JPC_API const JPC_Body* JPC_BodyLockMultiRead_GetBody(JPC_BodyLockMultiRead* self, int inBodyIndex);
+
+////////////////////////////////////////////////////////////////////////////////
+// BodyLockMultiWrite
+
+typedef struct JPC_BodyLockMultiWrite JPC_BodyLockMultiWrite;
+
+JPC_API JPC_BodyLockMultiWrite* JPC_BodyLockMultiWrite_new(
+	const JPC_BodyLockInterface* interface,
+	const JPC_BodyID *inBodyIDs,
+	int inNumber);
+JPC_API void JPC_BodyLockMultiWrite_delete(JPC_BodyLockMultiWrite* self);
+
+JPC_API JPC_Body* JPC_BodyLockMultiWrite_GetBody(JPC_BodyLockMultiWrite* self, int inBodyIndex);
+
+////////////////////////////////////////////////////////////////////////////////
 // BodyInterface
 
 typedef struct JPC_BodyInterface JPC_BodyInterface;
