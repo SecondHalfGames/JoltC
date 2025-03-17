@@ -1140,34 +1140,36 @@ static JPH::BodyCreationSettings to_jph(const JPC_BodyCreationSettings* settings
 }
 
 JPC_API void JPC_BodyCreationSettings_default(JPC_BodyCreationSettings* settings) {
-	settings->Position = JPC_RVec3{0, 0, 0};
-	settings->Rotation = JPC_Quat{0, 0, 0, 1};
-	settings->LinearVelocity = JPC_Vec3{0, 0, 0};
-	settings->AngularVelocity = JPC_Vec3{0, 0, 0};
-	settings->UserData = 0;
-	settings->ObjectLayer = 0;
+	JPH::BodyCreationSettings defaultSettings{};
+
+	settings->Position = to_jpc(defaultSettings.mPosition);
+	settings->Rotation = to_jpc(defaultSettings.mRotation);
+	settings->LinearVelocity = to_jpc(defaultSettings.mLinearVelocity);
+	settings->AngularVelocity = to_jpc(defaultSettings.mAngularVelocity);
+	settings->UserData = defaultSettings.mUserData;
+	settings->ObjectLayer = defaultSettings.mObjectLayer;
 	// CollisionGroup
-	settings->MotionType = JPC_MOTION_TYPE_DYNAMIC;
-	settings->AllowedDOFs = JPC_ALLOWED_DOFS_ALL;
-	settings->AllowDynamicOrKinematic = false;
-	settings->IsSensor = false;
-	settings->CollideKinematicVsNonDynamic = false;
-	settings->UseManifoldReduction = true;
-	settings->ApplyGyroscopicForce = false;
-	settings->MotionQuality = JPC_MOTION_QUALITY_DISCRETE;
-	settings->EnhancedInternalEdgeRemoval = false;
-	settings->AllowSleeping = true;
-	settings->Friction = 0.2f;
-	settings->Restitution = 0.0f;
-	settings->LinearDamping = 0.05f;
-	settings->AngularDamping = 0.05f;
-	settings->MaxLinearVelocity = 500.0f;
-	settings->MaxAngularVelocity = 0.25f * JPC_PI * 60.0f;
-	settings->GravityFactor = 1.0f;
-	settings->NumVelocityStepsOverride = 0;
-	settings->NumPositionStepsOverride = 0;
-	settings->OverrideMassProperties = JPC_OVERRIDE_MASS_PROPS_CALC_MASS_INERTIA;
-	settings->InertiaMultiplier = 1.0f;
+	settings->MotionType = to_jpc(defaultSettings.mMotionType);
+	settings->AllowedDOFs = to_jpc(defaultSettings.mAllowedDOFs);
+	settings->AllowDynamicOrKinematic = defaultSettings.mAllowDynamicOrKinematic;
+	settings->IsSensor = defaultSettings.mIsSensor;
+	settings->CollideKinematicVsNonDynamic = defaultSettings.mCollideKinematicVsNonDynamic;
+	settings->UseManifoldReduction = defaultSettings.mUseManifoldReduction;
+	settings->ApplyGyroscopicForce = defaultSettings.mApplyGyroscopicForce;
+	settings->MotionQuality = to_jpc(defaultSettings.mMotionQuality);
+	settings->EnhancedInternalEdgeRemoval = defaultSettings.mEnhancedInternalEdgeRemoval;
+	settings->AllowSleeping = defaultSettings.mAllowSleeping;
+	settings->Friction = defaultSettings.mFriction;
+	settings->Restitution = defaultSettings.mRestitution;
+	settings->LinearDamping = defaultSettings.mLinearDamping;
+	settings->AngularDamping = defaultSettings.mAngularDamping;
+	settings->MaxLinearVelocity = defaultSettings.mMaxLinearVelocity;
+	settings->MaxAngularVelocity = defaultSettings.mMaxAngularVelocity;
+	settings->GravityFactor = defaultSettings.mGravityFactor;
+	settings->NumVelocityStepsOverride = defaultSettings.mNumVelocityStepsOverride;
+	settings->NumPositionStepsOverride = defaultSettings.mNumPositionStepsOverride;
+	settings->OverrideMassProperties = to_jpc(defaultSettings.mOverrideMassProperties);
+	settings->InertiaMultiplier = defaultSettings.mInertiaMultiplier;
 	// MassPropertiesOverride
 }
 
@@ -1909,19 +1911,21 @@ JPC_API bool JPC_NarrowPhaseQuery_CastRay(const JPC_NarrowPhaseQuery* self, JPC_
 	return hit;
 }
 
-JPC_API void JPC_ShapeCastSettings_default(JPC_ShapeCastSettings* object) {
+JPC_API void JPC_ShapeCastSettings_default(JPC_ShapeCastSettings* settings) {
+	JPH::ShapeCastSettings defaultSettings{};
+
 	// JPH::CollideSettingsBase
 	// EActiveEdgeMode ActiveEdgeMode;
 	// ECollectFacesMode CollectFacesMode;
-	object->CollisionTolerance = JPC_DEFAULT_COLLISION_TOLERANCE;
-	object->PenetrationTolerance = JPC_DEFAULT_PENETRATION_TOLERANCE;
-	object->ActiveEdgeMovementDirection = JPC_Vec3{0};
+	settings->CollisionTolerance = defaultSettings.mCollisionTolerance;
+	settings->PenetrationTolerance = defaultSettings.mPenetrationTolerance;
+	settings->ActiveEdgeMovementDirection = to_jpc(defaultSettings.mActiveEdgeMovementDirection);
 
 	// JPH::ShapeCastSettings
-	object->BackFaceModeTriangles = JPC_BACK_FACE_MODE_IGNORE;
-	object->BackFaceModeConvex = JPC_BACK_FACE_MODE_IGNORE;
-	object->UseShrunkenShapeAndConvexRadius = false;
-	object->ReturnDeepestPoint = false;
+	settings->BackFaceModeTriangles = static_cast<JPC_BackFaceMode>(defaultSettings.mBackFaceModeTriangles);
+	settings->BackFaceModeConvex = static_cast<JPC_BackFaceMode>(defaultSettings.mBackFaceModeConvex);
+	settings->UseShrunkenShapeAndConvexRadius = defaultSettings.mUseShrunkenShapeAndConvexRadius;
+	settings->ReturnDeepestPoint = defaultSettings.mReturnDeepestPoint;
 }
 
 JPC_API void JPC_NarrowPhaseQuery_CastShape(const JPC_NarrowPhaseQuery* self, JPC_NarrowPhaseQuery_CastShapeArgs* args) {
