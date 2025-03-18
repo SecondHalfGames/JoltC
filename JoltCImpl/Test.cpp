@@ -58,7 +58,9 @@ constexpr auto to_integral(E e) -> typename std::underlying_type<E>::type
 // Ensures that the field offset, size, and alignment of two fields from two
 // different structs are identical.
 //
-// Comparing the offsets and alignments of each field helps provide some guarantee that
+// Comparing the offsets and alignments of each field helps provide some
+// guarantee that a manually-reflected C struct has the same layout as its C++
+// counterpart.
 #define ENSURE_FIELD(type0, field0, type1, field1) \
 	static_assert(offsetof(type0, field0) == offsetof(type1, field1), \
 		#type0 "." #field0 " did not have same offset as " #type1 "." #field1); \
@@ -72,4 +74,8 @@ constexpr auto to_integral(E e) -> typename std::underlying_type<E>::type
 #define ENSURE_NORMAL_FIELD(basetype, basefield) \
 	ENSURE_FIELD(JPC_ ## basetype, basefield, JPH::basetype, m ## basefield);
 
-#include "JoltC/JoltC.h"
+#define const constexpr // 🫡
+#include "JoltC/Enums.h"
+#undef const
+
+#include "JoltC/Functions.h"
