@@ -2012,6 +2012,10 @@ JPC_API void JPC_PhysicsSystem_AddConstraint(JPC_PhysicsSystem* self, JPC_Constr
 	to_jph(self)->AddConstraint(to_jph(constraint));
 }
 
+JPC_API void JPC_PhysicsSystem_RemoveConstraint(JPC_PhysicsSystem* self, JPC_Constraint* constraint) {
+	to_jph(self)->RemoveConstraint(to_jph(constraint));
+}
+
 JPC_API JPC_BodyInterface* JPC_PhysicsSystem_GetBodyInterface(JPC_PhysicsSystem* self) {
 	return to_jpc(&to_jph(self)->GetBodyInterface());
 }
