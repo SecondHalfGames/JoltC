@@ -3,6 +3,10 @@ C wrapper for [Jolt Physics](https://github.com/jrouwe/JoltPhysics) 5.1.0.
 
 Currently a work in progress. Bindings contain functions that we've needed as part of our game or the Rust bindings we're working on in [jolt-rust](https://github.com/SecondHalfGames/jolt-rust).
 
+The [`JoltC`](./JoltC) directory contains headers for the C interface that you can bind to.
+
+The [`JoltCImpl`](./JoltCImpl) directory contains the C++ implementation of the C interface and serves as the glue between the C++ and C code.
+
 ## Goals
 1. Sound C wrapper around current version of Jolt Physics
 2. Headers suitable for usage in automatic binding generation tools (i.e. Rust `bindgen`, LuaJIT FFI)

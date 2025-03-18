@@ -235,8 +235,8 @@ static JPC_RayCastResult to_jpc(JPH::RayCastResult in) {
 	return out;
 }
 
-static JPC_ShapeCastResult to_jpc(JPH::ShapeCastResult in) {
-	JPC_ShapeCastResult out{0};
+JPC_ShapeCastResult JPC_ShapeCastResult_to_jpc(JPH::ShapeCastResult in) {
+	JPC_ShapeCastResult out{};
 	// CollideShapeResult
 	out.ContactPointOn1 = to_jpc(in.mContactPointOn1);
 	out.ContactPointOn2 = to_jpc(in.mContactPointOn2);
@@ -255,8 +255,9 @@ static JPC_ShapeCastResult to_jpc(JPH::ShapeCastResult in) {
 	return out;
 }
 
-static JPH::ShapeCastSettings to_jph(JPC_ShapeCastSettings in) {
+JPH::ShapeCastSettings JPC_ShapeCastSettings_to_jph(JPC_ShapeCastSettings in) {
 	JPH::ShapeCastSettings out{};
+
 	// JPH::CollideSettingsBase
 	// EActiveEdgeMode ActiveEdgeMode;
 	// ECollectFacesMode CollectFacesMode;
@@ -662,7 +663,7 @@ public:
 	}
 
 	void AddHit(const ResultType &inResult) override {
-		JPC_ShapeCastResult result = to_jpc(inResult);
+		JPC_ShapeCastResult result = JPC_ShapeCastResult_to_jpc(inResult);
 		JPC_CastShapeCollector *base = to_jpc(this);
 
 		fns.AddHit(self, base, &result);
@@ -1929,7 +1930,7 @@ JPC_API void JPC_ShapeCastSettings_default(JPC_ShapeCastSettings* settings) {
 }
 
 JPC_API void JPC_NarrowPhaseQuery_CastShape(const JPC_NarrowPhaseQuery* self, JPC_NarrowPhaseQuery_CastShapeArgs* args) {
-	JPH::ShapeCastSettings settings = to_jph(args->Settings);
+	JPH::ShapeCastSettings settings = JPC_ShapeCastSettings_to_jph(args->Settings);
 
 	JPH::ClosestHitCollisionCollector<JPH::CastShapeCollector> defaultCollector{};
 	JPH::CastShapeCollector* collector = &defaultCollector;

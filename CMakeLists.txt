@@ -29,11 +29,14 @@ project(JoltC VERSION 0.1
     LANGUAGES C CXX)
 
 add_library(joltc STATIC
+    # C Interface
     JoltC/JoltC.h
-    JoltC/JoltC.cpp
     JoltC/Enums.h
     JoltC/Functions.h
-    JoltC/Test.cpp
+
+    # C++ Implementation
+    JoltCImpl/Test.cpp
+    JoltCImpl/JoltC.cpp
 )
 
 target_compile_features(joltc PUBLIC cxx_std_17)
