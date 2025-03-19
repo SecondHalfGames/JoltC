@@ -6,15 +6,6 @@ macro_rules! builtin_types {
     }
 }
 
-#[cps::cps]
-macro_rules! include_builtin_types {
-    () =>
-    let $($body:tt)* = cps::include!("input/BuiltinTypes.inc") in
-    {
-        builtin_types!($($body)*)
-    }
-}
-
 macro_rules! mirrored_structs {
     (
         $(struct $struct_name:ident {
@@ -53,15 +44,6 @@ macro_rules! mirrored_struct_field {
             is_superclass: true,
         }
     };
-}
-
-#[cps::cps]
-macro_rules! include_mirrored_structs {
-    () =>
-    let $($body:tt)* = cps::include!("input/MirroredStructs.h") in
-    {
-        mirrored_structs!($($body)*)
-    }
 }
 
 macro_rules! mirrored_enums {
@@ -106,13 +88,4 @@ macro_rules! enum_value {
         $counter += 1;
         val
     }};
-}
-
-#[cps::cps]
-macro_rules! include_mirrored_enums {
-    () =>
-    let $($body:tt)* = cps::include!("input/Enums.h") in
-    {
-        mirrored_enums!($($body)*)
-    }
 }

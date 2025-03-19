@@ -3,15 +3,24 @@ mod emit;
 #[macro_use]
 mod macros;
 
+#[macro_use]
+mod builtin_types;
+
+#[macro_use]
+mod enums;
+
+#[macro_use]
+mod mirrored_structs;
+
 use std::fmt::Write;
 use std::sync::OnceLock;
 
 use self::emit::{EnumMember, MirrorEnum, MirrorStruct, StructField};
 
-pub static BUILTIN_TYPES: &[&str] = &include_builtin_types!();
+pub static BUILTIN_TYPES: &[&str] = &all_builtin_types!();
 
 pub fn structs() -> &'static [MirrorStruct] {
-    static STRUCTS: &[MirrorStruct] = &include_mirrored_structs!();
+    static STRUCTS: &[MirrorStruct] = &all_mirrored_structs!();
 
     STRUCTS
 }
@@ -19,7 +28,7 @@ pub fn structs() -> &'static [MirrorStruct] {
 pub fn enums() -> &'static [MirrorEnum] {
     static ENUMS: OnceLock<Vec<MirrorEnum>> = OnceLock::new();
 
-    ENUMS.get_or_init(|| include_mirrored_enums!())
+    ENUMS.get_or_init(|| all_enums!())
 }
 
 fn main() {
