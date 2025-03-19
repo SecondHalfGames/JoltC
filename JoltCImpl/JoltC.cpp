@@ -31,6 +31,8 @@
 
 #include <JoltC/JoltC.h>
 
+#define JPC_IMPL static
+
 #define OPAQUE_WRAPPER(c_type, cpp_type) \
 	static c_type* to_jpc(cpp_type *in) { return reinterpret_cast<c_type*>(in); } \
 	static const c_type* to_jpc(const cpp_type *in) { return reinterpret_cast<const c_type*>(in); } \
@@ -235,7 +237,7 @@ static JPC_RayCastResult to_jpc(JPH::RayCastResult in) {
 	return out;
 }
 
-JPC_ShapeCastResult JPC_ShapeCastResult_to_jpc(JPH::ShapeCastResult in) {
+JPC_IMPL JPC_ShapeCastResult JPC_ShapeCastResult_to_jpc(JPH::ShapeCastResult in) {
 	JPC_ShapeCastResult out{};
 	// CollideShapeResult
 	out.ContactPointOn1 = to_jpc(in.mContactPointOn1);
@@ -255,7 +257,7 @@ JPC_ShapeCastResult JPC_ShapeCastResult_to_jpc(JPH::ShapeCastResult in) {
 	return out;
 }
 
-JPH::ShapeCastSettings JPC_ShapeCastSettings_to_jph(JPC_ShapeCastSettings in) {
+JPC_IMPL JPH::ShapeCastSettings JPC_ShapeCastSettings_to_jph(JPC_ShapeCastSettings in) {
 	JPH::ShapeCastSettings out{};
 
 	// JPH::CollideSettingsBase
@@ -741,14 +743,80 @@ JPC_API const char* JPC_String_c_str(JPC_String* self) {
 
 OPAQUE_WRAPPER(JPC_Constraint, JPH::Constraint);
 
-////////////////////////////////////////////////////////////////////////////////
-// TwoBodyConstraint
+JPC_API void JPC_Constraint_delete(JPC_Constraint* self) {
+	delete to_jph(self);
+}
 
 ////////////////////////////////////////////////////////////////////////////////
-// FixedConstraint
+// ConstraintSettings
 
-JPC_API void JPC_FixedConstraintSettings_default(JPC_FixedConstraintSettings* object) {
-	object->autoDetectPoint = false;
+JPC_IMPL void JPC_ConstraintSettings_to_jpc(
+	JPC_ConstraintSettings* outJpc,
+	const JPH::ConstraintSettings* inJph)
+{
+	outJpc->Enabled = inJph->mEnabled;
+	outJpc->ConstraintPriority = inJph->mConstraintPriority;
+	outJpc->NumVelocityStepsOverride = inJph->mNumVelocityStepsOverride;
+	outJpc->NumPositionStepsOverride = inJph->mNumPositionStepsOverride;
+	outJpc->DrawConstraintSize = inJph->mDrawConstraintSize;
+	outJpc->UserData = inJph->mUserData;
+}
+
+JPC_IMPL void JPC_ConstraintSettings_to_jph(
+	const JPC_ConstraintSettings* inJpc,
+	JPH::ConstraintSettings* outJph)
+{
+	outJph->mEnabled = inJpc->Enabled;
+	outJph->mConstraintPriority = inJpc->ConstraintPriority;
+	outJph->mNumVelocityStepsOverride = inJpc->NumVelocityStepsOverride;
+	outJph->mNumPositionStepsOverride = inJpc->NumPositionStepsOverride;
+	outJph->mDrawConstraintSize = inJpc->DrawConstraintSize;
+	outJph->mUserData = inJpc->UserData;
+}
+
+JPC_API void JPC_ConstraintSettings_default(JPC_ConstraintSettings* settings) {
+	JPH::ConstraintSettings defaultSettings{};
+	JPC_ConstraintSettings_to_jpc(settings, &defaultSettings);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// FixedConstraintSettings
+
+JPC_IMPL void JPC_FixedConstraintSettings_to_jpc(
+	JPC_FixedConstraintSettings* outJpc,
+	const JPH::FixedConstraintSettings* inJph)
+{
+	JPC_ConstraintSettings_to_jpc(&outJpc->ConstraintSettings, inJph);
+
+	outJpc->Space = static_cast<JPC_ConstraintSpace>(inJph->mSpace);
+	outJpc->AutoDetectPoint = inJph->mAutoDetectPoint;
+	outJpc->Point1 = to_jpc(inJph->mPoint1);
+	outJpc->AxisX1 = to_jpc(inJph->mAxisX1);
+	outJpc->AxisY1 = to_jpc(inJph->mAxisY1);
+	outJpc->Point2 = to_jpc(inJph->mPoint2);
+	outJpc->AxisX2 = to_jpc(inJph->mAxisX2);
+	outJpc->AxisY2 = to_jpc(inJph->mAxisY2);
+}
+
+JPC_IMPL void JPC_FixedConstraintSettings_to_jph(
+	const JPC_FixedConstraintSettings* inJpc,
+	JPH::FixedConstraintSettings* outJph)
+{
+	JPC_ConstraintSettings_to_jph(&inJpc->ConstraintSettings, outJph);
+
+	outJph->mSpace = static_cast<JPH::EConstraintSpace>(inJpc->Space);
+	outJph->mAutoDetectPoint = inJpc->AutoDetectPoint;
+	outJph->mPoint1 = to_jph(inJpc->Point1);
+	outJph->mAxisX1 = to_jph(inJpc->AxisX1);
+	outJph->mAxisY1 = to_jph(inJpc->AxisY1);
+	outJph->mPoint2 = to_jph(inJpc->Point2);
+	outJph->mAxisX2 = to_jph(inJpc->AxisX2);
+	outJph->mAxisY2 = to_jph(inJpc->AxisY2);
+}
+
+JPC_API void JPC_FixedConstraintSettings_default(JPC_FixedConstraintSettings* settings) {
+	JPH::FixedConstraintSettings defaultSettings{};
+	JPC_FixedConstraintSettings_to_jpc(settings, &defaultSettings);
 }
 
 JPC_API JPC_Constraint* JPC_FixedConstraintSettings_Create(
@@ -757,7 +825,7 @@ JPC_API JPC_Constraint* JPC_FixedConstraintSettings_Create(
 	JPC_Body* inBody2)
 {
 	JPH::FixedConstraintSettings jphSettings;
-	jphSettings.mAutoDetectPoint = self->autoDetectPoint;
+	JPC_FixedConstraintSettings_to_jph(self, &jphSettings);
 
 	return to_jpc(jphSettings.Create(*to_jph(inBody1), *to_jph(inBody2)));
 }

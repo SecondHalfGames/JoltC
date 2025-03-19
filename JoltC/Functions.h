@@ -555,21 +555,48 @@ JPC_API void JPC_String_delete(JPC_String* self);
 JPC_API const char* JPC_String_c_str(JPC_String* self);
 
 ////////////////////////////////////////////////////////////////////////////////
-// FixedConstraintSettings
+// Constraint
 
 typedef struct JPC_Constraint JPC_Constraint;
 
+JPC_API void JPC_Constraint_delete(JPC_Constraint* self);
+
+////////////////////////////////////////////////////////////////////////////////
+// ConstraintSettings
+
+typedef struct JPC_ConstraintSettings {
+	bool Enabled;
+	uint32_t ConstraintPriority;
+	uint NumVelocityStepsOverride;
+	uint NumPositionStepsOverride;
+	float DrawConstraintSize;
+	uint64_t UserData;
+} JPC_ConstraintSettings;
+
+JPC_API void JPC_ConstraintSettings_default(JPC_ConstraintSettings* settings);
+
+////////////////////////////////////////////////////////////////////////////////
+// FixedConstraintSettings
+
 typedef struct JPC_FixedConstraintSettings {
-	// Constraint
+	JPC_ConstraintSettings ConstraintSettings;
 
-	// TwoBodyConstraint
-	// (no extra members)
+	// TwoBodyConstraintSettings: no extra members
 
-	// FixedConstraint
-	bool autoDetectPoint;
+	// FixedConstraintSettings
+	JPC_ConstraintSpace Space;
+	bool AutoDetectPoint;
+
+	JPC_RVec3 Point1;
+	JPC_Vec3 AxisX1;
+	JPC_Vec3 AxisY1;
+
+	JPC_RVec3 Point2;
+	JPC_Vec3 AxisX2;
+	JPC_Vec3 AxisY2;
 } JPC_FixedConstraintSettings;
 
-JPC_API void JPC_FixedConstraintSettings_default(JPC_FixedConstraintSettings* object);
+JPC_API void JPC_FixedConstraintSettings_default(JPC_FixedConstraintSettings* settings);
 JPC_API JPC_Constraint* JPC_FixedConstraintSettings_Create(
 	const JPC_FixedConstraintSettings* self,
 	JPC_Body* inBody1,
