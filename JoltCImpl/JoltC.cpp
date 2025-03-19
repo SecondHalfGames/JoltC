@@ -33,6 +33,8 @@
 
 #define JPC_IMPL static
 
+#include <JoltCImpl/Generated.h>
+
 #define OPAQUE_WRAPPER(c_type, cpp_type) \
 	static c_type* to_jpc(cpp_type *in) { return reinterpret_cast<c_type*>(in); } \
 	static const c_type* to_jpc(const cpp_type *in) { return reinterpret_cast<const c_type*>(in); } \
@@ -745,38 +747,6 @@ OPAQUE_WRAPPER(JPC_Constraint, JPH::Constraint);
 
 JPC_API void JPC_Constraint_delete(JPC_Constraint* self) {
 	delete to_jph(self);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-// ConstraintSettings
-
-JPC_IMPL void JPC_ConstraintSettings_to_jpc(
-	JPC_ConstraintSettings* outJpc,
-	const JPH::ConstraintSettings* inJph)
-{
-	outJpc->Enabled = inJph->mEnabled;
-	outJpc->ConstraintPriority = inJph->mConstraintPriority;
-	outJpc->NumVelocityStepsOverride = inJph->mNumVelocityStepsOverride;
-	outJpc->NumPositionStepsOverride = inJph->mNumPositionStepsOverride;
-	outJpc->DrawConstraintSize = inJph->mDrawConstraintSize;
-	outJpc->UserData = inJph->mUserData;
-}
-
-JPC_IMPL void JPC_ConstraintSettings_to_jph(
-	const JPC_ConstraintSettings* inJpc,
-	JPH::ConstraintSettings* outJph)
-{
-	outJph->mEnabled = inJpc->Enabled;
-	outJph->mConstraintPriority = inJpc->ConstraintPriority;
-	outJph->mNumVelocityStepsOverride = inJpc->NumVelocityStepsOverride;
-	outJph->mNumPositionStepsOverride = inJpc->NumPositionStepsOverride;
-	outJph->mDrawConstraintSize = inJpc->DrawConstraintSize;
-	outJph->mUserData = inJpc->UserData;
-}
-
-JPC_API void JPC_ConstraintSettings_default(JPC_ConstraintSettings* settings) {
-	JPH::ConstraintSettings defaultSettings{};
-	JPC_ConstraintSettings_to_jpc(settings, &defaultSettings);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

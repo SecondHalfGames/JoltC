@@ -180,6 +180,8 @@ typedef struct JPC_ShapeCastResult {
 
 typedef struct JPC_Body JPC_Body;
 
+#include <JoltC/Generated.h>
+
 ////////////////////////////////////////////////////////////////////////////////
 // VertexList == Array<Float3> == std::vector<Float3>
 
@@ -562,20 +564,6 @@ typedef struct JPC_Constraint JPC_Constraint;
 JPC_API void JPC_Constraint_delete(JPC_Constraint* self);
 
 ////////////////////////////////////////////////////////////////////////////////
-// ConstraintSettings
-
-typedef struct JPC_ConstraintSettings {
-	bool Enabled;
-	uint32_t ConstraintPriority;
-	uint NumVelocityStepsOverride;
-	uint NumPositionStepsOverride;
-	float DrawConstraintSize;
-	uint64_t UserData;
-} JPC_ConstraintSettings;
-
-JPC_API void JPC_ConstraintSettings_default(JPC_ConstraintSettings* settings);
-
-////////////////////////////////////////////////////////////////////////////////
 // FixedConstraintSettings
 
 typedef struct JPC_FixedConstraintSettings {
@@ -603,7 +591,20 @@ JPC_API JPC_Constraint* JPC_FixedConstraintSettings_Create(
 	JPC_Body* inBody2);
 
 ////////////////////////////////////////////////////////////////////////////////
-// TriangleShapeSettings
+// ShapeSettings
+
+typedef struct JPC_ShapeSettings {
+	uint64_t UserData;
+} JPC_ShapeSettings;
+
+////////////////////////////////////////////////////////////////////////////////
+// ConvexShapeSettings -> ShapeSettings
+
+typedef struct JPC_ConvexShapeSettings {
+} JPC_ConvexShapeSettings;
+
+////////////////////////////////////////////////////////////////////////////////
+// TriangleShapeSettings -> ConvexShapeSettings -> ShapeSettings
 
 typedef struct JPC_TriangleShapeSettings {
 	// ShapeSettings
