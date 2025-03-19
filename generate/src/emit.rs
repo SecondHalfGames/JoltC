@@ -179,7 +179,7 @@ pub struct MirrorEnum {
 pub struct EnumMember {
     pub jpc_name: String,
     pub jph_name: String,
-    pub value: &'static str,
+    pub value: String,
 }
 
 impl MirrorEnum {
@@ -194,13 +194,22 @@ impl MirrorEnum {
         writeln!(out, "typedef {repr} {jpc_name};")?;
         for member in members {
             let EnumMember {
-                jph_name: jph_member,
                 jpc_name: jpc_member,
                 value,
                 ..
             } = member;
 
             writeln!(out, "const {jpc_name} {jpc_member} = {value};")?;
+        }
+        writeln!(out)?;
+
+        for member in members {
+            let EnumMember {
+                jph_name: jph_member,
+                jpc_name: jpc_member,
+                ..
+            } = member;
+
             writeln!(out, "ENSURE_ENUM_EQ({jpc_member}, {jph_member})")?;
         }
         writeln!(out)?;

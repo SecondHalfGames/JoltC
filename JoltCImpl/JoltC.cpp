@@ -88,8 +88,6 @@ ENUM_CONVERSION(JPC_Activation, JPH::EActivation)
 ENUM_CONVERSION(JPC_BodyType, JPH::EBodyType)
 ENUM_CONVERSION(JPC_MotionQuality, JPH::EMotionQuality)
 ENUM_CONVERSION(JPC_OverrideMassProperties, JPH::EOverrideMassProperties)
-ENUM_CONVERSION(JPC_ShapeType, JPH::EShapeType)
-ENUM_CONVERSION(JPC_ShapeSubType, JPH::EShapeSubType)
 
 OPAQUE_WRAPPER(JPC_PhysicsSystem, JPH::PhysicsSystem)
 DESTRUCTOR(JPC_PhysicsSystem)
@@ -787,11 +785,11 @@ JPC_API void JPC_Shape_SetUserData(JPC_Shape* self, uint64_t userData) {
 }
 
 JPC_API JPC_ShapeType JPC_Shape_GetType(const JPC_Shape* self) {
-	return to_jpc(to_jph(self)->GetType());
+	return static_cast<JPC_ShapeType>(to_jph(self)->GetType());
 }
 
 JPC_API JPC_ShapeSubType JPC_Shape_GetSubType(const JPC_Shape* self) {
-	return to_jpc(to_jph(self)->GetSubType());
+	return static_cast<JPC_ShapeSubType>(to_jph(self)->GetSubType());
 }
 
 JPC_API JPC_Vec3 JPC_Shape_GetCenterOfMass(const JPC_Shape* self) {

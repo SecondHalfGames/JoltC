@@ -67,26 +67,45 @@ macro_rules! include_mirrored_structs {
 macro_rules! mirrored_enums {
     (
         $(enum $enum_name:ident : $repr:ident {
-            $($member_name:ident = $member_value:expr,)*
+            $($member_name:ident $(= $member_value:expr)?,)*
         };)*
     ) => {
+
         vec![$(
-            MirrorEnum {
-                jph_name: concat!("JPH::E", stringify!($enum_name)),
-                jpc_name: concat!("JPC_", stringify!($enum_name)),
-                repr: stringify!($repr),
-                members: vec![$(
-                    EnumMember {
-                        jph_name: format!("JPH::E{}::{}", stringify!($enum_name), stringify!($member_name)),
-                        jpc_name: format!("JPC_{}_{}",
-                            heck::AsShoutySnakeCase(stringify!($enum_name)),
-                            heck::AsShoutySnakeCase(stringify!($member_name))),
-                        value: stringify!($member_value),
-                    },
-                )*],
-            }
+            #[allow(unused_variables, unused_assignments)]
+            {
+                let mut counter = 0;
+
+                MirrorEnum {
+                    jph_name: concat!("JPH::E", stringify!($enum_name)),
+                    jpc_name: concat!("JPC_", stringify!($enum_name)),
+                    repr: stringify!($repr),
+                    members: vec![$(
+                        EnumMember {
+                            jph_name: format!("JPH::E{}::{}", stringify!($enum_name), stringify!($member_name)),
+                            jpc_name: format!("JPC_{}_{}",
+                                heck::AsShoutySnakeCase(stringify!($enum_name)),
+                                heck::AsShoutySnakeCase(stringify!($member_name))),
+                            value: enum_value!(counter, $($member_value)?),
+                        },
+                    )*],
+                }
+            },
         )*]
     }
+}
+
+macro_rules! enum_value {
+    ($counter:ident, $member_value:expr) => {{
+        $counter = $member_value + 1;
+        stringify!($member_value).to_owned()
+    }};
+
+    ($counter:ident,) => {{
+        let val = $counter.to_string();
+        $counter += 1;
+        val
+    }};
 }
 
 #[cps::cps]
