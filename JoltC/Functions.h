@@ -566,24 +566,6 @@ JPC_API void JPC_Constraint_delete(JPC_Constraint* self);
 ////////////////////////////////////////////////////////////////////////////////
 // FixedConstraintSettings
 
-typedef struct JPC_FixedConstraintSettings {
-	JPC_ConstraintSettings ConstraintSettings;
-
-	// TwoBodyConstraintSettings: no extra members
-
-	// FixedConstraintSettings
-	JPC_ConstraintSpace Space;
-	bool AutoDetectPoint;
-
-	JPC_RVec3 Point1;
-	JPC_Vec3 AxisX1;
-	JPC_Vec3 AxisY1;
-
-	JPC_RVec3 Point2;
-	JPC_Vec3 AxisX2;
-	JPC_Vec3 AxisY2;
-} JPC_FixedConstraintSettings;
-
 JPC_API void JPC_FixedConstraintSettings_default(JPC_FixedConstraintSettings* settings);
 JPC_API JPC_Constraint* JPC_FixedConstraintSettings_Create(
 	const JPC_FixedConstraintSettings* self,

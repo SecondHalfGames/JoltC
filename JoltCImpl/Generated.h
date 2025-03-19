@@ -23,3 +23,32 @@ JPC_API void JPC_ConstraintSettings_default(JPC_ConstraintSettings* value) {
 	JPC_ConstraintSettings_to_jpc(value, &defaultValue);
 }
 
+JPC_IMPL void JPC_FixedConstraintSettings_to_jpc(JPC_FixedConstraintSettings* outJpc, const JPH::FixedConstraintSettings* inJph) {
+	JPC_ConstraintSettings_to_jpc(&outJpc->ConstraintSettings, &*inJph);
+	outJpc->Space = static_cast<JPC_ConstraintSpace>(inJph->mSpace);
+	outJpc->AutoDetectPoint = inJph->mAutoDetectPoint;
+	outJpc->Point1 = to_jpc(inJph->mPoint1);
+	outJpc->AxisX1 = to_jpc(inJph->mAxisX1);
+	outJpc->AxisY1 = to_jpc(inJph->mAxisY1);
+	outJpc->Point2 = to_jpc(inJph->mPoint2);
+	outJpc->AxisX2 = to_jpc(inJph->mAxisX2);
+	outJpc->AxisY2 = to_jpc(inJph->mAxisY2);
+}
+
+JPC_IMPL void JPC_FixedConstraintSettings_to_jph(const JPC_FixedConstraintSettings* inJpc, JPH::FixedConstraintSettings* outJph) {
+	JPC_ConstraintSettings_to_jph(&inJpc->ConstraintSettings, &*outJph);
+	outJph->mSpace = static_cast<JPH::EConstraintSpace>(inJpc->Space);
+	outJph->mAutoDetectPoint = inJpc->AutoDetectPoint;
+	outJph->mPoint1 = to_jph(inJpc->Point1);
+	outJph->mAxisX1 = to_jph(inJpc->AxisX1);
+	outJph->mAxisY1 = to_jph(inJpc->AxisY1);
+	outJph->mPoint2 = to_jph(inJpc->Point2);
+	outJph->mAxisX2 = to_jph(inJpc->AxisX2);
+	outJph->mAxisY2 = to_jph(inJpc->AxisY2);
+}
+
+JPC_API void JPC_FixedConstraintSettings_default(JPC_FixedConstraintSettings* value) {
+	JPH::FixedConstraintSettings defaultValue{};
+	JPC_FixedConstraintSettings_to_jpc(value, &defaultValue);
+}
+
