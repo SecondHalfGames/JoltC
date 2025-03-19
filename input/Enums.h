@@ -1,3 +1,9 @@
+enum MotionType: uint8_t {
+	Static,
+	Kinematic,
+	Dynamic,
+};
+
 enum ShapeType: uint8_t {
 	Convex,
 	Compound,
