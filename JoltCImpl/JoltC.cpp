@@ -739,10 +739,24 @@ JPC_API const char* JPC_String_c_str(JPC_String* self) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// Constraint
+// Constraint -> RefTarget<Constraint>
 
 OPAQUE_WRAPPER(JPC_Constraint, JPH::Constraint);
 
+// RefTarget<Constraint>
+JPC_API uint32_t JPC_Constraint_GetRefCount(const JPC_Constraint* self) {
+	return to_jph(self)->GetRefCount();
+}
+
+JPC_API void JPC_Constraint_AddRef(const JPC_Constraint* self) {
+	to_jph(self)->AddRef();
+}
+
+JPC_API void JPC_Constraint_Release(const JPC_Constraint* self) {
+	to_jph(self)->Release();
+}
+
+// Constraint
 JPC_API void JPC_Constraint_delete(JPC_Constraint* self) {
 	delete to_jph(self);
 }
@@ -831,8 +845,9 @@ JPC_API JPC_Constraint* JPC_FixedConstraintSettings_Create(
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// Shape
+// Shape -> RefTarget<Shape>
 
+// RefTarget<Shape>
 JPC_API uint32_t JPC_Shape_GetRefCount(const JPC_Shape* self) {
 	return to_jph(self)->GetRefCount();
 }
@@ -845,6 +860,7 @@ JPC_API void JPC_Shape_Release(const JPC_Shape* self) {
 	to_jph(self)->Release();
 }
 
+// Shape
 JPC_API uint64_t JPC_Shape_GetUserData(const JPC_Shape* self) {
 	return to_jph(self)->GetUserData();
 }

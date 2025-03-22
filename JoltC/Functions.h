@@ -197,7 +197,7 @@ JPC_API JPC_IndexedTriangleList* JPC_IndexedTriangleList_new(const JPC_IndexedTr
 JPC_API void JPC_IndexedTriangleList_delete(JPC_IndexedTriangleList* object);
 
 ////////////////////////////////////////////////////////////////////////////////
-// Shape -> RefTarget
+// Shape -> RefTarget<Shape>
 
 typedef struct JPC_Shape JPC_Shape;
 
@@ -214,7 +214,7 @@ JPC_API JPC_ShapeSubType JPC_Shape_GetSubType(const JPC_Shape* self);
 JPC_API JPC_Vec3 JPC_Shape_GetCenterOfMass(const JPC_Shape* self);
 
 ////////////////////////////////////////////////////////////////////////////////
-// CompoundShape -> Shape -> RefTarget
+// CompoundShape -> Shape -> RefTarget<Shape>
 
 typedef struct JPC_CompoundShape JPC_CompoundShape;
 
@@ -555,9 +555,13 @@ JPC_API void JPC_String_delete(JPC_String* self);
 JPC_API const char* JPC_String_c_str(JPC_String* self);
 
 ////////////////////////////////////////////////////////////////////////////////
-// Constraint
+// Constraint -> RefTarget<Constraint>
 
 typedef struct JPC_Constraint JPC_Constraint;
+
+JPC_API uint32_t JPC_Shape_GetRefCount(const JPC_Shape* self);
+JPC_API void JPC_Shape_AddRef(const JPC_Shape* self);
+JPC_API void JPC_Shape_Release(const JPC_Shape* self);
 
 JPC_API void JPC_Constraint_delete(JPC_Constraint* self);
 
