@@ -1157,6 +1157,8 @@ JPC_API void JPC_PhysicsSystem_DrawBodies(
 
 JPC_API void JPC_PhysicsSystem_SetSimShapeFilter(JPC_PhysicsSystem* self, const JPC_SimShapeFilter* inShapeFilter);
 
+JPC_API void JPC_PhysicsSystem_SetContactListener(JPC_PhysicsSystem* self, JPC_ContactListener* listener);
+
 #ifdef __cplusplus
 }
 #endif

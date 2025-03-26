@@ -2143,3 +2143,9 @@ JPC_API void JPC_PhysicsSystem_SetSimShapeFilter(
 {
 	to_jph(self)->SetSimShapeFilter(to_jph(inShapeFilter));
 }
+
+JPC_API void JPC_PhysicsSystem_SetContactListener(JPC_PhysicsSystem* self, JPC_ContactListener* listener)
+{
+	JPH::ContactListener* contactListener = reinterpret_cast<JPH::ContactListener*>(listener);
+	to_jph(self)->SetContactListener(contactListener);
+}
