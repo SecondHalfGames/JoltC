@@ -247,6 +247,29 @@ JPC_API JPC_JobSystemThreadPool* JPC_JobSystemThreadPool_new3(
 JPC_API void JPC_JobSystemThreadPool_delete(JPC_JobSystemThreadPool* object);
 
 ////////////////////////////////////////////////////////////////////////////////
+// CollisionGroup and GroupFilter
+
+typedef uint32_t JPC_GroupID;
+typedef uint32_t JPC_SubGroupID;
+typedef struct JPC_GroupFilter JPC_GroupFilter;
+
+typedef struct JPC_CollisionGroup {
+	const JPC_GroupFilter* GroupFilter;
+	JPC_GroupID GroupID;
+	JPC_SubGroupID SubGroupID;
+} JPC_CollisionGroup;
+
+typedef struct JPC_GroupFilterFns {
+	bool (*CanCollide)(const void *self, const JPC_CollisionGroup* inGroup1, const JPC_CollisionGroup* inGroup2);
+} JPC_GroupFilterFns;
+
+JPC_API JPC_GroupFilter* JPC_GroupFilter_new(
+	const void *self,
+	JPC_GroupFilterFns fns);
+
+JPC_API void JPC_GroupFilter_delete(JPC_GroupFilter* object);
+
+////////////////////////////////////////////////////////////////////////////////
 // BroadPhaseLayerInterface
 
 typedef struct JPC_BroadPhaseLayerInterfaceFns {

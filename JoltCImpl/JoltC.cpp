@@ -339,6 +339,55 @@ JPC_API JPC_JobSystemThreadPool* JPC_JobSystemThreadPool_new3(
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// CollisionGroup
+
+JPC_IMPL JPC_CollisionGroup JPC_CollisionGroup_to_jpc(const JPH::CollisionGroup* input);
+
+class JPC_GroupFilterBridge final : public JPH::GroupFilter {
+public:
+	explicit JPC_GroupFilterBridge(const void *self, JPC_GroupFilterFns fns) : self(self), fns(fns) {}
+
+	bool CanCollide(const JPH::CollisionGroup &inGroup1, const JPH::CollisionGroup &inGroup2) const override {
+		JPC_CollisionGroup jpcGroup1 = JPC_CollisionGroup_to_jpc(&inGroup1);
+		JPC_CollisionGroup jpcGroup2 = JPC_CollisionGroup_to_jpc(&inGroup2);
+
+		return fns.CanCollide(self, &jpcGroup1, &jpcGroup2);
+	}
+
+	void SaveBinaryState(JPH::StreamOut &inStream) const override {}
+	void RestoreBinaryState(JPH::StreamIn &inStream) override {}
+
+private:
+	const void* self;
+	JPC_GroupFilterFns fns;
+};
+
+OPAQUE_WRAPPER(JPC_GroupFilter, JPC_GroupFilterBridge)
+DESTRUCTOR(JPC_GroupFilter)
+
+JPC_IMPL JPH::CollisionGroup JPC_CollisionGroup_to_jph(const JPC_CollisionGroup* self) {
+	const JPC_GroupFilterBridge* filter_group = to_jph(self->GroupFilter);
+
+	JPH::CollisionGroup group(filter_group, self->GroupID, self->SubGroupID);
+	return group;
+}
+
+JPC_IMPL JPC_CollisionGroup JPC_CollisionGroup_to_jpc(const JPH::CollisionGroup* input) {
+	JPC_CollisionGroup group{};
+	group.GroupFilter; // NOTE: This member doesn't matter for callers of this function
+	group.GroupID = input->GetGroupID();
+	group.SubGroupID = input->GetSubGroupID();
+	return group;
+}
+
+JPC_API JPC_GroupFilter* JPC_GroupFilter_new(
+	const void *self,
+	JPC_GroupFilterFns fns)
+{
+	return to_jpc(new JPC_GroupFilterBridge(self, fns));
+}
+
+////////////////////////////////////////////////////////////////////////////////
 // BroadPhaseLayerInterface
 
 class JPC_BroadPhaseLayerInterfaceBridge final : public JPH::BroadPhaseLayerInterface {
