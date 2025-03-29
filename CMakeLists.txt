@@ -33,10 +33,12 @@ add_library(joltc STATIC
     JoltC/JoltC.h
     JoltC/Enums.h
     JoltC/Functions.h
+    JoltC/Generated.h
 
     # C++ Implementation
     JoltCImpl/Test.cpp
     JoltCImpl/JoltC.cpp
+    JoltCImpl/Generated.h
 )
 
 target_compile_features(joltc PUBLIC cxx_std_17)

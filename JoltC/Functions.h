@@ -180,6 +180,8 @@ typedef struct JPC_ShapeCastResult {
 
 typedef struct JPC_Body JPC_Body;
 
+#include <JoltC/Generated.h>
+
 ////////////////////////////////////////////////////////////////////////////////
 // VertexList == Array<Float3> == std::vector<Float3>
 
@@ -589,39 +591,7 @@ JPC_API void JPC_Shape_Release(const JPC_Shape* self);
 JPC_API void JPC_Constraint_delete(JPC_Constraint* self);
 
 ////////////////////////////////////////////////////////////////////////////////
-// ConstraintSettings
-
-typedef struct JPC_ConstraintSettings {
-	bool Enabled;
-	uint32_t ConstraintPriority;
-	uint NumVelocityStepsOverride;
-	uint NumPositionStepsOverride;
-	float DrawConstraintSize;
-	uint64_t UserData;
-} JPC_ConstraintSettings;
-
-JPC_API void JPC_ConstraintSettings_default(JPC_ConstraintSettings* settings);
-
-////////////////////////////////////////////////////////////////////////////////
 // FixedConstraintSettings
-
-typedef struct JPC_FixedConstraintSettings {
-	JPC_ConstraintSettings ConstraintSettings;
-
-	// TwoBodyConstraintSettings: no extra members
-
-	// FixedConstraintSettings
-	JPC_ConstraintSpace Space;
-	bool AutoDetectPoint;
-
-	JPC_RVec3 Point1;
-	JPC_Vec3 AxisX1;
-	JPC_Vec3 AxisY1;
-
-	JPC_RVec3 Point2;
-	JPC_Vec3 AxisX2;
-	JPC_Vec3 AxisY2;
-} JPC_FixedConstraintSettings;
 
 JPC_API void JPC_FixedConstraintSettings_default(JPC_FixedConstraintSettings* settings);
 JPC_API JPC_Constraint* JPC_FixedConstraintSettings_Create(
@@ -630,7 +600,20 @@ JPC_API JPC_Constraint* JPC_FixedConstraintSettings_Create(
 	JPC_Body* inBody2);
 
 ////////////////////////////////////////////////////////////////////////////////
-// TriangleShapeSettings
+// ShapeSettings
+
+typedef struct JPC_ShapeSettings {
+	uint64_t UserData;
+} JPC_ShapeSettings;
+
+////////////////////////////////////////////////////////////////////////////////
+// ConvexShapeSettings -> ShapeSettings
+
+typedef struct JPC_ConvexShapeSettings {
+} JPC_ConvexShapeSettings;
+
+////////////////////////////////////////////////////////////////////////////////
+// TriangleShapeSettings -> ConvexShapeSettings -> ShapeSettings
 
 typedef struct JPC_TriangleShapeSettings {
 	// ShapeSettings

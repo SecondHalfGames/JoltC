@@ -82,14 +82,11 @@ constexpr auto to_integral(E e) -> typename std::underlying_type<E>::type
 	return static_cast<typename std::underlying_type<E>::type>(e);
 }
 
-ENUM_CONVERSION(JPC_MotionType, JPH::EMotionType)
 ENUM_CONVERSION(JPC_AllowedDOFs, JPH::EAllowedDOFs)
 ENUM_CONVERSION(JPC_Activation, JPH::EActivation)
 ENUM_CONVERSION(JPC_BodyType, JPH::EBodyType)
 ENUM_CONVERSION(JPC_MotionQuality, JPH::EMotionQuality)
 ENUM_CONVERSION(JPC_OverrideMassProperties, JPH::EOverrideMassProperties)
-ENUM_CONVERSION(JPC_ShapeType, JPH::EShapeType)
-ENUM_CONVERSION(JPC_ShapeSubType, JPH::EShapeSubType)
 
 OPAQUE_WRAPPER(JPC_PhysicsSystem, JPH::PhysicsSystem)
 DESTRUCTOR(JPC_PhysicsSystem)
@@ -275,6 +272,8 @@ JPC_IMPL JPH::ShapeCastSettings JPC_ShapeCastSettings_to_jph(JPC_ShapeCastSettin
 
 	return out;
 }
+
+#include <JoltCImpl/Generated.h>
 
 JPC_API void JPC_RegisterDefaultAllocator() {
 	JPH::RegisterDefaultAllocator();
@@ -811,76 +810,7 @@ JPC_API void JPC_Constraint_delete(JPC_Constraint* self) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// ConstraintSettings
-
-JPC_IMPL void JPC_ConstraintSettings_to_jpc(
-	JPC_ConstraintSettings* outJpc,
-	const JPH::ConstraintSettings* inJph)
-{
-	outJpc->Enabled = inJph->mEnabled;
-	outJpc->ConstraintPriority = inJph->mConstraintPriority;
-	outJpc->NumVelocityStepsOverride = inJph->mNumVelocityStepsOverride;
-	outJpc->NumPositionStepsOverride = inJph->mNumPositionStepsOverride;
-	outJpc->DrawConstraintSize = inJph->mDrawConstraintSize;
-	outJpc->UserData = inJph->mUserData;
-}
-
-JPC_IMPL void JPC_ConstraintSettings_to_jph(
-	const JPC_ConstraintSettings* inJpc,
-	JPH::ConstraintSettings* outJph)
-{
-	outJph->mEnabled = inJpc->Enabled;
-	outJph->mConstraintPriority = inJpc->ConstraintPriority;
-	outJph->mNumVelocityStepsOverride = inJpc->NumVelocityStepsOverride;
-	outJph->mNumPositionStepsOverride = inJpc->NumPositionStepsOverride;
-	outJph->mDrawConstraintSize = inJpc->DrawConstraintSize;
-	outJph->mUserData = inJpc->UserData;
-}
-
-JPC_API void JPC_ConstraintSettings_default(JPC_ConstraintSettings* settings) {
-	JPH::ConstraintSettings defaultSettings{};
-	JPC_ConstraintSettings_to_jpc(settings, &defaultSettings);
-}
-
-////////////////////////////////////////////////////////////////////////////////
 // FixedConstraintSettings
-
-JPC_IMPL void JPC_FixedConstraintSettings_to_jpc(
-	JPC_FixedConstraintSettings* outJpc,
-	const JPH::FixedConstraintSettings* inJph)
-{
-	JPC_ConstraintSettings_to_jpc(&outJpc->ConstraintSettings, inJph);
-
-	outJpc->Space = static_cast<JPC_ConstraintSpace>(inJph->mSpace);
-	outJpc->AutoDetectPoint = inJph->mAutoDetectPoint;
-	outJpc->Point1 = to_jpc(inJph->mPoint1);
-	outJpc->AxisX1 = to_jpc(inJph->mAxisX1);
-	outJpc->AxisY1 = to_jpc(inJph->mAxisY1);
-	outJpc->Point2 = to_jpc(inJph->mPoint2);
-	outJpc->AxisX2 = to_jpc(inJph->mAxisX2);
-	outJpc->AxisY2 = to_jpc(inJph->mAxisY2);
-}
-
-JPC_IMPL void JPC_FixedConstraintSettings_to_jph(
-	const JPC_FixedConstraintSettings* inJpc,
-	JPH::FixedConstraintSettings* outJph)
-{
-	JPC_ConstraintSettings_to_jph(&inJpc->ConstraintSettings, outJph);
-
-	outJph->mSpace = static_cast<JPH::EConstraintSpace>(inJpc->Space);
-	outJph->mAutoDetectPoint = inJpc->AutoDetectPoint;
-	outJph->mPoint1 = to_jph(inJpc->Point1);
-	outJph->mAxisX1 = to_jph(inJpc->AxisX1);
-	outJph->mAxisY1 = to_jph(inJpc->AxisY1);
-	outJph->mPoint2 = to_jph(inJpc->Point2);
-	outJph->mAxisX2 = to_jph(inJpc->AxisX2);
-	outJph->mAxisY2 = to_jph(inJpc->AxisY2);
-}
-
-JPC_API void JPC_FixedConstraintSettings_default(JPC_FixedConstraintSettings* settings) {
-	JPH::FixedConstraintSettings defaultSettings{};
-	JPC_FixedConstraintSettings_to_jpc(settings, &defaultSettings);
-}
 
 JPC_API JPC_Constraint* JPC_FixedConstraintSettings_Create(
 	const JPC_FixedConstraintSettings* self,
@@ -919,11 +849,11 @@ JPC_API void JPC_Shape_SetUserData(JPC_Shape* self, uint64_t userData) {
 }
 
 JPC_API JPC_ShapeType JPC_Shape_GetType(const JPC_Shape* self) {
-	return to_jpc(to_jph(self)->GetType());
+	return static_cast<JPC_ShapeType>(to_jph(self)->GetType());
 }
 
 JPC_API JPC_ShapeSubType JPC_Shape_GetSubType(const JPC_Shape* self) {
-	return to_jpc(to_jph(self)->GetSubType());
+	return static_cast<JPC_ShapeSubType>(to_jph(self)->GetSubType());
 }
 
 JPC_API JPC_Vec3 JPC_Shape_GetCenterOfMass(const JPC_Shape* self) {
@@ -1246,7 +1176,7 @@ static JPH::BodyCreationSettings to_jph(const JPC_BodyCreationSettings* settings
 	output.mUserData = settings->UserData;
 	output.mObjectLayer = settings->ObjectLayer;
 	// CollisionGroup
-	output.mMotionType = to_jph(settings->MotionType);
+	output.mMotionType = static_cast<JPH::EMotionType>(settings->MotionType);
 	output.mAllowedDOFs = to_jph(settings->AllowedDOFs);
 	output.mAllowDynamicOrKinematic = settings->AllowDynamicOrKinematic;
 	output.mIsSensor = settings->IsSensor;
@@ -1283,7 +1213,7 @@ JPC_API void JPC_BodyCreationSettings_default(JPC_BodyCreationSettings* settings
 	settings->UserData = defaultSettings.mUserData;
 	settings->ObjectLayer = defaultSettings.mObjectLayer;
 	// CollisionGroup
-	settings->MotionType = to_jpc(defaultSettings.mMotionType);
+	settings->MotionType = static_cast<JPC_MotionType>(defaultSettings.mMotionType);
 	settings->AllowedDOFs = to_jpc(defaultSettings.mAllowedDOFs);
 	settings->AllowDynamicOrKinematic = defaultSettings.mAllowDynamicOrKinematic;
 	settings->IsSensor = defaultSettings.mIsSensor;
@@ -1395,11 +1325,11 @@ JPC_API bool JPC_Body_GetEnhancedInternalEdgeRemovalWithBody(const JPC_Body* sel
 }
 
 JPC_API JPC_MotionType JPC_Body_GetMotionType(const JPC_Body* self) {
-	return to_jpc(to_jph(self)->GetMotionType());
+	return static_cast<JPC_MotionType>(to_jph(self)->GetMotionType());
 }
 
 JPC_API void JPC_Body_SetMotionType(JPC_Body* self, JPC_MotionType inMotionType) {
-	to_jph(self)->SetMotionType(to_jph(inMotionType));
+	to_jph(self)->SetMotionType(static_cast<JPH::EMotionType>(inMotionType));
 }
 
 JPC_API JPC_BroadPhaseLayer JPC_Body_GetBroadPhaseLayer(const JPC_Body* self) {
@@ -1927,11 +1857,11 @@ JPC_API JPC_BodyType JPC_BodyInterface_GetBodyType(const JPC_BodyInterface *self
 }
 
 JPC_API void JPC_BodyInterface_SetMotionType(JPC_BodyInterface *self, JPC_BodyID inBodyID, JPC_MotionType inMotionType, JPC_Activation inActivationMode) {
-	to_jph(self)->SetMotionType(to_jph(inBodyID), to_jph(inMotionType), to_jph(inActivationMode));
+	to_jph(self)->SetMotionType(to_jph(inBodyID), static_cast<JPH::EMotionType>(inMotionType), to_jph(inActivationMode));
 }
 
 JPC_API JPC_MotionType JPC_BodyInterface_GetMotionType(const JPC_BodyInterface *self, JPC_BodyID inBodyID) {
-	return to_jpc(to_jph(self)->GetMotionType(to_jph(inBodyID)));
+	return static_cast<JPC_MotionType>(to_jph(self)->GetMotionType(to_jph(inBodyID)));
 }
 
 JPC_API void JPC_BodyInterface_SetMotionQuality(JPC_BodyInterface *self, JPC_BodyID inBodyID, JPC_MotionQuality inMotionQuality) {
