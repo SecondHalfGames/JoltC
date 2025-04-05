@@ -1,6 +1,8 @@
 #include <Jolt/Jolt.h>
 
 #include <Jolt/Core/Factory.h>
+#include <Jolt/Core/JobSystem.h>
+#include <Jolt/Core/JobSystemSingleThreaded.h>
 #include <Jolt/Core/JobSystemThreadPool.h>
 #include <Jolt/Core/TempAllocator.h>
 #include <Jolt/Physics/Body/BodyActivationListener.h>
@@ -105,8 +107,14 @@ OPAQUE_WRAPPER(JPC_NarrowPhaseQuery, JPH::NarrowPhaseQuery)
 OPAQUE_WRAPPER(JPC_TempAllocatorImpl, JPH::TempAllocatorImpl)
 DESTRUCTOR(JPC_TempAllocatorImpl)
 
+OPAQUE_WRAPPER(JPC_JobSystem, JPH::JobSystem)
+DESTRUCTOR(JPC_JobSystem)
+
 OPAQUE_WRAPPER(JPC_JobSystemThreadPool, JPH::JobSystemThreadPool)
 DESTRUCTOR(JPC_JobSystemThreadPool)
+
+OPAQUE_WRAPPER(JPC_JobSystemSingleThreaded, JPH::JobSystemSingleThreaded)
+DESTRUCTOR(JPC_JobSystemSingleThreaded)
 
 OPAQUE_WRAPPER(JPC_Shape, JPH::Shape)
 OPAQUE_WRAPPER(JPC_CompoundShape, JPH::CompoundShape)
@@ -336,6 +344,13 @@ JPC_API JPC_JobSystemThreadPool* JPC_JobSystemThreadPool_new3(
 	int inNumThreads)
 {
 	return to_jpc(new JPH::JobSystemThreadPool(inMaxJobs, inMaxBarriers, inNumThreads));
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// JobSystemSingleThreaded
+
+JPC_API JPC_JobSystemSingleThreaded* JPC_JobSystemSingleThreaded_new(uint inMaxJobs) {
+	return to_jpc(new JPH::JobSystemSingleThreaded(inMaxJobs));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -2166,7 +2181,7 @@ JPC_API JPC_PhysicsUpdateError JPC_PhysicsSystem_Update(
 	float inDeltaTime,
 	int inCollisionSteps,
 	JPC_TempAllocatorImpl *inTempAllocator,
-	JPC_JobSystemThreadPool *inJobSystem)
+	JPC_JobSystem *inJobSystem)
 {
 	auto res = to_jph(self)->Update(
 		inDeltaTime,

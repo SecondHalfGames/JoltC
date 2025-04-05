@@ -232,9 +232,11 @@ JPC_API JPC_TempAllocatorImpl* JPC_TempAllocatorImpl_new(uint size);
 JPC_API void JPC_TempAllocatorImpl_delete(JPC_TempAllocatorImpl* object);
 
 ////////////////////////////////////////////////////////////////////////////////
-// JobSystemThreadPool
+// JobSystem
 
+typedef struct JPC_JobSystem JPC_JobSystem;
 typedef struct JPC_JobSystemThreadPool JPC_JobSystemThreadPool;
+typedef struct JPC_JobSystemSingleThreaded JPC_JobSystemSingleThreaded;
 
 JPC_API JPC_JobSystemThreadPool* JPC_JobSystemThreadPool_new2(
 	uint inMaxJobs,
@@ -245,6 +247,9 @@ JPC_API JPC_JobSystemThreadPool* JPC_JobSystemThreadPool_new3(
 	int inNumThreads);
 
 JPC_API void JPC_JobSystemThreadPool_delete(JPC_JobSystemThreadPool* object);
+
+JPC_API JPC_JobSystemSingleThreaded* JPC_JobSystemSingleThreaded_new(uint inMaxJobs);
+JPC_API void JPC_JobSystemSingleThreaded_delete(JPC_JobSystemSingleThreaded* object);
 
 ////////////////////////////////////////////////////////////////////////////////
 // CollisionGroup and GroupFilter
@@ -1162,7 +1167,7 @@ JPC_API JPC_PhysicsUpdateError JPC_PhysicsSystem_Update(
 	float inDeltaTime,
 	int inCollisionSteps,
 	JPC_TempAllocatorImpl *inTempAllocator, // FIXME: un-specialize
-	JPC_JobSystemThreadPool *inJobSystem); // FIXME: un-specialize
+	JPC_JobSystem* inJobSystem);
 
 JPC_API void JPC_PhysicsSystem_AddConstraint(JPC_PhysicsSystem* self, JPC_Constraint* constraint);
 JPC_API void JPC_PhysicsSystem_RemoveConstraint(JPC_PhysicsSystem* self, JPC_Constraint* constraint);
