@@ -923,7 +923,8 @@ JPC_API JPC_RMat44 JPC_Body_GetInverseCenterOfMassTransform(const JPC_Body* self
 JPC_API uint64_t JPC_Body_GetUserData(const JPC_Body* self);
 JPC_API void JPC_Body_SetUserData(JPC_Body* self, uint64_t inUserData);
 
-// JPC_API JPC_Vec3 JPC_Body_GetWorldSpaceSurfaceNormal(const JPC_Body* self, const SubShapeID &inSubShapeID, JPC_RVec3 inPosition);
+JPC_API JPC_Vec3 JPC_Body_GetWorldSpaceSurfaceNormal(const JPC_Body* self, JPC_SubShapeID inSubShapeID, JPC_RVec3 inPosition);
+
 // JPC_API TransformedShape JPC_Body_GetTransformedShape(const JPC_Body* self);
 // JPC_API BodyCreationSettings JPC_Body_GetBodyCreationSettings(const JPC_Body* self);
 // JPC_API SoftBodyCreationSettings JPC_Body_GetSoftBodyCreationSettings(const JPC_Body* self);

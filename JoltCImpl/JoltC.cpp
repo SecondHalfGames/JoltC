@@ -218,7 +218,7 @@ static JPH::RShapeCast to_jph(JPC_RShapeCast in) {
 		to_jph(in.Direction));
 }
 
-static JPH::SubShapeID to_jph_subshapeid(JPC_SubShapeID in) {
+static JPH::SubShapeID JPC_SubShapeID_to_jph(JPC_SubShapeID in) {
 	JPH::SubShapeID out;
 	out.SetValue(in);
 	return out;
@@ -939,7 +939,7 @@ JPC_API uint32_t JPC_CompoundShape_GetSubShapeIndexFromID(
 	JPC_SubShapeID* outRemainder)
 {
 	JPH::SubShapeID jphRemainder;
-	uint32_t res = to_jph(self)->GetSubShapeIndexFromID(to_jph_subshapeid(inSubShapeID), jphRemainder);
+	uint32_t res = to_jph(self)->GetSubShapeIndexFromID(JPC_SubShapeID_to_jph(inSubShapeID), jphRemainder);
 	*outRemainder = to_jpc(jphRemainder);
 	return res;
 }
@@ -1581,7 +1581,12 @@ JPC_API void JPC_Body_SetUserData(JPC_Body* self, uint64_t inUserData) {
 	to_jph(self)->SetUserData(inUserData);
 }
 
-// JPC_API JPC_Vec3 JPC_Body_GetWorldSpaceSurfaceNormal(const JPC_Body* self, const SubShapeID &inSubShapeID, JPC_RVec3 inPosition);
+JPC_API JPC_Vec3 JPC_Body_GetWorldSpaceSurfaceNormal(const JPC_Body* self, JPC_SubShapeID inSubShapeID, JPC_RVec3 inPosition) {
+	JPH::SubShapeID jph_id = JPC_SubShapeID_to_jph(inSubShapeID);
+
+	return to_jpc(to_jph(self)->GetWorldSpaceSurfaceNormal(jph_id, to_jph(inPosition)));
+}
+
 // JPC_API TransformedShape JPC_Body_GetTransformedShape(const JPC_Body* self);
 // JPC_API BodyCreationSettings JPC_Body_GetBodyCreationSettings(const JPC_Body* self);
 // JPC_API SoftBodyCreationSettings JPC_Body_GetSoftBodyCreationSettings(const JPC_Body* self);
