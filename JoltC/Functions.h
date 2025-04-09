@@ -779,7 +779,26 @@ JPC_API void JPC_StaticCompoundShapeSettings_default(JPC_StaticCompoundShapeSett
 JPC_API bool JPC_StaticCompoundShapeSettings_Create(const JPC_StaticCompoundShapeSettings* self, JPC_Shape** outShape, JPC_String** outError);
 
 ////////////////////////////////////////////////////////////////////////////////
-// MutableCompoundShape -> CompoundShapeSettings -> ShapeSettings
+// MutableCompoundShape -> CompoundShape -> Shape
+
+typedef struct JPC_MutableCompoundShape JPC_MutableCompoundShape;
+
+JPC_API uint JPC_MutableCompoundShape_AddShape(
+	JPC_MutableCompoundShape* self,
+	JPC_Vec3 inPosition,
+	JPC_Quat inRotation,
+	const JPC_Shape* inShape,
+	uint32_t inUserData);
+
+JPC_API void JPC_MutableCompoundShape_RemoveShape(JPC_MutableCompoundShape* self, uint inIndex);
+JPC_API void JPC_MutableCompoundShape_ModifyShape(JPC_MutableCompoundShape* self, uint inIndex, JPC_Vec3 inPosition, JPC_Quat inRotation);
+JPC_API void JPC_MutableCompoundShape_ModifyShape2(JPC_MutableCompoundShape* self, uint inIndex, JPC_Vec3 inPosition, JPC_Quat inRotation, const JPC_Shape* inShape);
+
+// TODO:
+// JPC_API void JPC_MutableCompoundShape_ModifyShapes(JPC_MutableCompoundShape* self);
+
+////////////////////////////////////////////////////////////////////////////////
+// MutableCompoundShapeSettings -> CompoundShapeSettings -> ShapeSettings
 
 typedef struct JPC_MutableCompoundShapeSettings {
 	// ShapeSettings
@@ -789,12 +808,12 @@ typedef struct JPC_MutableCompoundShapeSettings {
 	const JPC_SubShapeSettings* SubShapes;
 	size_t SubShapesLen;
 
-	// MutableCompoundShape
+	// MutableCompoundShapeSettings
 	// (no fields)
 } JPC_MutableCompoundShapeSettings;
 
 JPC_API void JPC_MutableCompoundShapeSettings_default(JPC_MutableCompoundShapeSettings* object);
-JPC_API bool JPC_MutableCompoundShapeSettings_Create(const JPC_MutableCompoundShapeSettings* self, JPC_Shape** outShape, JPC_String** outError);
+JPC_API bool JPC_MutableCompoundShapeSettings_Create(const JPC_MutableCompoundShapeSettings* self, JPC_MutableCompoundShape** outShape, JPC_String** outError);
 
 ////////////////////////////////////////////////////////////////////////////////
 // BodyCreationSettings

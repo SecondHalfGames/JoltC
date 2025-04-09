@@ -1211,6 +1211,43 @@ JPC_API bool JPC_StaticCompoundShapeSettings_Create(const JPC_StaticCompoundShap
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// MutableCompoundShape -> CompoundShape -> Shape
+
+JPC_IMPL JPH::MutableCompoundShape* JPC_MutableCompoundShape_to_jph(JPC_MutableCompoundShape* self) {
+	return reinterpret_cast<JPH::MutableCompoundShape*>(self);
+}
+
+JPC_API uint JPC_MutableCompoundShape_AddShape(
+	JPC_MutableCompoundShape* self,
+	JPC_Vec3 inPosition,
+	JPC_Quat inRotation,
+	const JPC_Shape* inShape,
+	uint32_t inUserData)
+{
+	JPH::MutableCompoundShape* self_jph = JPC_MutableCompoundShape_to_jph(self);
+
+	return self_jph->AddShape(to_jph(inPosition), to_jph(inRotation), to_jph(inShape), inUserData);
+}
+
+JPC_API void JPC_MutableCompoundShape_RemoveShape(JPC_MutableCompoundShape* self, uint inIndex) {
+	JPH::MutableCompoundShape* self_jph = JPC_MutableCompoundShape_to_jph(self);
+
+	self_jph->RemoveShape(inIndex);
+}
+
+JPC_API void JPC_MutableCompoundShape_ModifyShape(JPC_MutableCompoundShape* self, uint inIndex, JPC_Vec3 inPosition, JPC_Quat inRotation) {
+	JPH::MutableCompoundShape* self_jph = JPC_MutableCompoundShape_to_jph(self);
+
+	self_jph->ModifyShape(inIndex, to_jph(inPosition), to_jph(inRotation));
+}
+
+JPC_API void JPC_MutableCompoundShape_ModifyShape2(JPC_MutableCompoundShape* self, uint inIndex, JPC_Vec3 inPosition, JPC_Quat inRotation, const JPC_Shape* inShape) {
+	JPH::MutableCompoundShape* self_jph = JPC_MutableCompoundShape_to_jph(self);
+
+	self_jph->ModifyShape(inIndex, to_jph(inPosition), to_jph(inRotation), to_jph(inShape));
+}
+
+////////////////////////////////////////////////////////////////////////////////
 // MutableCompoundShapeSettings -> CompoundShapeSettings -> ShapeSettings
 
 static void to_jph(const JPC_MutableCompoundShapeSettings* input, JPH::MutableCompoundShapeSettings* output) {
@@ -1226,11 +1263,11 @@ JPC_API void JPC_MutableCompoundShapeSettings_default(JPC_MutableCompoundShapeSe
 	object->SubShapesLen = 0;
 }
 
-JPC_API bool JPC_MutableCompoundShapeSettings_Create(const JPC_MutableCompoundShapeSettings* self, JPC_Shape** outShape, JPC_String** outError) {
+JPC_API bool JPC_MutableCompoundShapeSettings_Create(const JPC_MutableCompoundShapeSettings* self, JPC_MutableCompoundShape** outShape, JPC_String** outError) {
 	JPH::MutableCompoundShapeSettings settings;
 	to_jph(self, &settings);
 
-	return HandleShapeResult(settings.Create(), outShape, outError);
+	return HandleShapeResult(settings.Create(), (JPC_Shape**)outShape, outError);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
