@@ -812,6 +812,58 @@ JPC_API void JPC_Constraint_delete(JPC_Constraint* self) {
 	delete to_jph(self);
 }
 
+// JPC_API JPC_ConstraintType JPC_Constraint_GetType(const JPC_Constraint* self);
+// JPC_API JPC_ConstraintSubType JPC_Constraint_GetSubType(const JPC_Constraint* self);
+
+JPC_API uint32_t JPC_Constraint_GetConstraintPriority(const JPC_Constraint* self) {
+	return to_jph(self)->GetConstraintPriority();
+}
+
+JPC_API void JPC_Constraint_SetConstraintPriority(JPC_Constraint* self, uint32_t inPriority) {
+	to_jph(self)->SetConstraintPriority(inPriority);
+}
+
+JPC_API uint JPC_Constraint_GetNumVelocityStepsOverride(const JPC_Constraint* self) {
+	return to_jph(self)->GetNumVelocityStepsOverride();
+}
+
+JPC_API void JPC_Constraint_SetNumVelocityStepsOverride(JPC_Constraint* self, uint inN) {
+	to_jph(self)->SetNumVelocityStepsOverride(inN);
+}
+
+JPC_API uint JPC_Constraint_GetNumPositionStepsOverride(const JPC_Constraint* self) {
+	return to_jph(self)->GetNumPositionStepsOverride();
+}
+
+JPC_API void JPC_Constraint_SetNumPositionStepsOverride(JPC_Constraint* self, uint inN) {
+	to_jph(self)->SetNumPositionStepsOverride(inN);
+}
+
+JPC_API bool JPC_Constraint_GetEnabled(const JPC_Constraint* self) {
+	return to_jph(self)->GetEnabled();
+}
+
+JPC_API void JPC_Constraint_SetEnabled(JPC_Constraint* self, bool inEnabled) {
+	to_jph(self)->SetEnabled(inEnabled);
+}
+
+JPC_API uint64_t JPC_Constraint_GetUserData(const JPC_Constraint* self) {
+	return to_jph(self)->GetUserData();
+}
+
+JPC_API void JPC_Constraint_SetUserData(JPC_Constraint* self, uint64_t inUserData) {
+	to_jph(self)->SetUserData(inUserData);
+}
+
+JPC_API void JPC_Constraint_NotifyShapeChanged(JPC_Constraint* self, JPC_BodyID inBodyID, JPC_Vec3 inDeltaCOM) {
+	to_jph(self)->NotifyShapeChanged(to_jph(inBodyID), to_jph(inDeltaCOM));
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// TwoBodyConstraint -> Constraint -> RefTarget<Constraint>
+
+OPAQUE_WRAPPER(JPC_TwoBodyConstraint, JPH::TwoBodyConstraint);
+
 ////////////////////////////////////////////////////////////////////////////////
 // ConstraintSettings
 
@@ -892,7 +944,8 @@ JPC_API JPC_Constraint* JPC_FixedConstraintSettings_Create(
 	JPH::FixedConstraintSettings jphSettings;
 	JPC_FixedConstraintSettings_to_jph(self, &jphSettings);
 
-	return to_jpc(jphSettings.Create(*to_jph(inBody1), *to_jph(inBody2)));
+	JPH::FixedConstraint* outJph = new JPH::FixedConstraint(*to_jph(inBody1), *to_jph(inBody2), jphSettings);
+	return (JPC_Constraint*)outJph;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -951,7 +1004,8 @@ JPC_API JPC_Constraint* JPC_SixDOFConstraintSettings_Create(
 	JPH::SixDOFConstraintSettings jphSettings;
 	JPC_SixDOFConstraintSettings_to_jph(self, &jphSettings);
 
-	return to_jpc(jphSettings.Create(*to_jph(inBody1), *to_jph(inBody2)));
+	JPH::SixDOFConstraint* outJph = new JPH::SixDOFConstraint(*to_jph(inBody1), *to_jph(inBody2), jphSettings);
+	return (JPC_Constraint*)outJph;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

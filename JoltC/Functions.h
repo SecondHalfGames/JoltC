@@ -588,6 +588,31 @@ JPC_API void JPC_Constraint_Release(const JPC_Constraint* self);
 
 JPC_API void JPC_Constraint_delete(JPC_Constraint* self);
 
+// JPC_API JPC_ConstraintType JPC_Constraint_GetType(const JPC_Constraint* self);
+// JPC_API JPC_ConstraintSubType JPC_Constraint_GetSubType(const JPC_Constraint* self);
+
+JPC_API uint32_t JPC_Constraint_GetConstraintPriority(const JPC_Constraint* self);
+JPC_API void JPC_Constraint_SetConstraintPriority(JPC_Constraint* self, uint32_t inPriority);
+
+JPC_API uint JPC_Constraint_GetNumVelocityStepsOverride(const JPC_Constraint* self);
+JPC_API void JPC_Constraint_SetNumVelocityStepsOverride(JPC_Constraint* self, uint inN);
+
+JPC_API uint JPC_Constraint_GetNumPositionStepsOverride(const JPC_Constraint* self);
+JPC_API void JPC_Constraint_SetNumPositionStepsOverride(JPC_Constraint* self, uint inN);
+
+JPC_API bool JPC_Constraint_GetEnabled(const JPC_Constraint* self);
+JPC_API void JPC_Constraint_SetEnabled(JPC_Constraint* self, bool inEnabled);
+
+JPC_API uint64_t JPC_Constraint_GetUserData(const JPC_Constraint* self);
+JPC_API void JPC_Constraint_SetUserData(JPC_Constraint* self, uint64_t inUserData);
+
+JPC_API void JPC_Constraint_NotifyShapeChanged(JPC_Constraint* self, JPC_BodyID inBodyID, JPC_Vec3 inDeltaCOM);
+
+////////////////////////////////////////////////////////////////////////////////
+// TwoBodyConstraint -> Constraint -> RefTarget<Constraint>
+
+typedef struct JPC_TwoBodyConstraint JPC_TwoBodyConstraint;
+
 ////////////////////////////////////////////////////////////////////////////////
 // ConstraintSettings
 
