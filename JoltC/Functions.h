@@ -628,6 +628,11 @@ JPC_API JPC_Vec3 JPC_FixedConstraint_GetTotalLambdaPosition(const JPC_FixedConst
 JPC_API JPC_Vec3 JPC_FixedConstraint_GetTotalLambdaRotation(const JPC_FixedConstraint* self);
 
 ////////////////////////////////////////////////////////////////////////////////
+// SixDOFConstraint -> TwoBodyConstraint -> Constraint -> RefTarget<Constraint>
+
+typedef struct JPC_SixDOFConstraint JPC_SixDOFContraint;
+
+////////////////////////////////////////////////////////////////////////////////
 // ConstraintSettings
 
 typedef struct JPC_ConstraintSettings {

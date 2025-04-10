@@ -894,6 +894,11 @@ JPC_API JPC_Vec3 JPC_FixedConstraint_GetTotalLambdaRotation(const JPC_FixedConst
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// SixDOFConstraint -> TwoBodyConstraint -> Constraint -> RefTarget<Constraint>
+
+OPAQUE_WRAPPER(JPC_SixDOFConstraint, JPH::SixDOFConstraint);
+
+////////////////////////////////////////////////////////////////////////////////
 // ConstraintSettings
 
 JPC_IMPL void JPC_ConstraintSettings_to_jpc(
