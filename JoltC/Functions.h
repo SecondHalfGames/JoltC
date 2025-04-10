@@ -603,7 +603,7 @@ typedef struct JPC_ConstraintSettings {
 JPC_API void JPC_ConstraintSettings_default(JPC_ConstraintSettings* settings);
 
 ////////////////////////////////////////////////////////////////////////////////
-// FixedConstraintSettings
+// FixedConstraintSettings -> TwoBodyConstraintSettings -> ConstraintSettings
 
 typedef struct JPC_FixedConstraintSettings {
 	JPC_ConstraintSettings ConstraintSettings;
@@ -626,6 +626,39 @@ typedef struct JPC_FixedConstraintSettings {
 JPC_API void JPC_FixedConstraintSettings_default(JPC_FixedConstraintSettings* settings);
 JPC_API JPC_Constraint* JPC_FixedConstraintSettings_Create(
 	const JPC_FixedConstraintSettings* self,
+	JPC_Body* inBody1,
+	JPC_Body* inBody2);
+
+////////////////////////////////////////////////////////////////////////////////
+// SixDOFConstraintSettings -> TwoBodyConstraintSettings -> ConstraintSettings
+
+typedef struct JPC_SixDOFConstraintSettings {
+	JPC_ConstraintSettings ConstraintSettings;
+
+	// TwoBodyConstraintSettings: no extra members
+
+	// SixDOFConstraintSettings
+	JPC_ConstraintSpace Space;
+
+	JPC_RVec3 Position1;
+	JPC_Vec3 AxisX1;
+	JPC_Vec3 AxisY1;
+
+	JPC_RVec3 Position2;
+	JPC_Vec3 AxisX2;
+	JPC_Vec3 AxisY2;
+
+	float MaxFriction[6];
+
+	float LimitMin[6];
+	float LimitMax[6];
+
+	// TODO: LimitsSpringSettings
+} JPC_SixDOFConstraintSettings;
+
+JPC_API void JPC_SixDOFConstraintSettings_default(JPC_SixDOFConstraintSettings* settings);
+JPC_API JPC_Constraint* JPC_SixDOFConstraintSettings_Create(
+	const JPC_SixDOFConstraintSettings* self,
 	JPC_Body* inBody1,
 	JPC_Body* inBody2);
 

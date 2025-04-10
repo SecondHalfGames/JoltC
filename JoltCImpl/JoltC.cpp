@@ -23,6 +23,8 @@
 #include <Jolt/Physics/Collision/ShapeCast.h>
 #include <Jolt/Physics/Collision/SimShapeFilter.h>
 #include <Jolt/Physics/Constraints/FixedConstraint.h>
+#include <Jolt/Physics/Constraints/SixDOFConstraint.h>
+#include <Jolt/Physics/Constraints/ConstraintPart/SwingTwistConstraintPart.h>
 #include <Jolt/Physics/PhysicsSettings.h>
 #include <Jolt/Physics/PhysicsSystem.h>
 #include <Jolt/RegisterTypes.h>
@@ -843,7 +845,7 @@ JPC_API void JPC_ConstraintSettings_default(JPC_ConstraintSettings* settings) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// FixedConstraintSettings
+// FixedConstraintSettings -> TwoBodyConstraintSettings -> ConstraintSettings
 
 JPC_IMPL void JPC_FixedConstraintSettings_to_jpc(
 	JPC_FixedConstraintSettings* outJpc,
@@ -889,6 +891,65 @@ JPC_API JPC_Constraint* JPC_FixedConstraintSettings_Create(
 {
 	JPH::FixedConstraintSettings jphSettings;
 	JPC_FixedConstraintSettings_to_jph(self, &jphSettings);
+
+	return to_jpc(jphSettings.Create(*to_jph(inBody1), *to_jph(inBody2)));
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// SixDOFConstraintSettings -> TwoBodyConstraintSettings -> ConstraintSettings
+
+JPC_IMPL void JPC_SixDOFConstraintSettings_to_jpc(
+	JPC_SixDOFConstraintSettings* outJpc,
+	const JPH::SixDOFConstraintSettings* inJph)
+{
+	JPC_ConstraintSettings_to_jpc(&outJpc->ConstraintSettings, inJph);
+
+	outJpc->Space = static_cast<JPC_ConstraintSpace>(inJph->mSpace);
+	outJpc->Position1 = to_jpc(inJph->mPosition1);
+	outJpc->AxisX1 = to_jpc(inJph->mAxisX1);
+	outJpc->AxisY1 = to_jpc(inJph->mAxisY1);
+	outJpc->Position2 = to_jpc(inJph->mPosition2);
+	outJpc->AxisX2 = to_jpc(inJph->mAxisX2);
+	outJpc->AxisY2 = to_jpc(inJph->mAxisY2);
+	std::copy(inJph->mMaxFriction, inJph->mMaxFriction + 6, outJpc->MaxFriction);
+	std::copy(inJph->mLimitMin, inJph->mLimitMin + 6, outJpc->LimitMin);
+	std::copy(inJph->mLimitMax, inJph->mLimitMax + 6, outJpc->LimitMax);
+
+	// TODO: LimitsSpringSettings
+}
+
+JPC_IMPL void JPC_SixDOFConstraintSettings_to_jph(
+	const JPC_SixDOFConstraintSettings* inJpc,
+	JPH::SixDOFConstraintSettings* outJph)
+{
+	JPC_ConstraintSettings_to_jph(&inJpc->ConstraintSettings, outJph);
+
+	outJph->mSpace = static_cast<JPH::EConstraintSpace>(inJpc->Space);
+	outJph->mPosition1 = to_jph(inJpc->Position1);
+	outJph->mAxisX1 = to_jph(inJpc->AxisX1);
+	outJph->mAxisY1 = to_jph(inJpc->AxisY1);
+	outJph->mPosition2 = to_jph(inJpc->Position2);
+	outJph->mAxisX2 = to_jph(inJpc->AxisX2);
+	outJph->mAxisY2 = to_jph(inJpc->AxisY2);
+	std::copy(inJpc->MaxFriction, inJpc->MaxFriction + 6, outJph->mMaxFriction);
+	std::copy(inJpc->LimitMin, inJpc->LimitMin + 6, outJph->mLimitMin);
+	std::copy(inJpc->LimitMax, inJpc->LimitMax + 6, outJph->mLimitMax);
+
+	// TODO: LimitsSpringSettings
+}
+
+JPC_API void JPC_SixDOFConstraintSettings_default(JPC_SixDOFConstraintSettings* settings) {
+	JPH::SixDOFConstraintSettings defaultSettings{};
+	JPC_SixDOFConstraintSettings_to_jpc(settings, &defaultSettings);
+}
+
+JPC_API JPC_Constraint* JPC_SixDOFConstraintSettings_Create(
+	const JPC_SixDOFConstraintSettings* self,
+	JPC_Body* inBody1,
+	JPC_Body* inBody2)
+{
+	JPH::SixDOFConstraintSettings jphSettings;
+	JPC_SixDOFConstraintSettings_to_jph(self, &jphSettings);
 
 	return to_jpc(jphSettings.Create(*to_jph(inBody1), *to_jph(inBody2)));
 }
