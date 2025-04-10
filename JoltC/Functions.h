@@ -582,9 +582,9 @@ JPC_API const char* JPC_String_c_str(JPC_String* self);
 
 typedef struct JPC_Constraint JPC_Constraint;
 
-JPC_API uint32_t JPC_Shape_GetRefCount(const JPC_Shape* self);
-JPC_API void JPC_Shape_AddRef(const JPC_Shape* self);
-JPC_API void JPC_Shape_Release(const JPC_Shape* self);
+JPC_API uint32_t JPC_Constraint_GetRefCount(const JPC_Constraint* self);
+JPC_API void JPC_Constraint_AddRef(const JPC_Constraint* self);
+JPC_API void JPC_Constraint_Release(const JPC_Constraint* self);
 
 JPC_API void JPC_Constraint_delete(JPC_Constraint* self);
 
