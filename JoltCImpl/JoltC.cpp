@@ -864,20 +864,33 @@ JPC_API void JPC_Constraint_NotifyShapeChanged(JPC_Constraint* self, JPC_BodyID 
 
 OPAQUE_WRAPPER(JPC_TwoBodyConstraint, JPH::TwoBodyConstraint);
 
-JPC_API JPC_Body* JPC_TwoBodyConstraint_GetBody1(JPC_TwoBodyConstraint* self) {
+JPC_API JPC_Body* JPC_TwoBodyConstraint_GetBody1(const JPC_TwoBodyConstraint* self) {
 	return to_jpc(to_jph(self)->GetBody1());
 }
 
-JPC_API JPC_Body* JPC_TwoBodyConstraint_GetBody2(JPC_TwoBodyConstraint* self) {
+JPC_API JPC_Body* JPC_TwoBodyConstraint_GetBody2(const JPC_TwoBodyConstraint* self) {
 	return to_jpc(to_jph(self)->GetBody2());
 }
 
-JPC_API JPC_Mat44 JPC_TwoBodyConstraint_GetConstraintToBody1Matrix(JPC_TwoBodyConstraint* self) {
+JPC_API JPC_Mat44 JPC_TwoBodyConstraint_GetConstraintToBody1Matrix(const JPC_TwoBodyConstraint* self) {
 	return to_jpc(to_jph(self)->GetConstraintToBody1Matrix());
 }
 
-JPC_API JPC_Mat44 JPC_TwoBodyConstraint_GetConstraintToBody2Matrix(JPC_TwoBodyConstraint* self) {
+JPC_API JPC_Mat44 JPC_TwoBodyConstraint_GetConstraintToBody2Matrix(const JPC_TwoBodyConstraint* self) {
 	return to_jpc(to_jph(self)->GetConstraintToBody2Matrix());
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// FixedConstraint -> TwoBodyConstraint -> Constraint -> RefTarget<Constraint>
+
+OPAQUE_WRAPPER(JPC_FixedConstraint, JPH::FixedConstraint);
+
+JPC_API JPC_Vec3 JPC_FixedConstraint_GetTotalLambdaPosition(const JPC_FixedConstraint* self) {
+	return to_jpc(to_jph(self)->GetTotalLambdaPosition());
+}
+
+JPC_API JPC_Vec3 JPC_FixedConstraint_GetTotalLambdaRotation(const JPC_FixedConstraint* self) {
+	return to_jpc(to_jph(self)->GetTotalLambdaRotation());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
