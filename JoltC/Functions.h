@@ -613,6 +613,12 @@ JPC_API void JPC_Constraint_NotifyShapeChanged(JPC_Constraint* self, JPC_BodyID 
 
 typedef struct JPC_TwoBodyConstraint JPC_TwoBodyConstraint;
 
+JPC_API JPC_Body* JPC_TwoBodyConstraint_GetBody1(JPC_TwoBodyConstraint* self);
+JPC_API JPC_Body* JPC_TwoBodyConstraint_GetBody2(JPC_TwoBodyConstraint* self);
+
+JPC_API JPC_Mat44 JPC_TwoBodyConstraint_GetConstraintToBody1Matrix(JPC_TwoBodyConstraint* self);
+JPC_API JPC_Mat44 JPC_TwoBodyConstraint_GetConstraintToBody2Matrix(JPC_TwoBodyConstraint* self);
+
 ////////////////////////////////////////////////////////////////////////////////
 // ConstraintSettings
 
