@@ -622,7 +622,7 @@ JPC_API JPC_Mat44 JPC_TwoBodyConstraint_GetConstraintToBody2Matrix(const JPC_Two
 ////////////////////////////////////////////////////////////////////////////////
 // FixedConstraint -> TwoBodyConstraint -> Constraint -> RefTarget<Constraint>
 
-typedef struct JPC_FixedConstraint JPC_FixedContraint;
+typedef struct JPC_FixedConstraint JPC_FixedConstraint;
 
 JPC_API JPC_Vec3 JPC_FixedConstraint_GetTotalLambdaPosition(const JPC_FixedConstraint* self);
 JPC_API JPC_Vec3 JPC_FixedConstraint_GetTotalLambdaRotation(const JPC_FixedConstraint* self);
@@ -630,7 +630,7 @@ JPC_API JPC_Vec3 JPC_FixedConstraint_GetTotalLambdaRotation(const JPC_FixedConst
 ////////////////////////////////////////////////////////////////////////////////
 // SixDOFConstraint -> TwoBodyConstraint -> Constraint -> RefTarget<Constraint>
 
-typedef struct JPC_SixDOFConstraint JPC_SixDOFContraint;
+typedef struct JPC_SixDOFConstraint JPC_SixDOFConstraint;
 
 JPC_API JPC_Vec3 JPC_SixDOFConstraint_GetTranslationLimitsMin(const JPC_SixDOFConstraint* self);
 JPC_API JPC_Vec3 JPC_SixDOFConstraint_GetTranslationLimitsMax(const JPC_SixDOFConstraint* self);
