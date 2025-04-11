@@ -898,6 +898,114 @@ JPC_API JPC_Vec3 JPC_FixedConstraint_GetTotalLambdaRotation(const JPC_FixedConst
 
 OPAQUE_WRAPPER(JPC_SixDOFConstraint, JPH::SixDOFConstraint);
 
+JPC_API JPC_Vec3 JPC_SixDOFConstraint_GetTranslationLimitsMin(const JPC_SixDOFConstraint* self) {
+	return to_jpc(to_jph(self)->GetTranslationLimitsMin());
+}
+
+JPC_API JPC_Vec3 JPC_SixDOFConstraint_GetTranslationLimitsMax(const JPC_SixDOFConstraint* self) {
+	return to_jpc(to_jph(self)->GetTranslationLimitsMax());
+}
+
+JPC_API void JPC_SixDOFConstraint_SetTranslationLimits(JPC_SixDOFConstraint* self, JPC_Vec3 inLimitMin, JPC_Vec3 inLimitMax) {
+	to_jph(self)->SetTranslationLimits(to_jph(inLimitMin), to_jph(inLimitMax));
+}
+
+JPC_API JPC_Vec3 JPC_SixDOFConstraint_GetRotationLimitsMin(const JPC_SixDOFConstraint* self) {
+	return to_jpc(to_jph(self)->GetRotationLimitsMin());
+}
+
+JPC_API JPC_Vec3 JPC_SixDOFConstraint_GetRotationLimitsMax(const JPC_SixDOFConstraint* self) {
+	return to_jpc(to_jph(self)->GetRotationLimitsMax());
+}
+
+JPC_API void JPC_SixDOFConstraint_SetRotationLimits(JPC_SixDOFConstraint* self, JPC_Vec3 inLimitMin, JPC_Vec3 inLimitMax) {
+	to_jph(self)->SetRotationLimits(to_jph(inLimitMin), to_jph(inLimitMax));
+}
+
+JPC_API float JPC_SixDOFConstraint_GetLimitsMin(const JPC_SixDOFConstraint* self, JPC_SixDOFConstraint_Axis inAxis) {
+	return to_jph(self)->GetLimitsMin((JPH::SixDOFConstraint::EAxis)inAxis);
+}
+
+JPC_API float JPC_SixDOFConstraint_GetLimitsMax(const JPC_SixDOFConstraint* self, JPC_SixDOFConstraint_Axis inAxis) {
+	return to_jph(self)->GetLimitsMax((JPH::SixDOFConstraint::EAxis)inAxis);
+}
+
+JPC_API bool JPC_SixDOFConstraint_IsFreeAxis(const JPC_SixDOFConstraint* self, JPC_SixDOFConstraint_Axis inAxis);
+
+// const SpringSettings & GetLimitsSpringSettings(JPC_SixDOFConstraint_Axis inAxis) const { JPH_ASSERT(inAxis < JPC_SixDOFConstraint_Axis::NumTranslation); return mLimitsSpringSettings[inAxis]; }
+// void SetLimitsSpringSettings(JPC_SixDOFConstraint_Axis inAxis, const SpringSettings& inLimitsSpringSettings) { JPH_ASSERT(inAxis < JPC_SixDOFConstraint_Axis::NumTranslation); mLimitsSpringSettings[inAxis] = inLimitsSpringSettings; CacheHasSpringLimits(); }
+
+JPC_API void JPC_SixDOFConstraint_SetMaxFriction(JPC_SixDOFConstraint* self, JPC_SixDOFConstraint_Axis inAxis, float inFriction) {
+	to_jph(self)->SetMaxFriction((JPH::SixDOFConstraint::EAxis)inAxis, inFriction);
+}
+
+JPC_API float JPC_SixDOFConstraint_GetMaxFriction(const JPC_SixDOFConstraint* self, JPC_SixDOFConstraint_Axis inAxis) {
+	return to_jph(self)->GetMaxFriction((JPH::SixDOFConstraint::EAxis)inAxis);
+}
+
+JPC_API JPC_Quat JPC_SixDOFConstraint_GetRotationInConstraintSpace(const JPC_SixDOFConstraint* self) {
+	return to_jpc(to_jph(self)->GetRotationInConstraintSpace());
+}
+
+/// Motor settings
+// MotorSettings & GetMotorSettings(EAxis inAxis)
+// const MotorSettings & GetMotorSettings(EAxis inAxis) const
+
+// void SetMotorState(EAxis inAxis, EMotorState inState);
+// EMotorState GetMotorState(EAxis inAxis) const
+
+JPC_API JPC_Vec3 JPC_SixDOFConstraint_GetTargetVelocityCS(const JPC_SixDOFConstraint* self) {
+	return to_jpc(to_jph(self)->GetTargetVelocityCS());
+}
+
+JPC_API void JPC_SixDOFConstraint_SetTargetVelocityCS(JPC_SixDOFConstraint* self, JPC_Vec3 inVelocity) {
+	to_jph(self)->SetTargetVelocityCS(to_jph(inVelocity));
+}
+
+JPC_API JPC_Vec3 JPC_SixDOFConstraint_GetTargetAngularVelocityCS(const JPC_SixDOFConstraint* self) {
+	return to_jpc(to_jph(self)->GetTargetAngularVelocityCS());
+}
+
+JPC_API void JPC_SixDOFConstraint_SetTargetAngularVelocityCS(JPC_SixDOFConstraint* self, JPC_Vec3 inAngularVelocity) {
+	to_jph(self)->SetTargetAngularVelocityCS(to_jph(inAngularVelocity));
+}
+
+JPC_API JPC_Vec3 JPC_SixDOFConstraint_GetTargetPositionCS(const JPC_SixDOFConstraint* self) {
+	return to_jpc(to_jph(self)->GetTargetPositionCS());
+}
+
+JPC_API void JPC_SixDOFConstraint_SetTargetPositionCS(JPC_SixDOFConstraint* self, JPC_Vec3 inPosition) {
+	to_jph(self)->SetTargetPositionCS(to_jph(inPosition));
+}
+
+JPC_API JPC_Quat JPC_SixDOFConstraint_GetTargetOrientationCS(const JPC_SixDOFConstraint* self) {
+	return to_jpc(to_jph(self)->GetTargetOrientationCS());
+}
+
+JPC_API void JPC_SixDOFConstraint_SetTargetOrientationCS(JPC_SixDOFConstraint* self, JPC_Quat inOrientation) {
+	to_jph(self)->SetTargetOrientationCS(to_jph(inOrientation));
+}
+
+JPC_API void JPC_SixDOFConstraint_SetTargetOrientationBS(JPC_SixDOFConstraint* self, JPC_Quat inOrientation) {
+	to_jph(self)->SetTargetOrientationBS(to_jph(inOrientation));
+}
+
+JPC_API JPC_Vec3 JPC_SixDOFConstraint_GetTotalLambdaPosition(JPC_SixDOFConstraint* self) {
+	return to_jpc(to_jph(self)->GetTotalLambdaPosition());
+}
+
+JPC_API JPC_Vec3 JPC_SixDOFConstraint_GetTotalLambdaRotation(JPC_SixDOFConstraint* self) {
+	return to_jpc(to_jph(self)->GetTotalLambdaRotation());
+}
+
+JPC_API JPC_Vec3 JPC_SixDOFConstraint_GetTotalLambdaMotorTranslation(JPC_SixDOFConstraint* self) {
+	return to_jpc(to_jph(self)->GetTotalLambdaMotorTranslation());
+}
+
+JPC_API JPC_Vec3 JPC_SixDOFConstraint_GetTotalLambdaMotorRotation(JPC_SixDOFConstraint* self) {
+	return to_jpc(to_jph(self)->GetTotalLambdaMotorRotation());
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 // ConstraintSettings
 
