@@ -356,8 +356,8 @@ public:
 		return fns.CanCollide(self, &jpcGroup1, &jpcGroup2);
 	}
 
-	void SaveBinaryState(JPH::StreamOut &inStream) const override {}
-	void RestoreBinaryState(JPH::StreamIn &inStream) override {}
+	void SaveBinaryState([[maybe_unused]] JPH::StreamOut &inStream) const override {}
+	void RestoreBinaryState([[maybe_unused]] JPH::StreamIn &inStream) override {}
 
 private:
 	const void* self;
