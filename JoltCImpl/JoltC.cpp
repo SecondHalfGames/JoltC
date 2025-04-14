@@ -2485,6 +2485,14 @@ JPC_API void JPC_PhysicsSystem_DrawBodies(
 	to_jph(self)->DrawBodies(to_jph(*inSettings), to_jph(inRenderer), nullptr);
 }
 
+JPC_API void JPC_PhysicsSystem_DrawConstraints(
+	JPC_PhysicsSystem* self,
+	JPC_DebugRendererSimple* inRenderer)
+{
+	to_jph(self)->DrawConstraints(to_jph(inRenderer));
+}
+
+
 JPC_API void JPC_PhysicsSystem_SetSimShapeFilter(
 	JPC_PhysicsSystem* self,
 	const JPC_SimShapeFilter* inShapeFilter)
