@@ -917,9 +917,11 @@ JPC_API uint JPC_MutableCompoundShape_AddShape(
 JPC_API void JPC_MutableCompoundShape_RemoveShape(JPC_MutableCompoundShape* self, uint inIndex);
 JPC_API void JPC_MutableCompoundShape_ModifyShape(JPC_MutableCompoundShape* self, uint inIndex, JPC_Vec3 inPosition, JPC_Quat inRotation);
 JPC_API void JPC_MutableCompoundShape_ModifyShape2(JPC_MutableCompoundShape* self, uint inIndex, JPC_Vec3 inPosition, JPC_Quat inRotation, const JPC_Shape* inShape);
+JPC_API void JPC_MutableCompoundShape_AdjustCenterOfMass(JPC_MutableCompoundShape* self);
 
 // TODO:
-// JPC_API void JPC_MutableCompoundShape_ModifyShapes(JPC_MutableCompoundShape* self);
+// JPC_API void JPC_MutableCompoundShape_ModifyShapes(JPC_MutableCompoundShape* self, ...);
+// JPC_API JPC_MutableCompoundShape* JPC_MutableCompoundShape_Clone(JPC_MutableCompoundShape* self);
 
 ////////////////////////////////////////////////////////////////////////////////
 // MutableCompoundShapeSettings -> CompoundShapeSettings -> ShapeSettings

@@ -1504,6 +1504,12 @@ JPC_API void JPC_MutableCompoundShape_ModifyShape2(JPC_MutableCompoundShape* sel
 	self_jph->ModifyShape(inIndex, to_jph(inPosition), to_jph(inRotation), to_jph(inShape));
 }
 
+JPC_API void JPC_MutableCompoundShape_AdjustCenterOfMass(JPC_MutableCompoundShape* self) {
+	JPH::MutableCompoundShape* self_jph = JPC_MutableCompoundShape_to_jph(self);
+
+	self_jph->AdjustCenterOfMass();
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 // MutableCompoundShapeSettings -> CompoundShapeSettings -> ShapeSettings
 
