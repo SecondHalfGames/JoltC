@@ -1190,6 +1190,13 @@ JPC_API JPC_Vec3 JPC_Shape_GetCenterOfMass(const JPC_Shape* self) {
 ////////////////////////////////////////////////////////////////////////////////
 // CompoundShape
 
+JPC_API const JPC_Shape* JPC_CompoundShape_GetSubShape_Shape(
+	const JPC_CompoundShape* self,
+	uint inIdx)
+{
+	return to_jpc(to_jph(self)->GetSubShape(inIdx).mShape.GetPtr());
+}
+
 JPC_API uint32_t JPC_CompoundShape_GetSubShapeIndexFromID(
 	const JPC_CompoundShape* self,
 	JPC_SubShapeID inSubShapeID,
