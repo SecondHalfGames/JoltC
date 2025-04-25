@@ -1183,6 +1183,10 @@ JPC_API JPC_ShapeSubType JPC_Shape_GetSubType(const JPC_Shape* self) {
 	return to_jpc(to_jph(self)->GetSubType());
 }
 
+JPC_API uint64_t JPC_Shape_GetSubShapeUserData(const JPC_Shape* self, JPC_SubShapeID inSubShapeID) {
+	return to_jph(self)->GetSubShapeUserData(JPC_SubShapeID_to_jph(inSubShapeID));
+}
+
 JPC_API JPC_Vec3 JPC_Shape_GetCenterOfMass(const JPC_Shape* self) {
 	return to_jpc(to_jph(self)->GetCenterOfMass());
 }
