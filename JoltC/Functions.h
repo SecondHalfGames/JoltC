@@ -782,6 +782,27 @@ JPC_API void JPC_TriangleShapeSettings_default(JPC_TriangleShapeSettings* object
 JPC_API bool JPC_TriangleShapeSettings_Create(const JPC_TriangleShapeSettings* self, JPC_Shape** outShape, JPC_String** outError);
 
 ////////////////////////////////////////////////////////////////////////////////
+// MeshShapeSettings -> ShapeSettings
+
+typedef struct JPC_MeshShapeSettings {
+	// ShapeSettings
+	uint64_t UserData;
+
+	// MeshShapeSettings
+	JPC_Float3* TriangleVertices;
+	size_t TriangleVerticesLen;
+	JPC_IndexedTriangle* IndexedTriangles;
+	size_t IndexedTrianglesLen;
+	// PhysicsMaterialList				mMaterials;
+	// uint							mMaxTrianglesPerLeaf = 8;
+	// float							mActiveEdgeCosThresholdAngle = 0.996195f;
+	// bool							mPerTriangleUserData = false;
+} JPC_MeshShapeSettings;
+
+JPC_API void JPC_MeshShapeSettings_default(JPC_MeshShapeSettings* object);
+JPC_API bool JPC_MeshShapeSettings_Create(const JPC_MeshShapeSettings* self, JPC_Shape** outShape, JPC_String** outError);
+
+////////////////////////////////////////////////////////////////////////////////
 // BoxShapeSettings -> ConvexShapeSettings -> ShapeSettings
 
 typedef struct JPC_BoxShapeSettings {

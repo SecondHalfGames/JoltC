@@ -16,15 +16,16 @@
 #include <Jolt/Physics/Collision/Shape/CompoundShape.h>
 #include <Jolt/Physics/Collision/Shape/ConvexHullShape.h>
 #include <Jolt/Physics/Collision/Shape/CylinderShape.h>
+#include <Jolt/Physics/Collision/Shape/MeshShape.h>
 #include <Jolt/Physics/Collision/Shape/MutableCompoundShape.h>
 #include <Jolt/Physics/Collision/Shape/SphereShape.h>
 #include <Jolt/Physics/Collision/Shape/StaticCompoundShape.h>
 #include <Jolt/Physics/Collision/Shape/TriangleShape.h>
 #include <Jolt/Physics/Collision/ShapeCast.h>
 #include <Jolt/Physics/Collision/SimShapeFilter.h>
+#include <Jolt/Physics/Constraints/ConstraintPart/SwingTwistConstraintPart.h>
 #include <Jolt/Physics/Constraints/FixedConstraint.h>
 #include <Jolt/Physics/Constraints/SixDOFConstraint.h>
-#include <Jolt/Physics/Constraints/ConstraintPart/SwingTwistConstraintPart.h>
 #include <Jolt/Physics/PhysicsSettings.h>
 #include <Jolt/Physics/PhysicsSystem.h>
 #include <Jolt/RegisterTypes.h>
@@ -1263,6 +1264,49 @@ JPC_API void JPC_TriangleShapeSettings_default(JPC_TriangleShapeSettings* object
 JPC_API bool JPC_TriangleShapeSettings_Create(const JPC_TriangleShapeSettings* self, JPC_Shape** outShape, JPC_String** outError) {
 	JPH::TriangleShapeSettings settings;
 	to_jph(self, &settings);
+
+	return HandleShapeResult(settings.Create(), outShape, outError);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// MeshShapeSettings
+
+JPC_IMPL void JPC_MeshShapeSettings_to_jpc_borrowed(
+	JPC_MeshShapeSettings* outJpc,
+	const JPH::MeshShapeSettings* inJph)
+{
+	outJpc->TriangleVertices = (JPC_Float3*)inJph->mTriangleVertices.data();
+	outJpc->TriangleVerticesLen = inJph->mTriangleVertices.size();
+	outJpc->IndexedTriangles = (JPC_IndexedTriangle*)inJph->mIndexedTriangles.data();
+	outJpc->IndexedTrianglesLen = inJph->mIndexedTriangles.size();
+}
+
+JPC_IMPL void JPC_MeshShapeSettings_to_jph(
+	const JPC_MeshShapeSettings* inJpc,
+	JPH::MeshShapeSettings* outJph)
+{
+	auto triangleVertices = (const JPH::Float3*)inJpc->TriangleVertices;
+	outJph->mTriangleVertices = JPH::VertexList(triangleVertices, triangleVertices + inJpc->TriangleVerticesLen);
+
+	auto indexedTriangles = (const JPH::IndexedTriangle*)inJpc->IndexedTriangles;
+	outJph->mIndexedTriangles = JPH::IndexedTriangleList(indexedTriangles, indexedTriangles + inJpc->IndexedTrianglesLen);
+}
+
+JPC_API void JPC_MeshShapeSettings_default(JPC_MeshShapeSettings* object) {
+	JPH::MeshShapeSettings settings;
+	JPC_MeshShapeSettings_to_jpc_borrowed(object, &settings);
+
+	// Overwrite all pointers and lengths so that the default value doesn't
+	// contain pointers to freed memory.
+	object->TriangleVertices = nullptr;
+	object->TriangleVerticesLen = 0;
+	object->IndexedTriangles = nullptr;
+	object->IndexedTrianglesLen = 0;
+}
+
+JPC_API bool JPC_MeshShapeSettings_Create(const JPC_MeshShapeSettings* self, JPC_Shape** outShape, JPC_String** outError) {
+	JPH::MeshShapeSettings settings;
+	JPC_MeshShapeSettings_to_jph(self, &settings);
 
 	return HandleShapeResult(settings.Create(), outShape, outError);
 }
