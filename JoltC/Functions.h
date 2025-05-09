@@ -1307,7 +1307,7 @@ typedef struct JPC_NarrowPhaseQuery_CastShapeArgs {
 	const JPC_BroadPhaseLayerFilter *BroadPhaseLayerFilter;
 	const JPC_ObjectLayerFilter *ObjectLayerFilter;
 	const JPC_BodyFilter *BodyFilter;
-	// const JPC_ShapeFilter *ShapeFilter;
+	const JPC_ShapeFilter *ShapeFilter;
 } JPC_NarrowPhaseQuery_CastShapeArgs;
 
 JPC_API void JPC_NarrowPhaseQuery_CastShape(const JPC_NarrowPhaseQuery* self, JPC_NarrowPhaseQuery_CastShapeArgs* args);

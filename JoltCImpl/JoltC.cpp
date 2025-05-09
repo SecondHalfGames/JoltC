@@ -2451,9 +2451,9 @@ JPC_API void JPC_NarrowPhaseQuery_CastShape(const JPC_NarrowPhaseQuery* self, JP
 
 	JPH::ShapeFilter defaultShapeFilter{};
 	const JPH::ShapeFilter* shapeFilter = &defaultShapeFilter;
-	// if (args->ShapeFilter != nullptr) {
-	// 	shapeFilter = to_jph(args->ShapeFilter);
-	// }
+	if (args->ShapeFilter != nullptr) {
+		shapeFilter = to_jph(args->ShapeFilter);
+	}
 
 	to_jph(self)->CastShape(
 		to_jph(args->ShapeCast),
