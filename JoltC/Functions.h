@@ -343,6 +343,10 @@ JPC_API void JPC_BodyFilter_delete(JPC_BodyFilter* object);
 
 typedef struct JPC_ShapeFilterFns {
 	bool (*ShouldCollide)(const void *self, const JPC_Shape *inShape2, JPC_SubShapeID inSubShapeIDOfShape2);
+
+	bool (*ShouldCollideTwoShapes)(const void *self,
+		const JPC_Shape *inShape1, JPC_SubShapeID inSubShapeIDOfShape1,
+		const JPC_Shape *inShape2, JPC_SubShapeID inSubShapeIDOfShape2);
 } JPC_ShapeFilterFns;
 
 typedef struct JPC_ShapeFilter JPC_ShapeFilter;

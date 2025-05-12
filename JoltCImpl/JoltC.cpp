@@ -549,6 +549,19 @@ public:
 		return fns.ShouldCollide(self, to_jpc(inShape2), to_jpc(inSubShapeIDOfShape2));
 	}
 
+	virtual bool ShouldCollide(
+		const JPH::Shape *inShape1, const JPH::SubShapeID &inSubShapeIDOfShape1,
+		const JPH::Shape *inShape2, const JPH::SubShapeID &inSubShapeIDOfShape2) const override
+	{
+		if (fns.ShouldCollideTwoShapes == nullptr) {
+			return true;
+		}
+
+		return fns.ShouldCollideTwoShapes(self,
+			to_jpc(inShape1), to_jpc(inSubShapeIDOfShape1),
+			to_jpc(inShape2), to_jpc(inSubShapeIDOfShape2));
+	}
+
 private:
 	const void* self;
 	JPC_ShapeFilterFns fns;
