@@ -1275,6 +1275,8 @@ JPC_IMPL void JPC_MeshShapeSettings_to_jpc_borrowed(
 	JPC_MeshShapeSettings* outJpc,
 	const JPH::MeshShapeSettings* inJph)
 {
+	outJpc->UserData = inJph->mUserData;
+
 	outJpc->TriangleVertices = (JPC_Float3*)inJph->mTriangleVertices.data();
 	outJpc->TriangleVerticesLen = inJph->mTriangleVertices.size();
 	outJpc->IndexedTriangles = (JPC_IndexedTriangle*)inJph->mIndexedTriangles.data();
@@ -1285,6 +1287,8 @@ JPC_IMPL void JPC_MeshShapeSettings_to_jph(
 	const JPC_MeshShapeSettings* inJpc,
 	JPH::MeshShapeSettings* outJph)
 {
+	outJph->mUserData = inJpc->UserData;
+
 	auto triangleVertices = (const JPH::Float3*)inJpc->TriangleVertices;
 	outJph->mTriangleVertices = JPH::VertexList(triangleVertices, triangleVertices + inJpc->TriangleVerticesLen);
 
