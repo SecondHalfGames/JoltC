@@ -26,6 +26,7 @@
 #include <Jolt/Physics/Constraints/ConstraintPart/SwingTwistConstraintPart.h>
 #include <Jolt/Physics/Constraints/FixedConstraint.h>
 #include <Jolt/Physics/Constraints/SixDOFConstraint.h>
+#include <Jolt/Physics/Constraints/HingeConstraint.h>
 #include <Jolt/Physics/PhysicsSettings.h>
 #include <Jolt/Physics/PhysicsSystem.h>
 #include <Jolt/RegisterTypes.h>
@@ -1161,6 +1162,66 @@ JPC_API JPC_Constraint* JPC_SixDOFConstraintSettings_Create(
 	JPC_SixDOFConstraintSettings_to_jph(self, &jphSettings);
 
 	JPH::SixDOFConstraint* outJph = new JPH::SixDOFConstraint(*to_jph(inBody1), *to_jph(inBody2), jphSettings);
+	return (JPC_Constraint*)outJph;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// HingeConstraintSettings -> TwoBodyConstraintSettings -> ConstraintSettings
+
+JPC_IMPL void JPC_HingeConstraintSettings_to_jpc(
+	JPC_HingeConstraintSettings* outJpc,
+	const JPH::HingeConstraintSettings* inJph)
+{
+	JPC_ConstraintSettings_to_jpc(&outJpc->ConstraintSettings, inJph);
+
+	outJpc->Space = static_cast<JPC_ConstraintSpace>(inJph->mSpace);
+	outJpc->Point1 = to_jpc(inJph->mPoint1);
+	outJpc->HingeAxis1 = to_jpc(inJph->mHingeAxis1);
+	outJpc->NormalAxis1 = to_jpc(inJph->mNormalAxis1);
+	outJpc->Point2 = to_jpc(inJph->mPoint2);
+	outJpc->HingeAxis2 = to_jpc(inJph->mHingeAxis2);
+	outJpc->NormalAxis2 = to_jpc(inJph->mNormalAxis2);
+	outJpc->LimitsMin = inJph->mLimitsMin;
+	outJpc->LimitsMax = inJph->mLimitsMax;
+	// TODO: Spring settings
+	outJpc->MaxFrictionTorque = inJph->mMaxFrictionTorque;
+	// TODO: Spring settings
+}
+
+JPC_IMPL void JPC_HingeConstraintSettings_to_jph(
+	const JPC_HingeConstraintSettings* inJpc,
+	JPH::HingeConstraintSettings* outJph)
+{
+	JPC_ConstraintSettings_to_jph(&inJpc->ConstraintSettings, outJph);
+
+	outJph->mSpace = static_cast<JPH::EConstraintSpace>(inJpc->Space);
+	outJph->mPoint1 = to_jph(inJpc->Point1);
+	outJph->mHingeAxis1 = to_jph(inJpc->HingeAxis1);
+	outJph->mNormalAxis1 = to_jph(inJpc->NormalAxis1);
+	outJph->mPoint2 = to_jph(inJpc->Point2);
+	outJph->mHingeAxis2 = to_jph(inJpc->HingeAxis2);
+	outJph->mNormalAxis2 = to_jph(inJpc->NormalAxis2);
+	outJph->mLimitsMin = inJpc->LimitsMin;
+	outJph->mLimitsMax = inJpc->LimitsMax;
+	// TODO: Spring settings
+	outJph->mMaxFrictionTorque = inJpc->MaxFrictionTorque;
+	// TODO: Motor settings
+}
+
+JPC_API void JPC_HingeConstraintSettings_default(JPC_HingeConstraintSettings* settings) {
+	JPH::HingeConstraintSettings defaultSettings{};
+	JPC_HingeConstraintSettings_to_jpc(settings, &defaultSettings);
+}
+
+JPC_API JPC_Constraint* JPC_HingeConstraintSettings_Create(
+	const JPC_HingeConstraintSettings* self,
+	JPC_Body* inBody1,
+	JPC_Body* inBody2)
+{
+	JPH::HingeConstraintSettings jphSettings;
+	JPC_HingeConstraintSettings_to_jph(self, &jphSettings);
+
+	JPH::HingeConstraint* outJph = new JPH::HingeConstraint(*to_jph(inBody1), *to_jph(inBody2), jphSettings);
 	return (JPC_Constraint*)outJph;
 }
 

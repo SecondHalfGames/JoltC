@@ -691,6 +691,11 @@ JPC_API JPC_Vec3 JPC_SixDOFConstraint_GetTotalLambdaMotorTranslation(JPC_SixDOFC
 JPC_API JPC_Vec3 JPC_SixDOFConstraint_GetTotalLambdaMotorRotation(JPC_SixDOFConstraint* self);
 
 ////////////////////////////////////////////////////////////////////////////////
+// HingeConstraint
+
+typedef struct JPC_HingeConstraint JPC_HingeConstraint;
+
+////////////////////////////////////////////////////////////////////////////////
 // ConstraintSettings
 
 typedef struct JPC_ConstraintSettings {
@@ -761,6 +766,38 @@ typedef struct JPC_SixDOFConstraintSettings {
 JPC_API void JPC_SixDOFConstraintSettings_default(JPC_SixDOFConstraintSettings* settings);
 JPC_API JPC_Constraint* JPC_SixDOFConstraintSettings_Create(
 	const JPC_SixDOFConstraintSettings* self,
+	JPC_Body* inBody1,
+	JPC_Body* inBody2);
+
+////////////////////////////////////////////////////////////////////////////////
+// HingeConstraintSettings -> TwoBodyConstraintSettings -> ConstraintSettings
+
+typedef struct JPC_HingeConstraintSettings {
+	JPC_ConstraintSettings ConstraintSettings;
+
+	// TwoBodyConstraintSettings: no extra members
+
+	// HingeConstraintSettings
+	JPC_ConstraintSpace Space;
+
+	JPC_RVec3 Point1;
+	JPC_Vec3 HingeAxis1;
+	JPC_Vec3 NormalAxis1;
+
+	JPC_RVec3 Point2;
+	JPC_Vec3 HingeAxis2;
+	JPC_Vec3 NormalAxis2;
+
+	float LimitsMin;
+	float LimitsMax;
+	// TODO: Spring settings
+	float MaxFrictionTorque;
+	// TODO: Motor settings
+} JPC_HingeConstraintSettings;
+
+JPC_API void JPC_HingeConstraintSettings_default(JPC_HingeConstraintSettings* settings);
+JPC_API JPC_Constraint* JPC_HingeConstraintSettings_Create(
+	const JPC_HingeConstraintSettings* self,
 	JPC_Body* inBody1,
 	JPC_Body* inBody2);
 
