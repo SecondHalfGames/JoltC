@@ -921,6 +921,12 @@ typedef struct JPC_SliderConstraintSettings {
 	// TODO: Motor settings
 } JPC_SliderConstraintSettings;
 
+JPC_API void JPC_SliderConstraintSettings_default(JPC_SliderConstraintSettings* settings);
+JPC_API JPC_Constraint* JPC_SliderConstraintSettings_Create(
+	const JPC_SliderConstraintSettings* self,
+	JPC_Body* inBody1,
+	JPC_Body* inBody2);
+
 ////////////////////////////////////////////////////////////////////////////////
 // TriangleShapeSettings
 
