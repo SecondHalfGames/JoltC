@@ -28,6 +28,7 @@
 #include <Jolt/Physics/Constraints/SixDOFConstraint.h>
 #include <Jolt/Physics/Constraints/HingeConstraint.h>
 #include <Jolt/Physics/Constraints/DistanceConstraint.h>
+#include <Jolt/Physics/Constraints/SliderConstraint.h>
 #include <Jolt/Physics/PhysicsSettings.h>
 #include <Jolt/Physics/PhysicsSystem.h>
 #include <Jolt/RegisterTypes.h>
@@ -1330,11 +1331,73 @@ JPC_API JPC_Constraint* JPC_DistanceConstraintSettings_Create(
 	const JPC_DistanceConstraintSettings* self,
 	JPC_Body* inBody1,
 	JPC_Body* inBody2)
-{
-	JPH::DistanceConstraintSettings jphSettings;
-	JPC_DistanceConstraintSettings_to_jph(self, &jphSettings);
+	{
+		JPH::DistanceConstraintSettings jphSettings;
+		JPC_DistanceConstraintSettings_to_jph(self, &jphSettings);
 
-	JPH::DistanceConstraint* outJph = new JPH::DistanceConstraint(*to_jph(inBody1), *to_jph(inBody2), jphSettings);
+		JPH::DistanceConstraint* outJph = new JPH::DistanceConstraint(*to_jph(inBody1), *to_jph(inBody2), jphSettings);
+		return (JPC_Constraint*)outJph;
+	}
+
+////////////////////////////////////////////////////////////////////////////////
+// SliderConstraintSettings -> TwoBodyConstraintSettings -> ConstraintSettings
+
+JPC_IMPL void JPC_SliderConstraintSettings_to_jpc(
+	JPC_SliderConstraintSettings* outJpc,
+	const JPH::SliderConstraintSettings* inJph)
+{
+	JPC_ConstraintSettings_to_jpc(&outJpc->ConstraintSettings, inJph);
+
+	outJpc->Space = static_cast<JPC_ConstraintSpace>(inJph->mSpace);
+	outJpc->AutoDetectPoint = inJph->mAutoDetectPoint;
+	outJpc->Point1 = to_jpc(inJph->mPoint1);
+	outJpc->SliderAxis1 = to_jpc(inJph->mSliderAxis1);
+	outJpc->NormalAxis1 = to_jpc(inJph->mNormalAxis1);
+	outJpc->Point2 = to_jpc(inJph->mPoint2);
+	outJpc->SliderAxis2 = to_jpc(inJph->mSliderAxis2);
+	outJpc->NormalAxis2 = to_jpc(inJph->mNormalAxis2);
+	outJpc->LimitsMin = inJph->mLimitsMin;
+	outJpc->LimitsMax = inJph->mLimitsMax;
+	// TODO: Spring settings
+	outJpc->MaxFrictionForce = inJph->mMaxFrictionForce;
+	// TODO: Spring settings
+}
+
+JPC_IMPL void JPC_SliderConstraintSettings_to_jph(
+	const JPC_SliderConstraintSettings* inJpc,
+	JPH::SliderConstraintSettings* outJph)
+{
+	JPC_ConstraintSettings_to_jph(&inJpc->ConstraintSettings, outJph);
+
+	outJph->mSpace = static_cast<JPH::EConstraintSpace>(inJpc->Space);
+	outJph->mAutoDetectPoint = inJpc->AutoDetectPoint;
+	outJph->mPoint1 = to_jph(inJpc->Point1);
+	outJph->mSliderAxis1 = to_jph(inJpc->SliderAxis1);
+	outJph->mNormalAxis1 = to_jph(inJpc->NormalAxis1);
+	outJph->mPoint2 = to_jph(inJpc->Point2);
+	outJph->mSliderAxis2 = to_jph(inJpc->SliderAxis2);
+	outJph->mNormalAxis2 = to_jph(inJpc->NormalAxis2);
+	outJph->mLimitsMin = inJpc->LimitsMin;
+	outJph->mLimitsMax = inJpc->LimitsMax;
+	// TODO: Spring settings
+	outJph->mMaxFrictionForce = inJpc->MaxFrictionForce;
+	// TODO: Motor settings
+}
+
+JPC_API void JPC_SliderConstraintSettings_default(JPC_SliderConstraintSettings* settings) {
+	JPH::SliderConstraintSettings defaultSettings{};
+	JPC_SliderConstraintSettings_to_jpc(settings, &defaultSettings);
+}
+
+JPC_API JPC_Constraint* JPC_SliderConstraintSettings_Create(
+	const JPC_SliderConstraintSettings* self,
+	JPC_Body* inBody1,
+	JPC_Body* inBody2)
+{
+	JPH::SliderConstraintSettings jphSettings;
+	JPC_SliderConstraintSettings_to_jph(self, &jphSettings);
+
+	JPH::SliderConstraint* outJph = new JPH::SliderConstraint(*to_jph(inBody1), *to_jph(inBody2), jphSettings);
 	return (JPC_Constraint*)outJph;
 }
 

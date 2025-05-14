@@ -895,6 +895,33 @@ JPC_API JPC_Constraint* JPC_DistanceConstraintSettings_Create(
 	JPC_Body* inBody2);
 
 ////////////////////////////////////////////////////////////////////////////////
+// SliderConstraintSettings -> TwoBodyConstraintSettings -> ConstraintSettings
+
+typedef struct JPC_SliderConstraintSettings {
+	JPC_ConstraintSettings ConstraintSettings;
+
+	// TwoBodyConstraintSettings: no extra members
+
+	// SliderConstraintSettings
+	JPC_ConstraintSpace Space;
+	bool AutoDetectPoint;
+
+	JPC_RVec3 Point1;
+	JPC_Vec3 SliderAxis1;
+	JPC_Vec3 NormalAxis1;
+
+	JPC_RVec3 Point2;
+	JPC_Vec3 SliderAxis2;
+	JPC_Vec3 NormalAxis2;
+
+	float LimitsMin;
+	float LimitsMax;
+	// TODO: Spring settings
+	float MaxFrictionForce;
+	// TODO: Motor settings
+} JPC_SliderConstraintSettings;
+
+////////////////////////////////////////////////////////////////////////////////
 // TriangleShapeSettings
 
 typedef struct JPC_TriangleShapeSettings {
