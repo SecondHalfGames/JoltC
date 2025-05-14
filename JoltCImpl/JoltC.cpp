@@ -1450,6 +1450,10 @@ JPC_API bool JPC_MeshShapeSettings_Create(const JPC_MeshShapeSettings* self, JPC
 	JPH::MeshShapeSettings settings;
 	JPC_MeshShapeSettings_to_jph(self, &settings);
 
+	// MeshShapeSettings calls Sanitize in its default constructor, but we don't
+	// have constructors in C. It's probably fine to always Sanitize.
+	settings.Sanitize();
+
 	return HandleShapeResult(settings.Create(), outShape, outError);
 }
 
