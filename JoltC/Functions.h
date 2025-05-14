@@ -870,6 +870,31 @@ JPC_API JPC_Constraint* JPC_HingeConstraintSettings_Create(
 	JPC_Body* inBody2);
 
 ////////////////////////////////////////////////////////////////////////////////
+// DistanceConstraintSettings -> TwoBodyConstraintSettings -> ConstraintSettings
+
+typedef struct JPC_DistanceConstraintSettings {
+	JPC_ConstraintSettings ConstraintSettings;
+
+	// TwoBodyConstraintSettings: no extra members
+
+	// DistanceConstraintSettings
+	JPC_ConstraintSpace Space;
+
+	JPC_RVec3 Point1;
+	JPC_RVec3 Point2;
+
+	float MinDistance;
+	float MaxDistance;
+	// TODO: Spring settings
+} JPC_DistanceConstraintSettings;
+
+JPC_API void JPC_DistanceConstraintSettings_default(JPC_DistanceConstraintSettings* settings);
+JPC_API JPC_Constraint* JPC_DistanceConstraintSettings_Create(
+	const JPC_DistanceConstraintSettings* self,
+	JPC_Body* inBody1,
+	JPC_Body* inBody2);
+
+////////////////////////////////////////////////////////////////////////////////
 // TriangleShapeSettings
 
 typedef struct JPC_TriangleShapeSettings {

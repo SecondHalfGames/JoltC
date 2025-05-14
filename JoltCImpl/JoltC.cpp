@@ -27,6 +27,7 @@
 #include <Jolt/Physics/Constraints/FixedConstraint.h>
 #include <Jolt/Physics/Constraints/SixDOFConstraint.h>
 #include <Jolt/Physics/Constraints/HingeConstraint.h>
+#include <Jolt/Physics/Constraints/DistanceConstraint.h>
 #include <Jolt/Physics/PhysicsSettings.h>
 #include <Jolt/Physics/PhysicsSystem.h>
 #include <Jolt/RegisterTypes.h>
@@ -1286,6 +1287,54 @@ JPC_API JPC_Constraint* JPC_HingeConstraintSettings_Create(
 	JPC_HingeConstraintSettings_to_jph(self, &jphSettings);
 
 	JPH::HingeConstraint* outJph = new JPH::HingeConstraint(*to_jph(inBody1), *to_jph(inBody2), jphSettings);
+	return (JPC_Constraint*)outJph;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// DistanceConstraintSettings -> TwoBodyConstraintSettings -> ConstraintSettings
+
+JPC_IMPL void JPC_DistanceConstraintSettings_to_jpc(
+	JPC_DistanceConstraintSettings* outJpc,
+	const JPH::DistanceConstraintSettings* inJph)
+{
+	JPC_ConstraintSettings_to_jpc(&outJpc->ConstraintSettings, inJph);
+
+	outJpc->Space = static_cast<JPC_ConstraintSpace>(inJph->mSpace);
+	outJpc->Point1 = to_jpc(inJph->mPoint1);
+	outJpc->Point2 = to_jpc(inJph->mPoint2);
+	outJpc->MinDistance = inJph->mMinDistance;
+	outJpc->MaxDistance = inJph->mMaxDistance;
+	// TODO: Spring settings
+}
+
+JPC_IMPL void JPC_DistanceConstraintSettings_to_jph(
+	const JPC_DistanceConstraintSettings* inJpc,
+	JPH::DistanceConstraintSettings* outJph)
+{
+	JPC_ConstraintSettings_to_jph(&inJpc->ConstraintSettings, outJph);
+
+	outJph->mSpace = static_cast<JPH::EConstraintSpace>(inJpc->Space);
+	outJph->mPoint1 = to_jph(inJpc->Point1);
+	outJph->mPoint2 = to_jph(inJpc->Point2);
+	outJph->mMinDistance = inJpc->MinDistance;
+	outJph->mMaxDistance = inJpc->MaxDistance;
+	// TODO: Spring settings
+}
+
+JPC_API void JPC_DistanceConstraintSettings_default(JPC_DistanceConstraintSettings* settings) {
+	JPH::DistanceConstraintSettings defaultSettings{};
+	JPC_DistanceConstraintSettings_to_jpc(settings, &defaultSettings);
+}
+
+JPC_API JPC_Constraint* JPC_DistanceConstraintSettings_Create(
+	const JPC_DistanceConstraintSettings* self,
+	JPC_Body* inBody1,
+	JPC_Body* inBody2)
+{
+	JPH::DistanceConstraintSettings jphSettings;
+	JPC_DistanceConstraintSettings_to_jph(self, &jphSettings);
+
+	JPH::DistanceConstraint* outJph = new JPH::DistanceConstraint(*to_jph(inBody1), *to_jph(inBody2), jphSettings);
 	return (JPC_Constraint*)outJph;
 }
 
