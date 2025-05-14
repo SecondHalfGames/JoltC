@@ -2547,21 +2547,9 @@ JPC_API bool JPC_NarrowPhaseQuery_CastRay(const JPC_NarrowPhaseQuery* self, JPC_
 	return hit;
 }
 
-JPC_API void JPC_ShapeCastSettings_default(JPC_ShapeCastSettings* settings) {
-	JPH::ShapeCastSettings defaultSettings{};
-
-	// JPH::CollideSettingsBase
-	// EActiveEdgeMode ActiveEdgeMode;
-	// ECollectFacesMode CollectFacesMode;
-	settings->CollisionTolerance = defaultSettings.mCollisionTolerance;
-	settings->PenetrationTolerance = defaultSettings.mPenetrationTolerance;
-	settings->ActiveEdgeMovementDirection = to_jpc(defaultSettings.mActiveEdgeMovementDirection);
-
-	// JPH::ShapeCastSettings
-	settings->BackFaceModeTriangles = static_cast<JPC_BackFaceMode>(defaultSettings.mBackFaceModeTriangles);
-	settings->BackFaceModeConvex = static_cast<JPC_BackFaceMode>(defaultSettings.mBackFaceModeConvex);
-	settings->UseShrunkenShapeAndConvexRadius = defaultSettings.mUseShrunkenShapeAndConvexRadius;
-	settings->ReturnDeepestPoint = defaultSettings.mReturnDeepestPoint;
+JPC_API void JPC_ShapeCastSettings_default(JPC_ShapeCastSettings* object) {
+	JPH::ShapeCastSettings default{};
+	*object = to_jpc(default);
 }
 
 JPC_API void JPC_NarrowPhaseQuery_CastShape(const JPC_NarrowPhaseQuery* self, JPC_NarrowPhaseQuery_CastShapeArgs* args) {
@@ -2606,6 +2594,11 @@ JPC_API void JPC_NarrowPhaseQuery_CastShape(const JPC_NarrowPhaseQuery* self, JP
 		*olFilter,
 		*bodyFilter,
 		*shapeFilter);
+}
+
+JPC_API void JPC_CollideShapeSettings_default(JPC_CollideShapeSettings* object) {
+	JPH::CollideShapeSettings default{};
+	*object = to_jpc(default);
 }
 
 JPC_API void JPC_NarrowPhaseQuery_CollideShape(const JPC_NarrowPhaseQuery* self, JPC_NarrowPhaseQuery_CollideShapeArgs* args) {

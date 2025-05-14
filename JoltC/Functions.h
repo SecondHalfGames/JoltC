@@ -1406,6 +1406,8 @@ typedef struct JPC_NarrowPhaseQuery_CastShapeArgs {
 
 JPC_API void JPC_NarrowPhaseQuery_CastShape(const JPC_NarrowPhaseQuery* self, JPC_NarrowPhaseQuery_CastShapeArgs* args);
 
+JPC_API void JPC_CollideShapeSettings_default(JPC_CollideShapeSettings* object);
+
 typedef struct JPC_NarrowPhaseQuery_CollideShapeArgs {
 	const JPC_Shape *Shape;
 	JPC_Vec3 ShapeScale;
