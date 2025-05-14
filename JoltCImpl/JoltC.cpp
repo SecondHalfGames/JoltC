@@ -127,6 +127,9 @@ DESTRUCTOR(JPC_String)
 
 LAYOUT_COMPATIBLE(JPC_BodyManager_DrawSettings, JPH::BodyManager::DrawSettings)
 
+LAYOUT_COMPATIBLE(JPC_ShapeCastSettings, JPH::ShapeCastSettings)
+LAYOUT_COMPATIBLE(JPC_CollideShapeSettings, JPH::CollideShapeSettings)
+
 LAYOUT_COMPATIBLE(JPC_BodyID, JPH::BodyID)
 
 static auto to_jpc(JPH::BroadPhaseLayer in) { return in.GetValue(); }
@@ -276,6 +279,22 @@ JPC_IMPL JPH::ShapeCastSettings JPC_ShapeCastSettings_to_jph(JPC_ShapeCastSettin
 	out.mBackFaceModeConvex = static_cast<JPH::EBackFaceMode>(in.BackFaceModeConvex);
 	out.mUseShrunkenShapeAndConvexRadius = in.UseShrunkenShapeAndConvexRadius;
 	out.mReturnDeepestPoint = in.ReturnDeepestPoint;
+
+	return out;
+}
+
+JPC_IMPL JPC_CollideShapeResult JPC_CollideShapeResult_to_jpc(JPH::CollideShapeResult in) {
+	JPC_CollideShapeResult out{};
+	// CollideShapeResult
+	out.ContactPointOn1 = to_jpc(in.mContactPointOn1);
+	out.ContactPointOn2 = to_jpc(in.mContactPointOn2);
+	out.PenetrationAxis = to_jpc(in.mPenetrationAxis);
+	out.PenetrationDepth = in.mPenetrationDepth;
+	out.SubShapeID1 = to_jpc(in.mSubShapeID1);
+	out.SubShapeID2 = to_jpc(in.mSubShapeID2);
+	out.BodyID2 = to_jpc(in.mBodyID2);
+	// Face Shape1Face;
+	// Face Shape2Face;
 
 	return out;
 }
@@ -752,6 +771,51 @@ JPC_API JPC_CastShapeCollector* JPC_CastShapeCollector_new(
 }
 
 JPC_API void JPC_CastShapeCollector_UpdateEarlyOutFraction(JPC_CastShapeCollector* self, float inFraction) {
+	to_jph(self)->UpdateEarlyOutFraction(inFraction);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// JPC_CollideShapeCollector
+
+class JPC_CollideShapeCollectorBridge;
+OPAQUE_WRAPPER(JPC_CollideShapeCollector, JPC_CollideShapeCollectorBridge)
+
+class JPC_CollideShapeCollectorBridge final : public JPH::CollideShapeCollector {
+	using ResultType = JPH::CollideShapeResult;
+
+public:
+	explicit JPC_CollideShapeCollectorBridge(void *self, JPC_CollideShapeCollectorFns fns) : self(self), fns(fns) {}
+
+	void Reset() override {
+		JPH::CollideShapeCollector::Reset();
+
+		if (fns.Reset != nullptr) {
+			fns.Reset(self);
+		}
+	}
+
+	void AddHit(const ResultType &inResult) override {
+		JPC_CollideShapeResult result = JPC_CollideShapeResult_to_jpc(inResult);
+		JPC_CollideShapeCollector *base = to_jpc(this);
+
+		fns.AddHit(self, base, &result);
+	}
+
+private:
+	void* self;
+	JPC_CollideShapeCollectorFns fns;
+};
+
+DESTRUCTOR(JPC_CollideShapeCollector)
+
+JPC_API JPC_CollideShapeCollector* JPC_CollideShapeCollector_new(
+	void *self,
+	JPC_CollideShapeCollectorFns fns)
+{
+	return to_jpc(new JPC_CollideShapeCollectorBridge(self, fns));
+}
+
+JPC_API void JPC_CollideShapeCollector_UpdateEarlyOutFraction(JPC_CollideShapeCollector* self, float inFraction) {
 	to_jph(self)->UpdateEarlyOutFraction(inFraction);
 }
 
@@ -2501,7 +2565,7 @@ JPC_API void JPC_ShapeCastSettings_default(JPC_ShapeCastSettings* settings) {
 }
 
 JPC_API void JPC_NarrowPhaseQuery_CastShape(const JPC_NarrowPhaseQuery* self, JPC_NarrowPhaseQuery_CastShapeArgs* args) {
-	JPH::ShapeCastSettings settings = JPC_ShapeCastSettings_to_jph(args->Settings);
+	JPH::ShapeCastSettings settings = to_jph(args->Settings);
 
 	JPH::ClosestHitCollisionCollector<JPH::CastShapeCollector> defaultCollector{};
 	JPH::CastShapeCollector* collector = &defaultCollector;
@@ -2535,6 +2599,52 @@ JPC_API void JPC_NarrowPhaseQuery_CastShape(const JPC_NarrowPhaseQuery* self, JP
 
 	to_jph(self)->CastShape(
 		to_jph(args->ShapeCast),
+		settings,
+		to_jph(args->BaseOffset),
+		*collector,
+		*bplFilter,
+		*olFilter,
+		*bodyFilter,
+		*shapeFilter);
+}
+
+JPC_API void JPC_NarrowPhaseQuery_CollideShape(const JPC_NarrowPhaseQuery* self, JPC_NarrowPhaseQuery_CollideShapeArgs* args) {
+	JPH::CollideShapeSettings settings = to_jph(args->Settings);
+
+	JPH::ClosestHitCollisionCollector<JPH::CollideShapeCollector> defaultCollector{};
+	JPH::CollideShapeCollector* collector = &defaultCollector;
+	if (args->Collector != nullptr) {
+		collector = to_jph(args->Collector);
+	}
+
+	JPH::BroadPhaseLayerFilter defaultBplFilter{};
+	const JPH::BroadPhaseLayerFilter* bplFilter = &defaultBplFilter;
+	if (args->BroadPhaseLayerFilter != nullptr) {
+		bplFilter = to_jph(args->BroadPhaseLayerFilter);
+	}
+
+	JPH::ObjectLayerFilter defaultOlFilter{};
+	const JPH::ObjectLayerFilter* olFilter = &defaultOlFilter;
+	if (args->ObjectLayerFilter != nullptr) {
+		olFilter = to_jph(args->ObjectLayerFilter);
+	}
+
+	JPH::BodyFilter defaultBodyFilter{};
+	const JPH::BodyFilter* bodyFilter = &defaultBodyFilter;
+	if (args->BodyFilter != nullptr) {
+		bodyFilter = to_jph(args->BodyFilter);
+	}
+
+	JPH::ShapeFilter defaultShapeFilter{};
+	const JPH::ShapeFilter* shapeFilter = &defaultShapeFilter;
+	if (args->ShapeFilter != nullptr) {
+		shapeFilter = to_jph(args->ShapeFilter);
+	}
+
+	to_jph(self)->CollideShape(
+		to_jph(args->Shape),
+		to_jph(args->ShapeScale),
+		to_jph(args->CenterOfMassTransform),
 		settings,
 		to_jph(args->BaseOffset),
 		*collector,

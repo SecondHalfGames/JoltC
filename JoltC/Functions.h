@@ -178,6 +178,18 @@ typedef struct JPC_ShapeCastResult {
 	bool IsBackFaceHit;
 } JPC_ShapeCastResult;
 
+typedef struct JPC_CollideShapeResult {
+	JPC_Vec3 ContactPointOn1;
+	JPC_Vec3 ContactPointOn2;
+	JPC_Vec3 PenetrationAxis;
+	float PenetrationDepth;
+	JPC_SubShapeID SubShapeID1;
+	JPC_SubShapeID SubShapeID2;
+	JPC_BodyID BodyID2;
+	// Face Shape1Face;
+	// Face Shape2Face;
+} JPC_CollideShapeResult;
+
 typedef struct JPC_Body JPC_Body;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -465,6 +477,37 @@ typedef struct JPC_SubShapeIDPair {
 } JPC_SubShapeIDPair;
 
 ENSURE_SIZE_ALIGN(JPC_SubShapeIDPair, JPH::SubShapeIDPair)
+// These fields are private, so we can't test them directly!
+// ENSURE_NORMAL_FIELD(  SubShapeIDPair, Body1ID)
+// ENSURE_NORMAL_FIELD(  SubShapeIDPair, SubShapeID1)
+// ENSURE_NORMAL_FIELD(  SubShapeIDPair, Body2ID)
+// ENSURE_NORMAL_FIELD(  SubShapeIDPair, SubShapeID2)
+
+typedef struct JPC_ShapeCastSettings {
+	// JPH::CollideSettingsBase
+	JPC_ActiveEdgeMode ActiveEdgeMode;
+	JPC_CollectFacesMode CollectFacesMode;
+	float CollisionTolerance;
+	float PenetrationTolerance;
+	JPC_Vec3 ActiveEdgeMovementDirection;
+
+	// JPH::ShapeCastSettings
+	JPC_BackFaceMode BackFaceModeTriangles;
+	JPC_BackFaceMode BackFaceModeConvex;
+	bool UseShrunkenShapeAndConvexRadius;
+	bool ReturnDeepestPoint;
+} JPC_ShapeCastSettings;
+
+ENSURE_SIZE_ALIGN(JPC_ShapeCastSettings, JPH::ShapeCastSettings)
+ENSURE_NORMAL_FIELD(  ShapeCastSettings, ActiveEdgeMode)
+ENSURE_NORMAL_FIELD(  ShapeCastSettings, CollectFacesMode)
+ENSURE_NORMAL_FIELD(  ShapeCastSettings, CollisionTolerance)
+ENSURE_NORMAL_FIELD(  ShapeCastSettings, PenetrationTolerance)
+ENSURE_NORMAL_FIELD(  ShapeCastSettings, ActiveEdgeMovementDirection)
+ENSURE_NORMAL_FIELD(  ShapeCastSettings, BackFaceModeTriangles)
+ENSURE_NORMAL_FIELD(  ShapeCastSettings, BackFaceModeConvex)
+ENSURE_NORMAL_FIELD(  ShapeCastSettings, UseShrunkenShapeAndConvexRadius)
+ENSURE_NORMAL_FIELD(  ShapeCastSettings, ReturnDeepestPoint)
 
 typedef struct JPC_CollideShapeSettings {
 	// CollideSettingsBase
@@ -480,6 +523,13 @@ typedef struct JPC_CollideShapeSettings {
 } JPC_CollideShapeSettings;
 
 ENSURE_SIZE_ALIGN(JPC_CollideShapeSettings, JPH::CollideShapeSettings)
+ENSURE_NORMAL_FIELD(  CollideShapeSettings, ActiveEdgeMode)
+ENSURE_NORMAL_FIELD(  CollideShapeSettings, CollectFacesMode)
+ENSURE_NORMAL_FIELD(  CollideShapeSettings, CollisionTolerance)
+ENSURE_NORMAL_FIELD(  CollideShapeSettings, PenetrationTolerance)
+ENSURE_NORMAL_FIELD(  CollideShapeSettings, ActiveEdgeMovementDirection)
+ENSURE_NORMAL_FIELD(  CollideShapeSettings, MaxSeparationDistance)
+ENSURE_NORMAL_FIELD(  CollideShapeSettings, BackFaceMode)
 
 typedef struct JPC_ContactListenerFns {
 	// ValidateResult (*OnContactValidate)(
@@ -533,6 +583,24 @@ JPC_API JPC_CastShapeCollector* JPC_CastShapeCollector_new(
 JPC_API void JPC_CastShapeCollector_delete(JPC_CastShapeCollector* object);
 
 JPC_API void JPC_CastShapeCollector_UpdateEarlyOutFraction(JPC_CastShapeCollector *self, float inFraction);
+
+////////////////////////////////////////////////////////////////////////////////
+// CollideShapeCollector
+
+typedef struct JPC_CollideShapeCollector JPC_CollideShapeCollector;
+
+typedef struct JPC_CollideShapeCollectorFns {
+	void (*Reset)(void *self);
+	void (*AddHit)(void *self, JPC_CollideShapeCollector *base, const JPC_CollideShapeResult *Result);
+} JPC_CollideShapeCollectorFns;
+
+JPC_API JPC_CollideShapeCollector* JPC_CollideShapeCollector_new(
+	void *self,
+	JPC_CollideShapeCollectorFns fns);
+
+JPC_API void JPC_CollideShapeCollector_delete(JPC_CollideShapeCollector* object);
+
+JPC_API void JPC_CollideShapeCollector_UpdateEarlyOutFraction(JPC_CollideShapeCollector *self, float inFraction);
 
 ////////////////////////////////////////////////////////////////////////////////
 // DrawSettings
@@ -1323,21 +1391,6 @@ typedef struct JPC_RShapeCast {
 	// const JPC_AABox ShapeWorldBounds;
 } JPC_RShapeCast;
 
-typedef struct JPC_ShapeCastSettings {
-	// JPH::CollideSettingsBase
-	// EActiveEdgeMode ActiveEdgeMode;
-	// ECollectFacesMode CollectFacesMode;
-	float CollisionTolerance;
-	float PenetrationTolerance;
-	JPC_Vec3 ActiveEdgeMovementDirection;
-
-	// JPH::ShapeCastSettings
-	JPC_BackFaceMode BackFaceModeTriangles;
-	JPC_BackFaceMode BackFaceModeConvex;
-	bool UseShrunkenShapeAndConvexRadius;
-	bool ReturnDeepestPoint;
-} JPC_ShapeCastSettings;
-
 JPC_API void JPC_ShapeCastSettings_default(JPC_ShapeCastSettings* object);
 
 typedef struct JPC_NarrowPhaseQuery_CastShapeArgs {
@@ -1352,6 +1405,21 @@ typedef struct JPC_NarrowPhaseQuery_CastShapeArgs {
 } JPC_NarrowPhaseQuery_CastShapeArgs;
 
 JPC_API void JPC_NarrowPhaseQuery_CastShape(const JPC_NarrowPhaseQuery* self, JPC_NarrowPhaseQuery_CastShapeArgs* args);
+
+typedef struct JPC_NarrowPhaseQuery_CollideShapeArgs {
+	const JPC_Shape *Shape;
+	JPC_Vec3 ShapeScale;
+	JPC_RMat44 CenterOfMassTransform;
+	JPC_CollideShapeSettings Settings;
+	JPC_RVec3 BaseOffset;
+	JPC_CollideShapeCollector *Collector;
+	const JPC_BroadPhaseLayerFilter *BroadPhaseLayerFilter;
+	const JPC_ObjectLayerFilter *ObjectLayerFilter;
+	const JPC_BodyFilter *BodyFilter;
+	const JPC_ShapeFilter *ShapeFilter;
+} JPC_NarrowPhaseQuery_CollideShapeArgs;
+
+JPC_API void JPC_NarrowPhaseQuery_CollideShape(const JPC_NarrowPhaseQuery* self, JPC_NarrowPhaseQuery_CollideShapeArgs* args);
 
 ////////////////////////////////////////////////////////////////////////////////
 // PhysicsSystem
