@@ -194,7 +194,7 @@ int main() {
 
 		printf("Step %d: Position = (%f, %f, %f), Velocity = (%f, %f, %f)\n", step, position.x, position.y, position.z, velocity.x, velocity.y, velocity.z);
 
-		JPC_PhysicsSystem_Update(physics_system, cDeltaTime, cCollisionSteps, temp_allocator, job_system);
+		JPC_PhysicsSystem_Update(physics_system, cDeltaTime, cCollisionSteps, temp_allocator, (JPC_JobSystem*) job_system);
 	}
 
 	JPC_BodyInterface_RemoveBody(body_interface, sphere_id);
