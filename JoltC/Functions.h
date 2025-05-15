@@ -764,6 +764,20 @@ JPC_API JPC_Vec3 JPC_SixDOFConstraint_GetTotalLambdaMotorRotation(JPC_SixDOFCons
 typedef struct JPC_HingeConstraint JPC_HingeConstraint;
 
 ////////////////////////////////////////////////////////////////////////////////
+// SliderConstraint
+
+typedef struct JPC_SliderConstraint JPC_SliderConstraint;
+
+JPC_API JPC_Constraint* JPC_SliderConstraint_to_Constraint(JPC_SliderConstraint* self);
+
+JPC_API void JPC_SliderConstraint_SetMotorState(JPC_SliderConstraint* self, JPC_MotorState inState);
+JPC_API JPC_MotorState JPC_SliderConstraint_GetMotorState(const JPC_SliderConstraint* self);
+JPC_API void JPC_SliderConstraint_SetTargetVelocity(JPC_SliderConstraint* self, float inVelocity);
+JPC_API float JPC_SliderConstraint_GetTargetVelocity(const JPC_SliderConstraint* self);
+JPC_API void JPC_SliderConstraint_SetTargetPosition(JPC_SliderConstraint* self, float inPosition);
+JPC_API float JPC_SliderConstraint_GetTargetPosition(const JPC_SliderConstraint* self);
+
+////////////////////////////////////////////////////////////////////////////////
 // ConstraintSettings
 
 typedef struct JPC_ConstraintSettings {
@@ -953,7 +967,7 @@ typedef struct JPC_SliderConstraintSettings {
 } JPC_SliderConstraintSettings;
 
 JPC_API void JPC_SliderConstraintSettings_default(JPC_SliderConstraintSettings* settings);
-JPC_API JPC_Constraint* JPC_SliderConstraintSettings_Create(
+JPC_API JPC_SliderConstraint* JPC_SliderConstraintSettings_Create(
 	const JPC_SliderConstraintSettings* self,
 	JPC_Body* inBody1,
 	JPC_Body* inBody2);

@@ -1090,6 +1090,39 @@ JPC_API JPC_Vec3 JPC_SixDOFConstraint_GetTotalLambdaMotorRotation(JPC_SixDOFCons
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// SliderConstraint -> TwoBodyConstraint -> Constraint -> RefTarget<Constraint>
+
+OPAQUE_WRAPPER(JPC_SliderConstraint, JPH::SliderConstraint);
+
+JPC_API JPC_Constraint* JPC_SliderConstraint_to_Constraint(JPC_SliderConstraint* self) {
+	return (JPC_Constraint*)(self);
+}
+
+JPC_API void JPC_SliderConstraint_SetMotorState(JPC_SliderConstraint* self, JPC_MotorState inState) {
+	to_jph(self)->SetMotorState(to_jph(inState));
+}
+
+JPC_API JPC_MotorState JPC_SliderConstraint_GetMotorState(const JPC_SliderConstraint* self) {
+	return to_jpc(to_jph(self)->GetMotorState());
+}
+
+JPC_API void JPC_SliderConstraint_SetTargetVelocity(JPC_SliderConstraint* self, float inVelocity) {
+	to_jph(self)->SetTargetVelocity(inVelocity);
+}
+
+JPC_API float JPC_SliderConstraint_GetTargetVelocity(const JPC_SliderConstraint* self) {
+	return to_jph(self)->GetTargetVelocity();
+}
+
+JPC_API void JPC_SliderConstraint_SetTargetPosition(JPC_SliderConstraint* self, float inPosition) {
+	to_jph(self)->SetTargetPosition(inPosition);
+}
+
+JPC_API float JPC_SliderConstraint_GetTargetPosition(const JPC_SliderConstraint* self) {
+	return to_jph(self)->GetTargetPosition();
+}
+
+////////////////////////////////////////////////////////////////////////////////
 // ConstraintSettings
 
 JPC_IMPL void JPC_ConstraintSettings_to_jpc(
@@ -1447,7 +1480,7 @@ JPC_API void JPC_SliderConstraintSettings_default(JPC_SliderConstraintSettings* 
 	JPC_SliderConstraintSettings_to_jpc(settings, &defaultSettings);
 }
 
-JPC_API JPC_Constraint* JPC_SliderConstraintSettings_Create(
+JPC_API JPC_SliderConstraint* JPC_SliderConstraintSettings_Create(
 	const JPC_SliderConstraintSettings* self,
 	JPC_Body* inBody1,
 	JPC_Body* inBody2)
@@ -1456,7 +1489,7 @@ JPC_API JPC_Constraint* JPC_SliderConstraintSettings_Create(
 	JPC_SliderConstraintSettings_to_jph(self, &jphSettings);
 
 	JPH::SliderConstraint* outJph = new JPH::SliderConstraint(*to_jph(inBody1), *to_jph(inBody2), jphSettings);
-	return (JPC_Constraint*)outJph;
+	return (JPC_SliderConstraint*)outJph;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
