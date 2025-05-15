@@ -96,6 +96,8 @@ ENUM_CONVERSION(JPC_MotionQuality, JPH::EMotionQuality)
 ENUM_CONVERSION(JPC_OverrideMassProperties, JPH::EOverrideMassProperties)
 ENUM_CONVERSION(JPC_ShapeType, JPH::EShapeType)
 ENUM_CONVERSION(JPC_ShapeSubType, JPH::EShapeSubType)
+ENUM_CONVERSION(JPC_SpringMode, JPH::ESpringMode)
+ENUM_CONVERSION(JPC_MotorState, JPH::EMotorState)
 
 OPAQUE_WRAPPER(JPC_PhysicsSystem, JPH::PhysicsSystem)
 DESTRUCTOR(JPC_PhysicsSystem)
@@ -1120,6 +1122,62 @@ JPC_API void JPC_ConstraintSettings_default(JPC_ConstraintSettings* settings) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// SpringSettings
+
+JPC_IMPL void JPC_SpringSettings_to_jpc(
+	JPC_SpringSettings* outJpc,
+	const JPH::SpringSettings* inJph)
+{
+	outJpc->Mode = to_jpc(inJph->mMode);
+	outJpc->FrequencyOrStiffness = inJph->mFrequency;
+	outJpc->Damping = inJph->mDamping;
+}
+
+JPC_IMPL void JPC_SpringSettings_to_jph(
+	const JPC_SpringSettings* inJpc,
+	JPH::SpringSettings* outJph)
+{
+	outJph->mMode = to_jph(inJpc->Mode);
+	outJph->mFrequency = inJpc->FrequencyOrStiffness;
+	outJph->mDamping = inJpc->Damping;
+}
+
+JPC_API void JPC_SpringSettings_default(JPC_SpringSettings* settings) {
+	JPH::SpringSettings defaultSettings{};
+	JPC_SpringSettings_to_jpc(settings, &defaultSettings);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// MotorSettings
+
+JPC_IMPL void JPC_MotorSettings_to_jpc(
+	JPC_MotorSettings* outJpc,
+	const JPH::MotorSettings* inJph)
+{
+	JPC_SpringSettings_to_jpc(&outJpc->SpringSettings, &inJph->mSpringSettings);
+	outJpc->MinForceLimit = inJph->mMinForceLimit;
+	outJpc->MaxForceLimit = inJph->mMaxForceLimit;
+	outJpc->MinTorqueLimit = inJph->mMinTorqueLimit;
+	outJpc->MaxTorqueLimit = inJph->mMaxTorqueLimit;
+}
+
+JPC_IMPL void JPC_MotorSettings_to_jph(
+	const JPC_MotorSettings* inJpc,
+	JPH::MotorSettings* outJph)
+{
+	JPC_SpringSettings_to_jph(&inJpc->SpringSettings, &outJph->mSpringSettings);
+	outJph->mMinForceLimit = inJpc->MinForceLimit;
+	outJph->mMaxForceLimit = inJpc->MaxForceLimit;
+	outJph->mMinTorqueLimit = inJpc->MinTorqueLimit;
+	outJph->mMaxTorqueLimit = inJpc->MaxTorqueLimit;
+}
+
+JPC_API void JPC_MotorSettings_default(JPC_MotorSettings* settings) {
+	JPH::MotorSettings defaultSettings{};
+	JPC_MotorSettings_to_jpc(settings, &defaultSettings);
+}
+
+////////////////////////////////////////////////////////////////////////////////
 // FixedConstraintSettings -> TwoBodyConstraintSettings -> ConstraintSettings
 
 JPC_IMPL void JPC_FixedConstraintSettings_to_jpc(
@@ -1249,9 +1307,9 @@ JPC_IMPL void JPC_HingeConstraintSettings_to_jpc(
 	outJpc->NormalAxis2 = to_jpc(inJph->mNormalAxis2);
 	outJpc->LimitsMin = inJph->mLimitsMin;
 	outJpc->LimitsMax = inJph->mLimitsMax;
-	// TODO: Spring settings
+	JPC_SpringSettings_to_jpc(&outJpc->LimitsSpringSettings, &inJph->mLimitsSpringSettings);
 	outJpc->MaxFrictionTorque = inJph->mMaxFrictionTorque;
-	// TODO: Spring settings
+	JPC_MotorSettings_to_jpc(&outJpc->MotorSettings, &inJph->mMotorSettings);
 }
 
 JPC_IMPL void JPC_HingeConstraintSettings_to_jph(
@@ -1269,9 +1327,9 @@ JPC_IMPL void JPC_HingeConstraintSettings_to_jph(
 	outJph->mNormalAxis2 = to_jph(inJpc->NormalAxis2);
 	outJph->mLimitsMin = inJpc->LimitsMin;
 	outJph->mLimitsMax = inJpc->LimitsMax;
-	// TODO: Spring settings
+	JPC_SpringSettings_to_jph(&inJpc->LimitsSpringSettings, &outJph->mLimitsSpringSettings);
 	outJph->mMaxFrictionTorque = inJpc->MaxFrictionTorque;
-	// TODO: Motor settings
+	JPC_MotorSettings_to_jph(&inJpc->MotorSettings, &outJph->mMotorSettings);
 }
 
 JPC_API void JPC_HingeConstraintSettings_default(JPC_HingeConstraintSettings* settings) {
@@ -1358,9 +1416,9 @@ JPC_IMPL void JPC_SliderConstraintSettings_to_jpc(
 	outJpc->NormalAxis2 = to_jpc(inJph->mNormalAxis2);
 	outJpc->LimitsMin = inJph->mLimitsMin;
 	outJpc->LimitsMax = inJph->mLimitsMax;
-	// TODO: Spring settings
+	JPC_SpringSettings_to_jpc(&outJpc->LimitsSpringSettings, &inJph->mLimitsSpringSettings);
 	outJpc->MaxFrictionForce = inJph->mMaxFrictionForce;
-	// TODO: Spring settings
+	JPC_MotorSettings_to_jpc(&outJpc->MotorSettings, &inJph->mMotorSettings);
 }
 
 JPC_IMPL void JPC_SliderConstraintSettings_to_jph(
@@ -1379,9 +1437,9 @@ JPC_IMPL void JPC_SliderConstraintSettings_to_jph(
 	outJph->mNormalAxis2 = to_jph(inJpc->NormalAxis2);
 	outJph->mLimitsMin = inJpc->LimitsMin;
 	outJph->mLimitsMax = inJpc->LimitsMax;
-	// TODO: Spring settings
+	JPC_SpringSettings_to_jph(&inJpc->LimitsSpringSettings, &outJph->mLimitsSpringSettings);
 	outJph->mMaxFrictionForce = inJpc->MaxFrictionForce;
-	// TODO: Motor settings
+	JPC_MotorSettings_to_jph(&inJpc->MotorSettings, &outJph->mMotorSettings);
 }
 
 JPC_API void JPC_SliderConstraintSettings_default(JPC_SliderConstraintSettings* settings) {

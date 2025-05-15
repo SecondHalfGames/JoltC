@@ -778,6 +778,30 @@ typedef struct JPC_ConstraintSettings {
 JPC_API void JPC_ConstraintSettings_default(JPC_ConstraintSettings* settings);
 
 ////////////////////////////////////////////////////////////////////////////////
+// SpringSettings
+
+typedef struct JPC_SpringSettings {
+	JPC_SpringMode Mode;
+	float FrequencyOrStiffness;
+	float Damping;
+} JPC_SpringSettings;
+
+JPC_API void JPC_SpringSettings_default(JPC_SpringSettings* settings);
+
+////////////////////////////////////////////////////////////////////////////////
+// MotorSettings
+
+typedef struct JPC_MotorSettings {
+	JPC_SpringSettings SpringSettings;
+	float MinForceLimit;
+	float MaxForceLimit;
+	float MinTorqueLimit;
+	float MaxTorqueLimit;
+} JPC_MotorSettings;
+
+JPC_API void JPC_MotorSettings_default(JPC_MotorSettings* settings);
+
+////////////////////////////////////////////////////////////////////////////////
 // FixedConstraintSettings -> TwoBodyConstraintSettings -> ConstraintSettings
 
 typedef struct JPC_FixedConstraintSettings {
@@ -858,9 +882,12 @@ typedef struct JPC_HingeConstraintSettings {
 
 	float LimitsMin;
 	float LimitsMax;
-	// TODO: Spring settings
+
+	JPC_SpringSettings LimitsSpringSettings;
+
 	float MaxFrictionTorque;
-	// TODO: Motor settings
+
+	JPC_MotorSettings MotorSettings;
 } JPC_HingeConstraintSettings;
 
 JPC_API void JPC_HingeConstraintSettings_default(JPC_HingeConstraintSettings* settings);
@@ -885,7 +912,8 @@ typedef struct JPC_DistanceConstraintSettings {
 
 	float MinDistance;
 	float MaxDistance;
-	// TODO: Spring settings
+
+	JPC_SpringSettings LimitsSpringSettings;
 } JPC_DistanceConstraintSettings;
 
 JPC_API void JPC_DistanceConstraintSettings_default(JPC_DistanceConstraintSettings* settings);
@@ -916,9 +944,12 @@ typedef struct JPC_SliderConstraintSettings {
 
 	float LimitsMin;
 	float LimitsMax;
-	// TODO: Spring settings
+
+	JPC_SpringSettings LimitsSpringSettings;
+
 	float MaxFrictionForce;
-	// TODO: Motor settings
+
+	JPC_MotorSettings MotorSettings;
 } JPC_SliderConstraintSettings;
 
 JPC_API void JPC_SliderConstraintSettings_default(JPC_SliderConstraintSettings* settings);
