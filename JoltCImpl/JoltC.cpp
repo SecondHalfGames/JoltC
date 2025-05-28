@@ -2755,8 +2755,8 @@ JPC_API bool JPC_NarrowPhaseQuery_CastRay(const JPC_NarrowPhaseQuery* self, JPC_
 }
 
 JPC_API void JPC_ShapeCastSettings_default(JPC_ShapeCastSettings* object) {
-	JPH::ShapeCastSettings default{};
-	*object = to_jpc(default);
+	JPH::ShapeCastSettings defaultSettings{};
+	*object = to_jpc(defaultSettings);
 }
 
 JPC_API void JPC_NarrowPhaseQuery_CastShape(const JPC_NarrowPhaseQuery* self, JPC_NarrowPhaseQuery_CastShapeArgs* args) {
@@ -2804,8 +2804,8 @@ JPC_API void JPC_NarrowPhaseQuery_CastShape(const JPC_NarrowPhaseQuery* self, JP
 }
 
 JPC_API void JPC_CollideShapeSettings_default(JPC_CollideShapeSettings* object) {
-	JPH::CollideShapeSettings default{};
-	*object = to_jpc(default);
+	JPH::CollideShapeSettings defaultSettings{};
+	*object = to_jpc(defaultSettings);
 }
 
 JPC_API void JPC_NarrowPhaseQuery_CollideShape(const JPC_NarrowPhaseQuery* self, JPC_NarrowPhaseQuery_CollideShapeArgs* args) {
