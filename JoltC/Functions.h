@@ -634,7 +634,9 @@ typedef struct JPC_BodyManager_DrawSettings {
 	JPC_SoftBodyConstraintColor DrawSoftBodyConstraintColor;
 } JPC_BodyManager_DrawSettings;
 
+#ifdef JPH_DEBUG_RENDERER
 ENSURE_SIZE_ALIGN(JPC_BodyManager_DrawSettings, JPH::BodyManager::DrawSettings)
+#endif
 
 JPC_API void JPC_BodyManager_DrawSettings_default(JPC_BodyManager_DrawSettings* object);
 
