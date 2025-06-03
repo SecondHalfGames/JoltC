@@ -226,6 +226,7 @@ JPC_API JPC_ShapeSubType JPC_Shape_GetSubType(const JPC_Shape* self);
 JPC_API uint64_t JPC_Shape_GetSubShapeUserData(const JPC_Shape* self, JPC_SubShapeID inSubShapeID);
 
 JPC_API JPC_Vec3 JPC_Shape_GetCenterOfMass(const JPC_Shape* self);
+JPC_API float JPC_Shape_GetVolume(const JPC_Shape* self);
 
 ////////////////////////////////////////////////////////////////////////////////
 // CompoundShape -> Shape -> RefTarget<Shape>

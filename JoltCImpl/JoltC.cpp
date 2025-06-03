@@ -1564,6 +1564,10 @@ JPC_API JPC_Vec3 JPC_Shape_GetCenterOfMass(const JPC_Shape* self) {
 	return to_jpc(to_jph(self)->GetCenterOfMass());
 }
 
+JPC_API float JPC_Shape_GetVolume(const JPC_Shape* self) {
+	return to_jph(self)->GetVolume();
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 // CompoundShape
 
