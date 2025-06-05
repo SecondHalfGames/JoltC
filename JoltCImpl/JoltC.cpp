@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 #include <Jolt/Jolt.h>
 
 #include <Jolt/Core/Factory.h>
@@ -35,7 +37,9 @@
 #include <Jolt/Physics/PhysicsSystem.h>
 #include <Jolt/RegisterTypes.h>
 
+#ifdef JPH_DEBUG_RENDERER
 #include <Jolt/Renderer/DebugRendererSimple.h>
+#endif
 
 #include <JoltC/JoltC.h>
 
@@ -137,7 +141,9 @@ DESTRUCTOR(JPC_IndexedTriangleList)
 OPAQUE_WRAPPER(JPC_String, JPH::String)
 DESTRUCTOR(JPC_String)
 
+#ifdef JPH_DEBUG_RENDERER
 LAYOUT_COMPATIBLE(JPC_BodyManager_DrawSettings, JPH::BodyManager::DrawSettings)
+#endif
 
 LAYOUT_COMPATIBLE(JPC_ShapeCastSettings, JPH::ShapeCastSettings)
 LAYOUT_COMPATIBLE(JPC_CollideShapeSettings, JPH::CollideShapeSettings)
@@ -842,12 +848,17 @@ JPC_API void JPC_CollideShapeCollector_UpdateEarlyOutFraction(JPC_CollideShapeCo
 // BodyManager::DrawSettings
 
 JPC_API void JPC_BodyManager_DrawSettings_default(JPC_BodyManager_DrawSettings* object) {
+	#ifdef JPH_DEBUG_RENDERER
 	*object = to_jpc(JPH::BodyManager::DrawSettings());
+	#else
+	printf("JPC_BodyManager_DrawSettings_default is a debug functionality that is not supported in release build, skipping\n");
+	#endif
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // DebugRendererSimple
 
+#ifdef JPH_DEBUG_RENDERER
 class JPC_DebugRendererSimpleBridge final : public JPH::DebugRendererSimple {
 public:
 	explicit JPC_DebugRendererSimpleBridge(const void *self, JPC_DebugRendererSimpleFns fns) : self(self), fns(fns) {}
@@ -872,12 +883,17 @@ private:
 
 OPAQUE_WRAPPER(JPC_DebugRendererSimple, JPC_DebugRendererSimpleBridge)
 DESTRUCTOR(JPC_DebugRendererSimple)
+#endif
 
 JPC_API JPC_DebugRendererSimple* JPC_DebugRendererSimple_new(
 	const void *self,
 	JPC_DebugRendererSimpleFns fns)
 {
+	#ifdef JPH_DEBUG_RENDERER
 	return to_jpc(new JPC_DebugRendererSimpleBridge(self, fns));
+	#else
+	printf("JPC_DebugRendererSimple_new is a debug functionality that is not supported in release build, skipping\n");
+	#endif
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -2950,14 +2966,22 @@ JPC_API void JPC_PhysicsSystem_DrawBodies(
 	JPC_DebugRendererSimple* inRenderer,
 	[[maybe_unused]] const void* inBodyFilter)
 {
+	#ifdef JPH_DEBUG_RENDERER
 	to_jph(self)->DrawBodies(to_jph(*inSettings), to_jph(inRenderer), nullptr);
+	#else
+	printf("JPC_PhysicsSystem_DrawBodies is a debug functionality that is not supported in release build, skipping\n");
+	#endif
 }
 
 JPC_API void JPC_PhysicsSystem_DrawConstraints(
 	JPC_PhysicsSystem* self,
 	JPC_DebugRendererSimple* inRenderer)
 {
+	#ifdef JPH_DEBUG_RENDERER
 	to_jph(self)->DrawConstraints(to_jph(inRenderer));
+	#else
+	printf("JPC_PhysicsSystem_DrawConstraints is a debug functionality that is not supported in release build, skipping\n");
+	#endif
 }
 
 
