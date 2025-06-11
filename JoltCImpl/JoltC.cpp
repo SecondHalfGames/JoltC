@@ -12,6 +12,7 @@
 #include <Jolt/Physics/Collision/CollideShape.h>
 #include <Jolt/Physics/Collision/CollisionCollectorImpl.h>
 #include <Jolt/Physics/Collision/ContactListener.h>
+#include <Jolt/Physics/Collision/EstimateCollisionResponse.h>
 #include <Jolt/Physics/Collision/RayCast.h>
 #include <Jolt/Physics/Collision/Shape/BoxShape.h>
 #include <Jolt/Physics/Collision/Shape/CapsuleShape.h>
@@ -746,6 +747,30 @@ JPC_API JPC_ContactListener* JPC_ContactListener_new(
 	JPC_ContactListenerFns fns)
 {
 	return to_jpc(new JPC_ContactListenerBridge(self, fns));
+}
+
+JPC_API void JPC_EstimateCollisionResponse(
+	const JPC_Body* inBody1,
+	const JPC_Body* inBody2,
+	const JPC_ContactManifold* inManifold,
+	JPC_CollisionEstimationResult* outResult,
+	float inCombinedFriction,
+	float inCombinedRestitution,
+	float inMinVelocityForRestitution,	///< = 1.0f
+	uint inNumIterations				///< = 10
+) {
+	const auto* jphManifold = reinterpret_cast<const JPH::ContactManifold*>(inManifold);
+	auto* jphResult = reinterpret_cast<JPH::CollisionEstimationResult*>(outResult);
+
+	JPH::EstimateCollisionResponse(
+		*to_jph(inBody1),
+		*to_jph(inBody2),
+		*jphManifold,
+		*jphResult,
+		inCombinedFriction,
+		inCombinedRestitution,
+		inMinVelocityForRestitution,
+		inNumIterations);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

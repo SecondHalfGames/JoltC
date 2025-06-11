@@ -572,6 +572,40 @@ JPC_API JPC_ContactListener* JPC_ContactListener_new(
 
 JPC_API void JPC_ContactListener_delete(JPC_ContactListener* object);
 
+static const uint JPC_ContactPointsCapacity = 64;
+
+typedef struct JPC_Impulse {
+	float ContactImpulse;				///< Estimated contact impulses (kg m / s)
+	float FrictionImpulse1;				///< Estimated friction impulses in the direction of tangent 1 (kg m / s)
+	float FrictionImpulse2;				///< Estimated friction impulses in the direction of tangent 2 (kg m / s)
+} JPC_Impulse;
+
+typedef struct JPC_CollisionEstimationResult {
+	JPC_Vec3 LinearVelocity1;				///< The estimated linear velocity of body 1 after collision
+	JPC_Vec3 AngularVelocity1;				///< The estimated angular velocity of body 1 after collision
+	JPC_Vec3 LinearVelocity2;				///< The estimated linear velocity of body 2 after collision
+	JPC_Vec3 AngularVelocity2;				///< The estimated angular velocity of body 2 after collision
+
+	JPC_Vec3 Tangent1;						///< Normalized tangent of contact normal
+	JPC_Vec3 Tangent2;						///< Second normalized tangent of contact normal (forms a basis with mTangent1 and mWorldSpaceNormal)
+
+	uint NumImpulses;
+	JPC_Impulse Impulses[JPC_ContactPointsCapacity];
+} JPC_CollisionEstimationResult;
+
+ENSURE_SIZE_ALIGN(JPC_CollisionEstimationResult, JPH::CollisionEstimationResult)
+
+JPC_API void JPC_EstimateCollisionResponse(
+	const JPC_Body* inBody1,
+	const JPC_Body* inBody2,
+	const JPC_ContactManifold* inManifold,
+	JPC_CollisionEstimationResult* outResult,
+	float inCombinedFriction,
+	float inCombinedRestitution,
+	float inMinVelocityForRestitution,	///< = 1.0f
+	uint inNumIterations				///< = 10
+);
+
 ////////////////////////////////////////////////////////////////////////////////
 // CastShapeCollector
 

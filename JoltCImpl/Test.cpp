@@ -19,6 +19,7 @@
 #include <Jolt/Physics/Collision/ActiveEdgeMode.h>
 #include <Jolt/Physics/Collision/CollectFacesMode.h>
 #include <Jolt/Physics/Collision/CollideShape.h>
+#include <Jolt/Physics/Collision/EstimateCollisionResponse.h>
 #include <Jolt/Physics/Collision/Shape/BoxShape.h>
 #include <Jolt/Physics/Collision/Shape/SphereShape.h>
 #include <Jolt/Physics/Collision/ShapeCast.h>
@@ -29,7 +30,7 @@
 #include <Jolt/RegisterTypes.h>
 
 template<typename E>
-constexpr auto to_integral(E e) -> typename std::underlying_type<E>::type 
+constexpr auto to_integral(E e) -> typename std::underlying_type<E>::type
 {
 	return static_cast<typename std::underlying_type<E>::type>(e);
 }
