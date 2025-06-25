@@ -538,12 +538,12 @@ ENSURE_NORMAL_FIELD(  CollideShapeSettings, MaxSeparationDistance)
 ENSURE_NORMAL_FIELD(  CollideShapeSettings, BackFaceMode)
 
 typedef struct JPC_ContactListenerFns {
-	// ValidateResult (*OnContactValidate)(
-	// 	void *self,
-	// 	const Body &inBody1,
-	// 	const Body &inBody2,
-	// 	RVec3Arg inBaseOffset,
-	// 	const CollideShapeResult &inCollisionResult);
+	JPC_ValidateResult (*OnContactValidate)(
+		void *self,
+		const JPC_Body *inBody1,
+		const JPC_Body *inBody2,
+		JPC_RVec3 inBaseOffset,
+		const JPC_CollideShapeResult *inCollisionResult);
 
 	void (*OnContactAdded)(
 		void *self,

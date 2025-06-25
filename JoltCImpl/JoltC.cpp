@@ -101,6 +101,7 @@ ENUM_CONVERSION(JPC_ShapeType, JPH::EShapeType)
 ENUM_CONVERSION(JPC_ShapeSubType, JPH::EShapeSubType)
 ENUM_CONVERSION(JPC_SpringMode, JPH::ESpringMode)
 ENUM_CONVERSION(JPC_MotorState, JPH::EMotorState)
+ENUM_CONVERSION(JPC_ValidateResult, JPH::ValidateResult)
 
 OPAQUE_WRAPPER(JPC_PhysicsSystem, JPH::PhysicsSystem)
 DESTRUCTOR(JPC_PhysicsSystem)
@@ -691,10 +692,10 @@ public:
 		JPH::RVec3Arg inBaseOffset,
 		const JPH::CollideShapeResult &inCollisionResult) override
 	{
-		// if (fns.OnContactValidate != nullptr) {
-		// 	return fns.OnContactValidate(self, to_jpc(inBody1), to_jpc(inBody2), to_jpc(inBaseOffset), to_jpc(inCollisionResult));
-		// }
-
+		if (fns.OnContactValidate != nullptr) {
+			JPC_CollideShapeResult collisionResult = JPC_CollideShapeResult_to_jpc(inCollisionResult);
+			return to_jph(fns.OnContactValidate(self, to_jpc(&inBody1), to_jpc(&inBody2), to_jpc(inBaseOffset), &collisionResult));
+		}
 		return ContactListener::OnContactValidate(inBody1, inBody2, inBaseOffset, inCollisionResult);
 	}
 
