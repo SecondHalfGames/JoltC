@@ -815,8 +815,6 @@ JPC_API float JPC_HingeConstraint_GetTargetAngle(const JPC_HingeConstraint* self
 
 typedef struct JPC_SliderConstraint JPC_SliderConstraint;
 
-JPC_API JPC_Constraint* JPC_SliderConstraint_to_Constraint(JPC_SliderConstraint* self);
-
 JPC_API void JPC_SliderConstraint_SetMotorState(JPC_SliderConstraint* self, JPC_MotorState inState);
 JPC_API JPC_MotorState JPC_SliderConstraint_GetMotorState(const JPC_SliderConstraint* self);
 JPC_API void JPC_SliderConstraint_SetTargetVelocity(JPC_SliderConstraint* self, float inVelocity);

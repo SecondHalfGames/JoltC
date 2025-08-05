@@ -1168,10 +1168,6 @@ JPC_API float JPC_HingeConstraint_GetTargetAngle(const JPC_HingeConstraint* self
 
 OPAQUE_WRAPPER(JPC_SliderConstraint, JPH::SliderConstraint);
 
-JPC_API JPC_Constraint* JPC_SliderConstraint_to_Constraint(JPC_SliderConstraint* self) {
-	return (JPC_Constraint*)(self);
-}
-
 JPC_API void JPC_SliderConstraint_SetMotorState(JPC_SliderConstraint* self, JPC_MotorState inState) {
 	to_jph(self)->SetMotorState(to_jph(inState));
 }
