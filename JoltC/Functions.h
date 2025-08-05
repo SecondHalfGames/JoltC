@@ -803,6 +803,13 @@ JPC_API JPC_Vec3 JPC_SixDOFConstraint_GetTotalLambdaMotorRotation(JPC_SixDOFCons
 
 typedef struct JPC_HingeConstraint JPC_HingeConstraint;
 
+JPC_API void JPC_HingeConstraint_SetMotorState(JPC_HingeConstraint* self, JPC_MotorState inState);
+JPC_API JPC_MotorState JPC_HingeConstraint_GetMotorState(const JPC_HingeConstraint* self);
+JPC_API void JPC_HingeConstraint_SetTargetAngularVelocity(JPC_HingeConstraint* self, float inAngularVelocity);
+JPC_API float JPC_HingeConstraint_GetTargetAngularVelocity(const JPC_HingeConstraint* self);
+JPC_API void JPC_HingeConstraint_SetTargetAngle(JPC_HingeConstraint* self, float inAngle);
+JPC_API float JPC_HingeConstraint_GetTargetAngle(const JPC_HingeConstraint* self);
+
 ////////////////////////////////////////////////////////////////////////////////
 // SliderConstraint
 
@@ -945,7 +952,7 @@ typedef struct JPC_HingeConstraintSettings {
 } JPC_HingeConstraintSettings;
 
 JPC_API void JPC_HingeConstraintSettings_default(JPC_HingeConstraintSettings* settings);
-JPC_API JPC_Constraint* JPC_HingeConstraintSettings_Create(
+JPC_API JPC_HingeConstraint* JPC_HingeConstraintSettings_Create(
 	const JPC_HingeConstraintSettings* self,
 	JPC_Body* inBody1,
 	JPC_Body* inBody2);

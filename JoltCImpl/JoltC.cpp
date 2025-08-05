@@ -1131,6 +1131,39 @@ JPC_API JPC_Vec3 JPC_SixDOFConstraint_GetTotalLambdaMotorRotation(JPC_SixDOFCons
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// HingeConstraint -> TwoBodyConstraint -> Constraint -> RefTarget<Constraint>
+
+OPAQUE_WRAPPER(JPC_HingeConstraint, JPH::HingeConstraint);
+
+JPC_API JPC_Constraint* JPC_HingeConstraint_to_Constraint(JPC_HingeConstraint* self) {
+	return (JPC_Constraint*)(self);
+}
+
+JPC_API void JPC_HingeConstraint_SetMotorState(JPC_HingeConstraint* self, JPC_MotorState inState) {
+	to_jph(self)->SetMotorState(to_jph(inState));
+}
+
+JPC_API JPC_MotorState JPC_HingeConstraint_GetMotorState(const JPC_HingeConstraint* self) {
+	return to_jpc(to_jph(self)->GetMotorState());
+}
+
+JPC_API void JPC_HingeConstraint_SetTargetAngularVelocity(JPC_HingeConstraint* self, float inAngularVelocity) {
+	to_jph(self)->SetTargetAngularVelocity(inAngularVelocity);
+}
+
+JPC_API float JPC_HingeConstraint_GetTargetAngularVelocity(const JPC_HingeConstraint* self) {
+	return to_jph(self)->GetTargetAngularVelocity();
+}
+
+JPC_API void JPC_HingeConstraint_SetTargetAngle(JPC_HingeConstraint* self, float inAngle) {
+	to_jph(self)->SetTargetAngle(inAngle);
+}
+
+JPC_API float JPC_HingeConstraint_GetTargetAngle(const JPC_HingeConstraint* self) {
+	return to_jph(self)->GetTargetAngle();
+}
+
+////////////////////////////////////////////////////////////////////////////////
 // SliderConstraint -> TwoBodyConstraint -> Constraint -> RefTarget<Constraint>
 
 OPAQUE_WRAPPER(JPC_SliderConstraint, JPH::SliderConstraint);
@@ -1411,7 +1444,7 @@ JPC_API void JPC_HingeConstraintSettings_default(JPC_HingeConstraintSettings* se
 	JPC_HingeConstraintSettings_to_jpc(settings, &defaultSettings);
 }
 
-JPC_API JPC_Constraint* JPC_HingeConstraintSettings_Create(
+JPC_API JPC_HingeConstraint* JPC_HingeConstraintSettings_Create(
 	const JPC_HingeConstraintSettings* self,
 	JPC_Body* inBody1,
 	JPC_Body* inBody2)
@@ -1420,7 +1453,7 @@ JPC_API JPC_Constraint* JPC_HingeConstraintSettings_Create(
 	JPC_HingeConstraintSettings_to_jph(self, &jphSettings);
 
 	JPH::HingeConstraint* outJph = new JPH::HingeConstraint(*to_jph(inBody1), *to_jph(inBody2), jphSettings);
-	return (JPC_Constraint*)outJph;
+	return (JPC_HingeConstraint*)outJph;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
