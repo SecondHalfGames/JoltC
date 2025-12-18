@@ -149,6 +149,16 @@ LAYOUT_COMPATIBLE(JPC_BodyID, JPH::BodyID)
 static auto to_jpc(JPH::BroadPhaseLayer in) { return in.GetValue(); }
 static auto to_jph(JPC_BroadPhaseLayer in) { return JPH::BroadPhaseLayer(in); }
 
+static JPC_Vec2 to_jpc(JPH::Vector<2> in) {
+	return JPC_Vec2{in[0], in[1]};
+}
+static JPH::Vector<2> to_jph(JPC_Vec2 in) {
+	JPH::Vector<2> out;
+	out[0] = in.x;
+	out[1] = in.y;
+	return out;
+}
+
 static JPC_Vec3 to_jpc(JPH::Vec3 in) {
 	return JPC_Vec3{in.GetX(), in.GetY(), in.GetZ(), in.GetZ()};
 }

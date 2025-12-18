@@ -37,6 +37,14 @@ typedef struct JPC_Float3 {
 
 ENSURE_SIZE_ALIGN(JPC_Float3, JPH::Float3)
 
+// Jolt has no type named Vec2 but uses Vector<2> in its API sometimes
+typedef struct JPC_Vec2 {
+	float x;
+	float y;
+} JPC_Vec2;
+
+ENSURE_SIZE_ALIGN(JPC_Vec2, JPH::Vector<2>)
+
 typedef struct JPC_Vec3 {
 	alignas(16) float x;
 	float y;
