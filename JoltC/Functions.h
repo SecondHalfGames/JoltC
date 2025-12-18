@@ -829,6 +829,10 @@ JPC_API void JPC_SliderConstraint_SetTargetVelocity(JPC_SliderConstraint* self, 
 JPC_API float JPC_SliderConstraint_GetTargetVelocity(const JPC_SliderConstraint* self);
 JPC_API void JPC_SliderConstraint_SetTargetPosition(JPC_SliderConstraint* self, float inPosition);
 JPC_API float JPC_SliderConstraint_GetTargetPosition(const JPC_SliderConstraint* self);
+JPC_API JPC_Vec2 JPC_SliderConstraint_GetTotalLambdaPosition(const JPC_SliderConstraint* self);
+JPC_API float JPC_SliderConstraint_GetTotalLambdaPositionLimits(const JPC_SliderConstraint* self);
+JPC_API JPC_Vec3 JPC_SliderConstraint_GetTotalLambdaRotation(const JPC_SliderConstraint* self);
+JPC_API float JPC_SliderConstraint_GetTotalLambdaMotor(const JPC_SliderConstraint* self);
 
 ////////////////////////////////////////////////////////////////////////////////
 // ConstraintSettings

@@ -1202,6 +1202,23 @@ JPC_API float JPC_SliderConstraint_GetTargetPosition(const JPC_SliderConstraint*
 	return to_jph(self)->GetTargetPosition();
 }
 
+JPC_API JPC_Vec2 JPC_SliderConstraint_GetTotalLambdaPosition(const JPC_SliderConstraint* self) {
+	return to_jpc(to_jph(self)->GetTotalLambdaPosition());
+}
+
+JPC_API float JPC_SliderConstraint_GetTotalLambdaPositionLimits(const JPC_SliderConstraint* self) {
+	return to_jph(self)->GetTotalLambdaPositionLimits();
+}
+
+JPC_API JPC_Vec3 JPC_SliderConstraint_GetTotalLambdaRotation(const JPC_SliderConstraint* self) {
+	return to_jpc(to_jph(self)->GetTotalLambdaRotation());
+}
+
+JPC_API float JPC_SliderConstraint_GetTotalLambdaMotor(const JPC_SliderConstraint* self) {
+	return to_jph(self)->GetTotalLambdaMotor();
+}
+
+
 ////////////////////////////////////////////////////////////////////////////////
 // ConstraintSettings
 
