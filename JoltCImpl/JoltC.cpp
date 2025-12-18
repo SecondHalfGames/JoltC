@@ -1173,6 +1173,23 @@ JPC_API float JPC_HingeConstraint_GetTargetAngle(const JPC_HingeConstraint* self
 	return to_jph(self)->GetTargetAngle();
 }
 
+JPC_API JPC_Vec3 JPC_HingeConstraint_GetTotalLambdaPosition(const JPC_HingeConstraint* self) {
+	return to_jpc(to_jph(self)->GetTotalLambdaPosition());
+}
+
+JPC_API JPC_Vec2 JPC_HingeConstraint_GetTotalLambdaRotation(const JPC_HingeConstraint* self) {
+	return to_jpc(to_jph(self)->GetTotalLambdaRotation());
+}
+
+JPC_API float JPC_HingeConstraint_GetTotalLambdaRotationLimits(const JPC_HingeConstraint* self) {
+	return to_jph(self)->GetTotalLambdaRotationLimits();
+}
+
+JPC_API float JPC_HingeConstraint_GetTotalLambdaMotor(const JPC_HingeConstraint* self) {
+	return to_jph(self)->GetTotalLambdaMotor();
+}
+
+
 ////////////////////////////////////////////////////////////////////////////////
 // SliderConstraint -> TwoBodyConstraint -> Constraint -> RefTarget<Constraint>
 

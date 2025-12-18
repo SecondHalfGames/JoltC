@@ -818,6 +818,11 @@ JPC_API float JPC_HingeConstraint_GetTargetAngularVelocity(const JPC_HingeConstr
 JPC_API void JPC_HingeConstraint_SetTargetAngle(JPC_HingeConstraint* self, float inAngle);
 JPC_API float JPC_HingeConstraint_GetTargetAngle(const JPC_HingeConstraint* self);
 
+JPC_API JPC_Vec3 JPC_HingeConstraint_GetTotalLambdaPosition(const JPC_HingeConstraint* self);
+JPC_API JPC_Vec2 JPC_HingeConstraint_GetTotalLambdaRotation(const JPC_HingeConstraint* self);
+JPC_API float JPC_HingeConstraint_GetTotalLambdaRotationLimits(const JPC_HingeConstraint* self);
+JPC_API float JPC_HingeConstraint_GetTotalLambdaMotor(const JPC_HingeConstraint* self);
+
 ////////////////////////////////////////////////////////////////////////////////
 // SliderConstraint
 
