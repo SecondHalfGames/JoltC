@@ -755,6 +755,13 @@ JPC_API JPC_Vec3 JPC_FixedConstraint_GetTotalLambdaPosition(const JPC_FixedConst
 JPC_API JPC_Vec3 JPC_FixedConstraint_GetTotalLambdaRotation(const JPC_FixedConstraint* self);
 
 ////////////////////////////////////////////////////////////////////////////////
+// DistanceConstraint -> TwoBodyConstraint -> Constraint -> RefTarget<Constraint>
+
+typedef struct JPC_DistanceConstraint JPC_DistanceConstraint;
+
+JPC_API float JPC_DistanceConstraint_GetTotalLambdaPosition(const JPC_DistanceConstraint* self);
+
+////////////////////////////////////////////////////////////////////////////////
 // SixDOFConstraint -> TwoBodyConstraint -> Constraint -> RefTarget<Constraint>
 
 typedef struct JPC_SixDOFConstraint JPC_SixDOFConstraint;
@@ -993,7 +1000,7 @@ typedef struct JPC_DistanceConstraintSettings {
 } JPC_DistanceConstraintSettings;
 
 JPC_API void JPC_DistanceConstraintSettings_default(JPC_DistanceConstraintSettings* settings);
-JPC_API JPC_Constraint* JPC_DistanceConstraintSettings_Create(
+JPC_API JPC_DistanceConstraint* JPC_DistanceConstraintSettings_Create(
 	const JPC_DistanceConstraintSettings* self,
 	JPC_Body* inBody1,
 	JPC_Body* inBody2);

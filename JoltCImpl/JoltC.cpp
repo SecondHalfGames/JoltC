@@ -1028,6 +1028,15 @@ JPC_API JPC_Vec3 JPC_FixedConstraint_GetTotalLambdaRotation(const JPC_FixedConst
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// DistanceConstraint -> TwoBodyConstraint -> Constraint -> RefTarget<Constraint>
+
+OPAQUE_WRAPPER(JPC_DistanceConstraint, JPH::DistanceConstraint);
+
+JPC_API float JPC_DistanceConstraint_GetTotalLambdaPosition(const JPC_DistanceConstraint* self) {
+	return to_jph(self)->GetTotalLambdaPosition();
+}
+
+////////////////////////////////////////////////////////////////////////////////
 // SixDOFConstraint -> TwoBodyConstraint -> Constraint -> RefTarget<Constraint>
 
 OPAQUE_WRAPPER(JPC_SixDOFConstraint, JPH::SixDOFConstraint);
@@ -1532,7 +1541,7 @@ JPC_API void JPC_DistanceConstraintSettings_default(JPC_DistanceConstraintSettin
 	JPC_DistanceConstraintSettings_to_jpc(settings, &defaultSettings);
 }
 
-JPC_API JPC_Constraint* JPC_DistanceConstraintSettings_Create(
+JPC_API JPC_DistanceConstraint* JPC_DistanceConstraintSettings_Create(
 	const JPC_DistanceConstraintSettings* self,
 	JPC_Body* inBody1,
 	JPC_Body* inBody2)
@@ -1541,7 +1550,7 @@ JPC_API JPC_Constraint* JPC_DistanceConstraintSettings_Create(
 		JPC_DistanceConstraintSettings_to_jph(self, &jphSettings);
 
 		JPH::DistanceConstraint* outJph = new JPH::DistanceConstraint(*to_jph(inBody1), *to_jph(inBody2), jphSettings);
-		return (JPC_Constraint*)outJph;
+		return (JPC_DistanceConstraint*)outJph;
 	}
 
 ////////////////////////////////////////////////////////////////////////////////
