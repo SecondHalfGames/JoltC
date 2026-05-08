@@ -21,6 +21,7 @@
 #include <Jolt/Physics/Collision/Shape/CylinderShape.h>
 #include <Jolt/Physics/Collision/Shape/MeshShape.h>
 #include <Jolt/Physics/Collision/Shape/MutableCompoundShape.h>
+#include <Jolt/Physics/Collision/Shape/PlaneShape.h>
 #include <Jolt/Physics/Collision/Shape/SphereShape.h>
 #include <Jolt/Physics/Collision/Shape/StaticCompoundShape.h>
 #include <Jolt/Physics/Collision/Shape/TriangleShape.h>
@@ -1902,6 +1903,33 @@ JPC_API void JPC_CylinderShapeSettings_default(JPC_CylinderShapeSettings* object
 
 JPC_API bool JPC_CylinderShapeSettings_Create(const JPC_CylinderShapeSettings* self, JPC_Shape** outShape, JPC_String** outError) {
 	JPH::CylinderShapeSettings settings;
+	to_jph(self, &settings);
+
+	return HandleShapeResult(settings.Create(), outShape, outError);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// PlaneShapeSettings
+
+static void to_jph(const JPC_PlaneShapeSettings* input, JPH::PlaneShapeSettings* output) {
+	output->mUserData = input->UserData;
+
+	// TODO: Material
+	output->mPlane = JPH::Plane(to_jph(input->Normal), input->Constant);
+	output->mHalfExtent = input->HalfExtent;
+}
+
+JPC_API void JPC_PlaneShapeSettings_default(JPC_PlaneShapeSettings* object) {
+	object->UserData = 0;
+
+	// TODO: Material
+	object->Normal = JPC_Vec3{0, 1, 0, 1};
+	object->Constant = 0.0;
+	object->HalfExtent = JPH::PlaneShapeSettings::cDefaultHalfExtent;
+}
+
+JPC_API bool JPC_PlaneShapeSettings_Create(const JPC_PlaneShapeSettings* self, JPC_Shape** outShape, JPC_String** outError) {
+	JPH::PlaneShapeSettings settings;
 	to_jph(self, &settings);
 
 	return HandleShapeResult(settings.Create(), outShape, outError);

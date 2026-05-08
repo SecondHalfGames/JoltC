@@ -1160,6 +1160,23 @@ JPC_API void JPC_CylinderShapeSettings_default(JPC_CylinderShapeSettings* object
 JPC_API bool JPC_CylinderShapeSettings_Create(const JPC_CylinderShapeSettings* self, JPC_Shape** outShape, JPC_String** outError);
 
 ////////////////////////////////////////////////////////////////////////////////
+// PlaneShapeSettings -> ShapeSettings
+
+typedef struct JPC_PlaneShapeSettings {
+	// ShapeSettings
+	uint64_t UserData;
+
+	// PlaneShapeSettings
+	// TODO: Material
+	JPC_Vec3 Normal;
+	float Constant;
+	float HalfExtent;
+} JPC_PlaneShapeSettings;
+
+JPC_API void JPC_PlaneShapeSettings_default(JPC_PlaneShapeSettings* object);
+JPC_API bool JPC_PlaneShapeSettings_Create(const JPC_PlaneShapeSettings* self, JPC_Shape** outShape, JPC_String** outError);
+
+////////////////////////////////////////////////////////////////////////////////
 // ConvexHullShapeSettings -> ConvexShapeSettings -> ShapeSettings
 
 typedef struct JPC_ConvexHullShapeSettings {
