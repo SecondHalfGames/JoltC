@@ -11,6 +11,46 @@
 	#define JPC_API
 #endif
 
+// Mirror JPH's per-arch VECTOR / DVECTOR alignment logic from
+// `JoltPhysics/Jolt/Core/Core.h`. These two values MUST match what JPH
+// computes, otherwise the LAYOUT_COMPATIBLE static_asserts in
+// `JoltCImpl/JoltC.cpp` fail at build time.
+//
+// The load-bearing case is 32-bit ARM (e.g. armv7 Android, armv7 Linux):
+// JPH falls back to 8-byte alignment because 32-bit ARM cannot stack-align
+// to 16 bytes. Without mirroring that fallback here, the C-side `alignas(16)`
+// over-constrains `JPC_Vec3` / `Vec4` / `Quat` / `Mat44` / `DVec3` / `DMat44`
+// (and every higher-level struct that embeds them: `JPC_ShapeCastSettings`,
+// `JPC_CollideShapeSettings`, `JPC_BodyManager_DrawSettings`,
+// `JPC_ContactPoints`, `JPC_ContactManifold`, …) and the LAYOUT_COMPATIBLE
+// static_assert fires for every settings struct that contains a vector
+// field — `align of JPC_<X> did not match align of JPH::<X> (16 == 8)`.
+#if defined(__aarch64__) || defined(_M_ARM64) || \
+    defined(__x86_64__)  || defined(_M_X64)   || \
+    defined(__i386__)    || defined(_M_IX86)  || \
+    defined(__wasm__)    || defined(__e2k__)
+	#define JPC_VECTOR_ALIGNMENT  16
+	#define JPC_DVECTOR_ALIGNMENT 32
+#elif defined(__arm__) || defined(_M_ARM)
+	// 32-bit ARM (the aarch64 case above takes precedence on 64-bit).
+	#define JPC_VECTOR_ALIGNMENT  8
+	#define JPC_DVECTOR_ALIGNMENT 8
+#elif defined(__riscv)
+	#define JPC_VECTOR_ALIGNMENT  16
+	#if __riscv_xlen == 64
+		#define JPC_DVECTOR_ALIGNMENT 32
+	#else
+		#define JPC_DVECTOR_ALIGNMENT 8
+	#endif
+#elif defined(__powerpc__) || defined(__powerpc64__) || defined(__loongarch__)
+	#define JPC_VECTOR_ALIGNMENT  16
+	#define JPC_DVECTOR_ALIGNMENT 8
+#else
+	// Conservative fallback: assume the common 64-bit shape.
+	#define JPC_VECTOR_ALIGNMENT  16
+	#define JPC_DVECTOR_ALIGNMENT 32
+#endif
+
 static float JPC_PI = 3.14159265358979323846f;
 
 // C-compatible typedefs that match Jolt's internal primitive typedefs.
@@ -46,7 +86,7 @@ typedef struct JPC_Vec2 {
 ENSURE_SIZE_ALIGN(JPC_Vec2, JPH::Vector<2>)
 
 typedef struct JPC_Vec3 {
-	alignas(16) float x;
+	alignas(JPC_VECTOR_ALIGNMENT) float x;
 	float y;
 	float z;
 	float _w;
@@ -55,7 +95,7 @@ typedef struct JPC_Vec3 {
 ENSURE_SIZE_ALIGN(JPC_Vec3, JPH::Vec3)
 
 typedef struct JPC_Vec4 {
-	alignas(16) float x;
+	alignas(JPC_VECTOR_ALIGNMENT) float x;
 	float y;
 	float z;
 	float w;
@@ -64,7 +104,7 @@ typedef struct JPC_Vec4 {
 ENSURE_SIZE_ALIGN(JPC_Vec4, JPH::Vec4)
 
 typedef struct JPC_DVec3 {
-	alignas(32) double x;
+	alignas(JPC_DVECTOR_ALIGNMENT) double x;
 	double y;
 	double z;
 	double _w;
@@ -73,7 +113,7 @@ typedef struct JPC_DVec3 {
 ENSURE_SIZE_ALIGN(JPC_DVec3, JPH::DVec3)
 
 typedef struct JPC_Quat {
-	alignas(16) float x;
+	alignas(JPC_VECTOR_ALIGNMENT) float x;
 	float y;
 	float z;
 	float w;
@@ -82,14 +122,14 @@ typedef struct JPC_Quat {
 ENSURE_SIZE_ALIGN(JPC_Quat, JPH::Quat)
 
 typedef struct JPC_Mat44 {
-	alignas(16) JPC_Vec4 col[3];
+	alignas(JPC_VECTOR_ALIGNMENT) JPC_Vec4 col[3];
 	JPC_Vec3 col3;
 } JPC_Mat44;
 
 ENSURE_SIZE_ALIGN(JPC_Mat44, JPH::Mat44)
 
 typedef struct JPC_DMat44 {
-	alignas(32) JPC_Vec4 col[3];
+	alignas(JPC_DVECTOR_ALIGNMENT) JPC_Vec4 col[3];
 	JPC_DVec3 col3;
 } JPC_DMat44;
 
