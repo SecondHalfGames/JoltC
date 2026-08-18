@@ -598,7 +598,8 @@ public:
 			return true;
 		}
 
-		return fns.ShouldCollide(self, to_jpc(inShape2), to_jpc(inSubShapeIDOfShape2));
+		const JPC_ShapeFilter* filter = reinterpret_cast<const JPC_ShapeFilter*>(this);
+		return fns.ShouldCollide(self, filter, to_jpc(inShape2), to_jpc(inSubShapeIDOfShape2));
 	}
 
 	virtual bool ShouldCollide(
@@ -609,7 +610,8 @@ public:
 			return true;
 		}
 
-		return fns.ShouldCollideTwoShapes(self,
+		const JPC_ShapeFilter* filter = reinterpret_cast<const JPC_ShapeFilter*>(this);
+		return fns.ShouldCollideTwoShapes(self, filter,
 			to_jpc(inShape1), to_jpc(inSubShapeIDOfShape1),
 			to_jpc(inShape2), to_jpc(inSubShapeIDOfShape2));
 	}
@@ -627,6 +629,11 @@ JPC_API JPC_ShapeFilter* JPC_ShapeFilter_new(
 	JPC_ShapeFilterFns fns)
 {
 	return to_jpc(new JPC_ShapeFilterBridge(self, fns));
+}
+
+JPC_API JPC_BodyID JPC_ShapeFilter_getBodyID2(const JPC_ShapeFilter* self) {
+	const JPC_ShapeFilterBridge* filter = to_jph(self);
+	return to_jpc(filter->mBodyID2);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
