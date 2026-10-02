@@ -345,6 +345,10 @@ JPC_API void JPC_UnregisterTypes() {
 	JPH::UnregisterTypes();
 }
 
+JPC_API void JPC_SetAssertFailed(JPC_AssertFailedFunction fn) {
+	JPH_IF_ENABLE_ASSERTS(JPH::AssertFailed = fn;)
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 // VertexList == Array<Float3> == std::vector<Float3>
 

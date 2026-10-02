@@ -88,10 +88,24 @@ static JPC_DebugRendererSimpleFns Hello_DebugRenderer = {
 	.DrawLine = Hello_Debug_DrawLine,
 };
 
+bool AssertFailedImpl(const char *inExpression, const char *inMessage, const char *inFile, uint inLine) {
+	// Print to the TTY
+	printf("%s: %u: (%s) ", inFile, inLine, inExpression);
+	if (inMessage != nullptr) {
+		printf("%s", inMessage);
+	}
+	printf("\n");
+
+	// Breakpoint
+	return true;
+};
+
 int main() {
 	JPC_RegisterDefaultAllocator();
 	JPC_FactoryInit();
 	JPC_RegisterTypes();
+
+	JPC_SetAssertFailed(AssertFailedImpl);
 
 	JPC_TempAllocatorImpl* temp_allocator = JPC_TempAllocatorImpl_new(10 * 1024 * 1024);
 

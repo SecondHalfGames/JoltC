@@ -66,6 +66,10 @@ JPC_API void JPC_FactoryDelete();
 JPC_API void JPC_RegisterTypes();
 JPC_API void JPC_UnregisterTypes();
 
+typedef bool(*JPC_AssertFailedFunction)(const char *inExpression, const char *inMessage, const char *inFile, uint inLine);
+
+JPC_API void JPC_SetAssertFailed(JPC_AssertFailedFunction fn);
+
 ////////////////////////////////////////////////////////////////////////////////
 // Primitive types
 
