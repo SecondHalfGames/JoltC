@@ -1313,6 +1313,16 @@ typedef struct JPC_MutableCompoundShapeSettings {
 JPC_API void JPC_MutableCompoundShapeSettings_default(JPC_MutableCompoundShapeSettings* object);
 JPC_API bool JPC_MutableCompoundShapeSettings_Create(const JPC_MutableCompoundShapeSettings* self, JPC_MutableCompoundShape** outShape, JPC_String** outError);
 
+/////////
+// MassProperties
+
+typedef struct JPC_MassProperties {
+	float Mass;
+	JPC_Mat44 Inertia;
+} JPC_MassProperties;
+
+JPC_API void JPC_MassProperties_default(JPC_MassProperties* properties);
+
 ////////////////////////////////////////////////////////////////////////////////
 // BodyCreationSettings
 
@@ -1344,6 +1354,7 @@ typedef struct JPC_BodyCreationSettings {
 	uint NumVelocityStepsOverride;
 	uint NumPositionStepsOverride;
 	JPC_OverrideMassProperties OverrideMassProperties;
+	JPC_MassProperties MassPropertiesOverride;
 	float InertiaMultiplier;
 
 	// MassProperties MassPropertiesOverride;
