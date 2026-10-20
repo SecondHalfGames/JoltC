@@ -3099,6 +3099,10 @@ JPC_API JPC_BodyInterface* JPC_PhysicsSystem_GetBodyInterface(JPC_PhysicsSystem*
 	return to_jpc(&to_jph(self)->GetBodyInterface());
 }
 
+JPC_API JPC_BodyInterface* JPC_PhysicsSystem_GetBodyInterfaceNoLock(JPC_PhysicsSystem* self) {
+	return to_jpc(&to_jph(self)->GetBodyInterfaceNoLock());
+}
+
 JPC_API const JPC_BodyLockInterface* JPC_PhysicsSystem_GetBodyLockInterface(JPC_PhysicsSystem* self) {
 	return to_jpc(&to_jph(self)->GetBodyLockInterface());
 }

@@ -1702,6 +1702,7 @@ JPC_API void JPC_PhysicsSystem_SetGravity(JPC_PhysicsSystem* self, JPC_Vec3 inGr
 JPC_API JPC_Vec3 JPC_PhysicsSystem_GetGravity(const JPC_PhysicsSystem* self);
 
 JPC_API JPC_BodyInterface* JPC_PhysicsSystem_GetBodyInterface(JPC_PhysicsSystem* self);
+JPC_API JPC_BodyInterface* JPC_PhysicsSystem_GetBodyInterfaceNoLock(JPC_PhysicsSystem* self);
 JPC_API const JPC_BodyLockInterface* JPC_PhysicsSystem_GetBodyLockInterface(JPC_PhysicsSystem* self);
 
 JPC_API const JPC_NarrowPhaseQuery* JPC_PhysicsSystem_GetNarrowPhaseQuery(const JPC_PhysicsSystem* self);
