@@ -2654,7 +2654,7 @@ JPC_API void JPC_BodyInterface_ActivateBody(JPC_BodyInterface *self, JPC_BodyID 
 	to_jph(self)->ActivateBody(to_jph(inBodyID));
 }
 
-JPC_API void JPC_BodyInterface_ActivateBodies(JPC_BodyInterface *self, JPC_BodyID *inBodyIDs, int inNumber) {
+JPC_API void JPC_BodyInterface_ActivateBodies(JPC_BodyInterface *self, const JPC_BodyID *inBodyIDs, int inNumber) {
 	to_jph(self)->ActivateBodies(to_jph(inBodyIDs), inNumber);
 }
 
