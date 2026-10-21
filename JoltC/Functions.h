@@ -1313,6 +1313,16 @@ typedef struct JPC_MutableCompoundShapeSettings {
 JPC_API void JPC_MutableCompoundShapeSettings_default(JPC_MutableCompoundShapeSettings* object);
 JPC_API bool JPC_MutableCompoundShapeSettings_Create(const JPC_MutableCompoundShapeSettings* self, JPC_MutableCompoundShape** outShape, JPC_String** outError);
 
+/////////
+// MassProperties
+
+typedef struct JPC_MassProperties {
+	float Mass;
+	JPC_Mat44 Inertia;
+} JPC_MassProperties;
+
+JPC_API void JPC_MassProperties_default(JPC_MassProperties* properties);
+
 ////////////////////////////////////////////////////////////////////////////////
 // BodyCreationSettings
 
@@ -1344,6 +1354,7 @@ typedef struct JPC_BodyCreationSettings {
 	uint NumVelocityStepsOverride;
 	uint NumPositionStepsOverride;
 	JPC_OverrideMassProperties OverrideMassProperties;
+	JPC_MassProperties MassPropertiesOverride;
 	float InertiaMultiplier;
 
 	// MassProperties MassPropertiesOverride;
@@ -1691,6 +1702,7 @@ JPC_API void JPC_PhysicsSystem_SetGravity(JPC_PhysicsSystem* self, JPC_Vec3 inGr
 JPC_API JPC_Vec3 JPC_PhysicsSystem_GetGravity(const JPC_PhysicsSystem* self);
 
 JPC_API JPC_BodyInterface* JPC_PhysicsSystem_GetBodyInterface(JPC_PhysicsSystem* self);
+JPC_API JPC_BodyInterface* JPC_PhysicsSystem_GetBodyInterfaceNoLock(JPC_PhysicsSystem* self);
 JPC_API const JPC_BodyLockInterface* JPC_PhysicsSystem_GetBodyLockInterface(JPC_PhysicsSystem* self);
 
 JPC_API const JPC_NarrowPhaseQuery* JPC_PhysicsSystem_GetNarrowPhaseQuery(const JPC_PhysicsSystem* self);

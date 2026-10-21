@@ -2104,6 +2104,30 @@ JPC_API bool JPC_MutableCompoundShapeSettings_Create(const JPC_MutableCompoundSh
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// MassProperties
+
+static JPH::MassProperties to_jph(const JPC_MassProperties input) {
+	JPH::MassProperties output{};
+	output.mMass = input.Mass;
+	output.mInertia = to_jph(input.Inertia);
+	return output;
+}
+
+static JPC_MassProperties to_jpc(const JPH::MassProperties& input) {
+	JPC_MassProperties output{};
+	output.Mass = input.mMass;
+	output.Inertia = to_jpc(input.mInertia);
+	return output;
+}
+
+JPC_API void JPC_MassProperties_default(JPC_MassProperties* properties) {
+	JPH::MassProperties defaultProperties{};
+
+	properties->Mass = defaultProperties.mMass;
+	properties->Inertia = to_jpc(defaultProperties.mInertia);
+}
+
+////////////////////////////////////////////////////////////////////////////////
 // BodyCreationSettings
 
 static JPH::BodyCreationSettings to_jph(const JPC_BodyCreationSettings* settings) {
@@ -2136,8 +2160,8 @@ static JPH::BodyCreationSettings to_jph(const JPC_BodyCreationSettings* settings
 	output.mNumVelocityStepsOverride = settings->NumVelocityStepsOverride;
 	output.mNumPositionStepsOverride = settings->NumPositionStepsOverride;
 	output.mOverrideMassProperties = to_jph(settings->OverrideMassProperties);
+	output.mMassPropertiesOverride = to_jph(settings->MassPropertiesOverride);
 	output.mInertiaMultiplier = settings->InertiaMultiplier;
-	// output.mMassPropertiesOverride = settings->MassPropertiesOverride;
 	output.SetShape(to_jph(settings->Shape));
 
 	return output;
@@ -2173,8 +2197,8 @@ JPC_API void JPC_BodyCreationSettings_default(JPC_BodyCreationSettings* settings
 	settings->NumVelocityStepsOverride = defaultSettings.mNumVelocityStepsOverride;
 	settings->NumPositionStepsOverride = defaultSettings.mNumPositionStepsOverride;
 	settings->OverrideMassProperties = to_jpc(defaultSettings.mOverrideMassProperties);
+	settings->MassPropertiesOverride = to_jpc(defaultSettings.mMassPropertiesOverride);
 	settings->InertiaMultiplier = defaultSettings.mInertiaMultiplier;
-	// MassPropertiesOverride
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -3073,6 +3097,10 @@ JPC_API JPC_Vec3 JPC_PhysicsSystem_GetGravity(const JPC_PhysicsSystem* self) {
 
 JPC_API JPC_BodyInterface* JPC_PhysicsSystem_GetBodyInterface(JPC_PhysicsSystem* self) {
 	return to_jpc(&to_jph(self)->GetBodyInterface());
+}
+
+JPC_API JPC_BodyInterface* JPC_PhysicsSystem_GetBodyInterfaceNoLock(JPC_PhysicsSystem* self) {
+	return to_jpc(&to_jph(self)->GetBodyInterfaceNoLock());
 }
 
 JPC_API const JPC_BodyLockInterface* JPC_PhysicsSystem_GetBodyLockInterface(JPC_PhysicsSystem* self) {
