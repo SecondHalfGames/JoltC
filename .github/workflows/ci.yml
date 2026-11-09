@@ -44,7 +44,7 @@ jobs:
 
     - name: Run Hello World
       shell: bash
-      run: ./build/${{ matrix.build_type }}/HelloWorld.exe
+      run: ./build/HelloWorld.exe
       if: ${{ contains(matrix.os, 'windows') }}
 
     - name: Run Hello World
