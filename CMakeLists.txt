@@ -78,6 +78,14 @@ if (CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
 
     target_include_directories(HelloWorld PUBLIC .)
     target_link_libraries(HelloWorld PUBLIC joltc)
+
+    # get_property(fancy_lib_location TARGET HelloWorld PROPERTY LOCATION)
+    # message(STATUS "fancy_lib_location == " $<TARGET_FILE:HelloWorld>)
+    # file(GENERATE OUTPUT exe_path.txt CONTENT $<TARGET_FILE:HelloWorld>)
+
+    add_custom_command(TARGET HelloWorld POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E echo 
+      "target = $<TARGET_FILE:HelloWorld>")
 endif()
 
 add_subdirectory(JoltPhysics/Build)
