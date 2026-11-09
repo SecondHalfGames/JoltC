@@ -34,15 +34,17 @@ jobs:
       with:
         compiler: ${{ contains(matrix.os, 'windows') && 'msvc' || 'clang' }}
         cmake: true
+        ninja: true
 
     - name: Configure CMake
       run: cmake -B build ${{ matrix.build_flags }} -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
 
     - name: Build
-      run: cmake --build build --config=${{ matrix.build_type }}
+      run: cmake --build build --verbose --config=${{ matrix.build_type }}
 
     - name: Run Hello World
-      run: build/${{ matrix.build_type }}/HelloWorld.exe
+      shell: bash
+      run: ./build/${{ matrix.build_type }}/HelloWorld.exe
       if: ${{ contains(matrix.os, 'windows') }}
 
     - name: Run Hello World
