@@ -40,7 +40,7 @@ jobs:
       run: cmake -B build ${{ matrix.build_flags }} -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
 
     - name: Build
-      run: cmake --build build --verbose --config=${{ matrix.build_type }}
+      run: cmake --build build --config=${{ matrix.build_type }}
 
     - name: Run Hello World
       shell: bash
