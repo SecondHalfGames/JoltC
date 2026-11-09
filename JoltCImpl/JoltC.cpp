@@ -300,6 +300,7 @@ JPC_IMPL JPH::ShapeCastSettings JPC_ShapeCastSettings_to_jph(JPC_ShapeCastSettin
 	out.mActiveEdgeMovementDirection = to_jph(in.ActiveEdgeMovementDirection);
 
 	// JPH::ShapeCastSettings
+	out.mExtraConvexRadius = in.ExtraConvexRadius;
 	out.mBackFaceModeTriangles = static_cast<JPH::EBackFaceMode>(in.BackFaceModeTriangles);
 	out.mBackFaceModeConvex = static_cast<JPH::EBackFaceMode>(in.BackFaceModeConvex);
 	out.mUseShrunkenShapeAndConvexRadius = in.UseShrunkenShapeAndConvexRadius;
@@ -1282,11 +1283,6 @@ JPC_IMPL void JPC_ConstraintSettings_to_jph(
 	outJph->mNumPositionStepsOverride = inJpc->NumPositionStepsOverride;
 	outJph->mDrawConstraintSize = inJpc->DrawConstraintSize;
 	outJph->mUserData = inJpc->UserData;
-}
-
-JPC_API void JPC_ConstraintSettings_default(JPC_ConstraintSettings* settings) {
-	JPH::ConstraintSettings defaultSettings{};
-	JPC_ConstraintSettings_to_jpc(settings, &defaultSettings);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
